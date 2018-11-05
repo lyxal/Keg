@@ -119,7 +119,7 @@ def split(source):
                         structure = None
 
 
-                    structures["For"] -= 1
+                structures["For"] -= 1
                     
         elif char in WHILE_LOOP.values():
             if char == WHILE_LOOP[START]:
@@ -139,8 +139,7 @@ def split(source):
                         index = {START : 0, END : 0, BODY : None}
                         structure = None
 
-
-                    structures["While"] -= 1
+                structures["While"] -= 1
                     
         elif char in IF_STMT.values():
             if char == IF_STMT[START]:
@@ -160,7 +159,7 @@ def split(source):
                         index = {START : 0, END : 0, BODY : None}
                         structure = None
 
-                    structures["If"] -= 1
+                structures["If"] -= 1
 
         else:
             if structure is None:
@@ -339,7 +338,7 @@ def run(source):
 
         else:
             stack.append(ord(cmd))
-       
+
 if __name__ == "__main__":
     file_location = input("Enter the file location of the Keg program: ")
     prepop = input("Enter values to prepopulate the stack: ")
