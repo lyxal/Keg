@@ -120,6 +120,10 @@ If `n` isn't present, no items will be popped from the stack, and all code in th
 ### Cat Program
 
     ?^_^
+    
+### Fizzbuzz Program
+
+    0(d|1+:35*%0=[ zzubzziF(9|,)|:5%0=[ zzuB(5|,)|:3%0=[ zziF(5|,)|:. ,]]])
 
 ## Command Glossary
 |Command|Description|Usage|Notes|
