@@ -143,7 +143,7 @@ If `n` isn't present, no items will be popped from the stack, and all code in th
 | `|` | Branches to the next section of a structure | `B...\|...B`| `B` is any one bracket type |
 | `\` | Escapes the next command, and pushes it as a string | `\<command>` | |
 | `&` | Gets/sets the register value | `&` | |
-| `@` | Define/call a function | `@ name ∆n∆ \| ...` | |
+| `@` | Define/call a function | `@ name ∆n∆ \| ...@` | |
 | `+` | Pops `x` and `y` and pushes `y` + `x` | `<value><value>+` | |
 | `-` | Pops `x` and `y` and pushes `y` - `x` | `<value><value>-` | |
 | `*` | Pops `x` and `y` and pushes `y` * `x` | `<value><value>*` | |
