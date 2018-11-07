@@ -84,13 +84,16 @@ def _eval(expression):
         elif char == RANDOM:
             temp.append(random.randint(0, 32767))
 
+        elif char == NEWLINE or char == TAB:
+            continue
+
         else:
             temp.append(ord(char))
 
     return temp[0]
 
 def split(source):
-    source = list(source)
+    source = list(source.replace(TAB, ""))
     structures = {"If" : 0, "While" : 0, "For" : 0}
     indexes = []
     index = {START : 0, END : 0, BODY : None}
@@ -99,7 +102,6 @@ def split(source):
     for i in range(len(source)):
         char = source[i]
         
-            
         if char in FOR_LOOP.values():
             if char == FOR_LOOP[START]:
                 if max(structures.values()) == 0:
@@ -161,7 +163,7 @@ def split(source):
 
                 structures["If"] -= 1
 
-        else:
+        else:               
             if structure is None:
                 index[START] = i
                 index[END] = i
@@ -239,7 +241,6 @@ def run(source):
         elif cmd == SWAP:
             stack[-1], stack[-2] = stack[-2], stack[-1] #only in python you see
                                                         #this
-
         elif cmd == INPUT:
             x = input()
             stack.append(-1)
@@ -339,6 +340,8 @@ def run(source):
         else:
             stack.append(ord(cmd))
 
+        #print(cmd, stack)
+
 if __name__ == "__main__":
     file_location = input("Enter the file location of the Keg program: ")
     prepop = input("Enter values to prepopulate the stack: ")
@@ -346,7 +349,7 @@ if __name__ == "__main__":
     for item in prepop.split():
         stack.append(int(item))
 
-    code = open(file_location).read().strip("\n")
+    code = open(file_location, encoding="utf-8").read().strip("\n")
     run(code)
 
     if not printed:
