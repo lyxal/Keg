@@ -84,8 +84,14 @@ def _eval(expression):
         elif char == RANDOM:
             temp.append(random.randint(0, 32767))
 
+        elif char == POP:
+            temp.append(stack.pop())
+
         elif char == NEWLINE or char == TAB:
             continue
+
+        elif char in "#|`@":
+            raise SyntaxError("Invalid symbol in expression: " + expression)
 
         else:
             temp.append(ord(char))
@@ -244,7 +250,7 @@ def run(source):
         elif cmd == INPUT:
             x = input()
             stack.append(-1)
-            for char in x:
+            for char in reversed(x):
                 stack.append(ord(char))
                 
 
