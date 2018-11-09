@@ -124,6 +124,16 @@ If `n` isn't present, no items will be popped from the stack, and all code in th
 ### Fizzbuzz Program
 
     0(d|1+:35*%0=[ zzubzziF(9|,)|:5%0=[ zzuB(5|,)|:3%0=[ zziF(5|,)|:. ,]]])
+   
+### 99 Bottles of Beer Program
+
+    c&(c|&:.& bottles of beer on the wall\, ^(!|,)&:.& bottles of beer\.91+^(!|,)Take one down\, pass it around\, ^(!|,)&1-&&:.& bottles of beer on the wall\.91+^(!|,))
+    
+### Quine
+
+    Q
+
+_This can be any series of alphabetical letters_
 
 ## Command Glossary
 |Command|Description|Usage|Notes|
