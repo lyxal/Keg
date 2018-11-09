@@ -119,7 +119,7 @@ If `n` isn't present, no items will be popped from the stack, and all code in th
 
 ### Cat Program
 
-    ?^_^
+    ?^_
     
 ### Fizzbuzz Program
 
