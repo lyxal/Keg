@@ -1,3 +1,4 @@
+import sys
 import For, If, While, random
 
 #Functions
@@ -369,11 +370,14 @@ def grun(code, prepop):
         
 
 if __name__ == "__main__":
-    file_location = input("Enter the file location of the Keg program: ")
-    prepop = input("Enter values to prepopulate the stack: ")
+    if len(sys.argv) > 1:
+        file_location = sys.argv[1]
+    else:
+        file_location = input("Enter the file location of the Keg program: ")
+        prepop = input("Enter values to prepopulate the stack: ")
 
-    for item in prepop.split():
-        stack.append(int(item))
+        for item in prepop.split():
+            stack.append(int(item))
 
     code = open(file_location, encoding="utf-8").read().strip("\n")
     run(code)
