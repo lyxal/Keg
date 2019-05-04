@@ -1,5 +1,5 @@
 # Keg -- (Ke)yboard (G)olfed
-_Keg_ is a stack-based esolang with condensability as well as simplicity and readability in mind. It's main purpose is to be used for golfing, although it can be potentially used for other purposes. What makes this esolang different from others is that:
+[_Keg_](https://esolangs.org/wiki/Keg) is a stack-based esolang with condensability as well as simplicity and readability in mind. It's main purpose is to be used for golfing, although it can be potentially used for other purposes. What makes this esolang different from others is that:
 
 * Alphanumerical characters are automatically pushed (no need to wrap them in quotation marks)
 * There are readable and intuitive `if` statements, `for` and `while` loops
