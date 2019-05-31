@@ -185,6 +185,46 @@ def split(source):
 
     return new
                                 
+#Bracket balancer
+
+def balance(string):
+    brackets = list()
+    mapping = {"{" : "}", "[" : "]", "(" : ")", "": ""}
+    escaped = False
+
+    result = ""
+    for char in string:
+        if escaped:
+        
+            escaped = False
+            continue
+
+        elif char == "\\":
+            escaped = True
+            continue
+        
+        if char in "[{(":
+            brackets.append(char)
+
+        elif char == brackets[-1]:
+            brackets.pop()
+
+        elif char in "])}":
+            for i in range(len(brackets)):
+                if mapping[brackets[i]] == char:
+                    brackets[i] = ""
+                    break
+                    
+
+
+
+    if len(brackets):
+
+        for char in reversed(brackets):
+            result += mapping[char]
+
+    return string+result
+        
     
 def run(source):
     global stack, register, comment, escape, printed
@@ -354,7 +394,7 @@ def grun(code, prepop):
     for item in prepop.split():
         stack.append(int(item))
 
-    run(code)
+    run(balance(code))
 
     if not printed:
         printing = ""
@@ -380,7 +420,7 @@ if __name__ == "__main__":
             stack.append(int(item))
 
     code = open(file_location, encoding="utf-8").read().strip("\n")
-    run(code)
+    run(balance(code))
 
     if not printed:
         printing = ""
