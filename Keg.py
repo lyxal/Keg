@@ -206,7 +206,7 @@ def balance(string):
         if char in "[{(":
             brackets.append(char)
 
-        elif char == brackets[-1]:
+        elif len(brackets) and char == brackets[-1]:
             brackets.pop()
 
         elif char in "])}":
