@@ -75,7 +75,10 @@ comment = False
 escape = False
 printed = False
 
-
+def keg_input():
+    x = input()
+    for char in reversed(x):
+        stack.append(ord(char))
             
 def _eval(expression):
     #Evaulate the given expression as Keg code
@@ -284,6 +287,9 @@ def run(source):
             stack.append(len(stack))
 
         elif cmd == DUPLICATE:
+            # If the stack is empty, take input and then reverse. (Saves 1 byte)
+            if len(stack)==0:
+                keg_input()
             stack.append(stack.content[-1])
 
         elif cmd == POP:
@@ -308,6 +314,9 @@ def run(source):
             stack.append(random.randint(0, 32767))
 
         elif cmd == REVERSE:
+            # If the stack is empty, take input and then reverse. (Saves 1 byte; this is more common than the duplicate instruction.)
+            if len(stack)==0:
+                keg_input()
             stack.reverse()
 
         elif cmd == SWAP:
@@ -315,12 +324,10 @@ def run(source):
             stack.content[-1]
 
             #only in python you see this
+        # No annoying -1's anymore!
         elif cmd == INPUT:
-            x = input()
-            stack.append(-1)
-            for char in reversed(x):
-                stack.append(ord(char))
-                
+            keg_input()
+
 
         #Now keywords
 

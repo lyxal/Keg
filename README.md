@@ -62,7 +62,7 @@ In the above example, the numbers `3` and `4` are pushed onto the stack, and are
 _Note that the `.` function prints the last item on the stack as an integer._
 
 ### Input and Output
-_Keg_ has two output functions and one input function. When taking input from the user, the next line from the Standard Input and push the ascii value of each character onto the stack. It will then push -1 onto the stack to sigify the end of input (input as integers will be coming in a later version of _Keg_). Input is taken using the `?` command, as shown in the example program:
+_Keg_ has two output functions and one input function. When taking input from the user, the next line from the Standard Input and push the ascii value of each character onto the stack. It will then push -1 onto the stack to sigify the end of input (input as integers will be coming in a later version of _Keg_). _Edit: input will not push -1 anymore, as this is not useful in practical competitions._ Input is taken using the `?` command, as shown in the example program:
 
     ?(!|,)
     
@@ -111,6 +111,10 @@ If `n` isn't present, no items will be popped from the stack, and all code in th
 
 * Closing brackets can be left out of programs, and will be auto-completed in a LIFO matter
 
+* There is also implicit input. If you use `^` and `:` on an empty stack, one line of input will be taken.
+
+* The next edit of the interpreter does not have -1's being pushed to the input.
+
 ## Example Programs
 
 ### Hello World, Further Golfed
@@ -136,6 +140,8 @@ If `n` isn't present, no items will be popped from the stack, and all code in th
 _This can be any series of alphabetical letters_
 
 ## Command Glossary
+If the `^` or `:` commands tried to operate on an empty stack, an input will be taken (for shorter programs).
+
 |Command|Description|Usage|Notes|
 |------------|-------------|-------|-------|
 | `!` |  Pushes the length of the stack onto the stack |  `!` | |
