@@ -62,7 +62,7 @@ In the above example, the numbers `3` and `4` are pushed onto the stack, and are
 _Note that the `.` function prints the last item on the stack as an integer._
 
 ### Input and Output
-_Keg_ has two output functions and one input function. When taking input from the user, the next line from the Standard Input and push the ascii value of each character onto the stack. It will then push -1 onto the stack to sigify the end of input (input as integers will be coming in a later version of _Keg_). _Edit: input will not push -1 anymore, as this is not useful in practical competitions._ Input is taken using the `?` command, as shown in the example program:
+_Keg_ has two output functions and one input function. When taking input from the user, the next line from the Standard Input and push the ascii value of each character onto the stack. It will not push -1 anymore onto the stack to sigify the end of input (input as integers will be coming in a later version of _Keg_). Input is taken using the `?` command, as shown in the example program:
 
     ?(!|,)
     
@@ -123,7 +123,7 @@ If `n` isn't present, no items will be popped from the stack, and all code in th
 
 ### Cat Program
 
-    ?^_
+    ^
     
 ### Fizzbuzz Program
 
@@ -149,7 +149,7 @@ If the `^` or `:` commands tried to operate on an empty stack, an input will be 
 | `_` | Removes the last item on the stack | `_` | |
 | `,` | Prints the last item on the stack as a character | `,` | |
 | `.` | Prints the last item on the stack as an integer | `.` | |
-| `?` | Gets input from the user | `?` | Pushes -1 after the last character of input to signify EOI |
+| `?` | Gets input from the user | `?` | |
 | `'` | Left shifts the stack | `'` | |
 | `"` | Right shifts the stack | `"` | |
 | `~` | Pushes a random number onto the stack | `~` | The number will be between 0 and 32767 |
