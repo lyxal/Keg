@@ -46,15 +46,40 @@ FOR_LOOP = {START : "(", END : ")"}
 IF_STMT = {START : "[", END : "]"}
 WHILE_LOOP = {START : "{", END : "}"}
 
-stack = []
+
+class Stack:
+    def __init__(self, contents=None):
+        self.content = contents if type(contents) is list else []
+        self.index = len(self.content)
+
+    def append(self, expr):
+        self.content.append(expr)
+
+    def pop(self):
+        try:
+            return self.content.pop()
+        except IndexError as e: #Implict input
+            run("?^")
+            return stack.pop()
+
+    def __len__(self):
+        return len(self.content)
+
+    def reverse(self):
+        return self.content.reverse()
+
+
+stack = Stack()
 register = None
 comment = False
 escape = False
 printed = False
 
+
+            
 def _eval(expression):
     #Evaulate the given expression as Keg code
-    temp = []
+    temp = Stack()
     for char in expression:
         if char in NUMBERS:
             temp.append(int(char))
@@ -80,7 +105,7 @@ def _eval(expression):
             temp.append(len(stack))
 
         elif char == DUPLICATE:
-            temp.append(stack[-1])
+            temp.append(stack.content[-1])
 
         elif char == RANDOM:
             temp.append(random.randint(0, 32767))
@@ -97,7 +122,7 @@ def _eval(expression):
         else:
             temp.append(ord(char))
 
-    return temp[0]
+    return temp.content[0]
 
 def split(source):
     source = list(source.replace(TAB, ""))
@@ -259,7 +284,7 @@ def run(source):
             stack.append(len(stack))
 
         elif cmd == DUPLICATE:
-            stack.append(stack[-1])
+            stack.append(stack.content[-1])
 
         elif cmd == POP:
             stack.pop()
@@ -273,11 +298,11 @@ def run(source):
             printed = True
 
         elif cmd == L_SHIFT:
-            stack.append(stack[0])
-            del stack[0]
+            stack.append(stack.content[0])
+            del stack.content[0]
 
         elif cmd == R_SHIFT:
-            stack.insert(0, stack.pop())
+            stack.content.insert(0, stack.pop())
 
         elif cmd == RANDOM:
             stack.append(random.randint(0, 32767))
@@ -286,8 +311,10 @@ def run(source):
             stack.reverse()
 
         elif cmd == SWAP:
-            stack[-1], stack[-2] = stack[-2], stack[-1] #only in python you see
-                                                        #this
+            stack.content[-1], stack.content[-2] = stack.content[-2],
+            stack.content[-1]
+
+            #only in python you see this
         elif cmd == INPUT:
             x = input()
             stack.append(-1)
@@ -398,7 +425,7 @@ def grun(code, prepop):
 
     if not printed:
         printing = ""
-        for item in stack:
+        for item in stack.content:
             if item < 10 or item > 256:
                 printing += str(item) + " "
 
@@ -411,20 +438,39 @@ def grun(code, prepop):
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        file_location = sys.argv[1]
+        import argparse
+
+        parser = argparse.ArgumentParser()
+        parser.add_argument("file", help="The location of the Keg file to open")
+        parser.add_argument("-i","--input",
+                            help="The input to prepopulate the stack",
+                            type=str)
+
+        args = parser.parse_args()
+        file_location = args.file
+
+        if args.input:
+            for c in args.input:
+                if c in "0123456789":
+                    stack.append(int(c))
+                else:
+                    stack.append(ord(c))
     else:
         file_location = input("Enter the file location of the Keg program: ")
-        prepop = input("Enter values to prepopulate the stack: ")
+        prepop = input("Enter string to populate stack: ")
 
-        for item in prepop.split():
-            stack.append(int(item))
+        for c in prepop:
+            if c in "0123456789":
+                stack.append(int(c))
+            else:
+                stack.append(ord(c))
 
     code = open(file_location, encoding="utf-8").read().strip("\n")
     run(balance(code))
 
     if not printed:
         printing = ""
-        for item in stack:
+        for item in stack.content:
             if item < 10 or item > 256:
                 printing += str(item) + " "
 
