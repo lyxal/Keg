@@ -141,6 +141,7 @@ _This can be any series of alphabetical letters_
 
 ## Command Glossary
 If the `^` or `:` commands tried to operate on an empty stack, an input will be taken (for shorter programs).
+
 |Command|Description|Usage|Notes|
 |------------|-------------|-------|-------|
 | `!` |  Pushes the length of the stack onto the stack |  `!` | |
