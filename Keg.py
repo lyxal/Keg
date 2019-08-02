@@ -308,6 +308,11 @@ def run(source):
             stack.append(random.randint(0, 32767))
 
         elif cmd == REVERSE:
+            # If the stack is empty, take input and then reverse. (Saves 1 byte)
+            if len(stack)==0:
+                x = input()
+                for char in reversed(x):
+                    stack.append(ord(char))
             stack.reverse()
 
         elif cmd == SWAP:
@@ -315,12 +320,12 @@ def run(source):
             stack.content[-1]
 
             #only in python you see this
+        # No annoying -1's anymore!
         elif cmd == INPUT:
             x = input()
-            stack.append(-1)
             for char in reversed(x):
                 stack.append(ord(char))
-                
+
 
         #Now keywords
 
