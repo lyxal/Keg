@@ -176,4 +176,5 @@ Those commands are added to Keg in order to make Keg programs shorter. These ins
 
 |Command|Description|Usage|Notes|
 |-------|-----------|-----|-----|
-|`ï`| Replaces the top of stack with all items from `top to 0`| |`ï`| this is under EASCII, of course|
+|`ï`| Replaces the top of stack with all items from `top to 0`|`ï`| this is under EASCII, of course|
+|`;`| Decrement the top of the stack | `;` | |
