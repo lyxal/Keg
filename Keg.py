@@ -117,7 +117,10 @@ def _eval(expression):
             temp.append(stack.pop())
 
         elif char == IOTA: # IOTA in loops is useless, because it is longer than a specified constant.
-            pass
+            k=temp.content[-1]
+            temp.pop()
+            for i in range(k,-1,-1):
+                temp.append(i)
 
         elif char == NEWLINE or char == TAB:
             continue
