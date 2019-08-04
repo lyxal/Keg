@@ -171,3 +171,9 @@ If the `^` or `:` commands tried to operate on an empty stack, an input will be 
 | `0-9` | Pushes the given integer onto the stack | `<value>` | |
 | `a-z, A-Z` | Pushes the ascii value of the given character onto the stack | `<value>` | |
 
+## Extended command glossary
+Those commands are added to Keg in order to make Keg programs shorter. These instructions can be implemented in Keg quite easily.
+
+|Command|Description|Usage|Notes|
+|-------|-----------|-----|-----|
+|`ï`| Replaces the top of stack with all items from `top to 0`| |`ï`| this is under EASCII, of course|

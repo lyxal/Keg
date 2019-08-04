@@ -14,7 +14,7 @@ R_SHIFT = '"' #Right shift stack
 RANDOM = "~" #Pushes a random number between -infinity and infinity
 REVERSE = "^" #Reverses the stack
 SWAP = "$" #Swap the last two items on the stack
-
+IOTA = "ï" #Replaces the top of stack with all items from [top->0]; under EASCII, of course
 #Keywords
 
 COMMENT = "#" #Creates a comment, which ignores all code thereafter
@@ -79,7 +79,7 @@ def keg_input():
     x = input()
     for char in reversed(x):
         stack.append(ord(char))
-            
+  
 def _eval(expression):
     #Evaulate the given expression as Keg code
     temp = Stack()
@@ -116,9 +116,15 @@ def _eval(expression):
         elif char == POP:
             temp.append(stack.pop())
 
+        elif char == IOTA: # IOTA in loops is useless, because it is longer than a specified constant.
+            k=temp.content[-1]
+            temp.pop()
+            for i in range(k,-1,-1):
+                temp.append(i)
+
         elif char == NEWLINE or char == TAB:
             continue
-
+        
         elif char in "#|`@":
             raise SyntaxError("Invalid symbol in expression: " + expression)
 
@@ -287,7 +293,7 @@ def run(source):
             stack.append(len(stack))
 
         elif cmd == DUPLICATE:
-            # If the stack is empty, take input and then reverse. (Saves 1 byte)
+            # If the stack is empty, simply take input. (Saves 1 byte)
             if len(stack)==0:
                 keg_input()
             stack.append(stack.content[-1])
@@ -320,15 +326,19 @@ def run(source):
             stack.reverse()
 
         elif cmd == SWAP:
-            stack.content[-1], stack.content[-2] = stack.content[-2],
-            stack.content[-1]
+            stack.content[-1], stack.content[-2] = stack.content[-2], stack.content[-1]
 
             #only in python you see this
+
         # No annoying -1's anymore!
         elif cmd == INPUT:
             keg_input()
 
-
+        elif cmd == IOTA:
+            k=stack.content[-1]
+            stack.pop()
+            for i in range(k,-1,-1):
+                stack.append(i)
         #Now keywords
 
         elif cmd == COMMENT:
