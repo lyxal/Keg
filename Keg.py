@@ -14,7 +14,12 @@ R_SHIFT = '"' #Right shift stack
 RANDOM = "~" #Pushes a random number between -infinity and infinity
 REVERSE = "^" #Reverses the stack
 SWAP = "$" #Swap the last two items on the stack
-IOTA = "ï" #Replaces the top of stack with all items from [top->0]; under EASCII, of course
+
+#Unofficial Functions
+
+IOTA = "ï" #Replaces the top of stack with all items from [top->0]
+DECR = ";" #Decrement the top of the stack
+
 #Keywords
 
 COMMENT = "#" #Creates a comment, which ignores all code thereafter
@@ -116,11 +121,18 @@ def _eval(expression):
         elif char == POP:
             temp.append(stack.pop())
 
+        # Unofficial
+
         elif char == IOTA: # IOTA in loops is useless, because it is longer than a specified constant.
             k=temp.content[-1]
             temp.pop()
             for i in range(k,-1,-1):
                 temp.append(i)
+
+        elif char == DECR:
+            temp.append(temp.pop()-1)
+
+        # End Unofficial
 
         elif char == NEWLINE or char == TAB:
             continue
@@ -333,12 +345,18 @@ def run(source):
         # No annoying -1's anymore!
         elif cmd == INPUT:
             keg_input()
+        
+        # Unofficial functions
 
         elif cmd == IOTA:
             k=stack.content[-1]
             stack.pop()
             for i in range(k,-1,-1):
                 stack.append(i)
+        
+        elif cmd == DECR:
+            stack.append(stack.pop()-1)
+
         #Now keywords
 
         elif cmd == COMMENT:
