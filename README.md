@@ -174,7 +174,7 @@ If the `^` or `:` commands tried to operate on an empty stack, an input will be 
 ## Extended command glossary
 These commands are added to Keg in order to make Keg programs shorter. These instructions can be implemented in Keg quite easily. These are NOT part of the official Keg.
 
-|Command|Description|Usage|Notes|
-|-------|-----------|-----|-----|
-|`ï`| Replaces the top of stack with all items from `top to 0`|`ï`| this is under EASCII, of course|
-|`;`| Decrement the top of the stack | `;` | |
+|Command|Description|Usage|Notes|Implementation|
+|-------|-----------|-----|-----|--------------|
+|`ï`| Replaces the top of stack with all items from `top to 0`|`ï`| this is under EASCII, of course|`(:|:1-)`|
+|`;`| Decrement the top of the stack | `;` | `1-` |
