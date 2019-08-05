@@ -156,7 +156,7 @@ If the `^` or `:` commands tried to operate on an empty stack, an input will be 
 | `^` | Reverses the stack | `^` | |
 | `$` | Swaps the top two items on the stack | `$` | |
 | `#` | Starts a comment | `#` | |
-| `|` | Branches to the next section of a structure | `B...\|...B`| `B` is any one bracket type |
+| `\|` | Branches to the next section of a structure | `B...\|...B`| `B` is any one bracket type |
 | `\` | Escapes the next command, and pushes it as a string | `\<command>` | |
 | `&` | Gets/sets the register value | `&` | |
 | `@` | Define/call a function | `@ name ∆n∆ \| ...@` | |
@@ -172,8 +172,9 @@ If the `^` or `:` commands tried to operate on an empty stack, an input will be 
 | `a-z, A-Z` | Pushes the ascii value of the given character onto the stack | `<value>` | |
 
 ## Extended command glossary
-Those commands are added to Keg in order to make Keg programs shorter. These instructions can be implemented in Keg quite easily.
+These commands are added to Keg in order to make Keg programs shorter. These instructions can be implemented in Keg quite easily. These are NOT part of the official Keg. (From A__)
 
-|Command|Description|Usage|Notes|
-|-------|-----------|-----|-----|
-|`ï`| Replaces the top of stack with all items from `top to 0`| |`ï`| this is under EASCII, of course|
+|Command|Description|Usage|Notes&Implementation|
+|-------|-----------|-----|--------------------|
+|`ï`| Replaces the top of stack with all items from `top to 0`|`ï`| this is under EASCII, of course;<br/>```(:\|:1-)```|
+|`;`| Decrement the top of the stack | `;` | `1-` |
