@@ -120,7 +120,7 @@ def _eval(expression):
 
         elif char == POP:
             temp.append(stack.pop())
-
+        
         # Unofficial
 
         elif char == IOTA: # IOTA in loops is useless, because it is longer than a specified constant.
@@ -133,8 +133,10 @@ def _eval(expression):
             temp.append(temp.pop()-1)
 
         # End Unofficial
+        elif char == NEWLINE: # Testing. Support for pushing 10 is weird.
+            temp.append(10)
 
-        elif char == NEWLINE or char == TAB:
+        elif char == TAB:
             continue
         
         elif char in "#|`@":
