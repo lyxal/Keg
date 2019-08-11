@@ -19,7 +19,6 @@ SWAP = "$" #Swap the last two items on the stack
 
 IOTA = "ï" #Replaces the top of stack with all items from [top->0]
 DECR = ";" #Decrement the top of the stack
-
 #Keywords
 
 COMMENT = "#" #Creates a comment, which ignores all code thereafter
@@ -31,7 +30,7 @@ FUNCTION = "@" #Starts/ends a function definiton OR calls a function
 
 #Operators
 
-MATHS = "+-*/%"
+MATHS = "+-*/%Ẹ"
 CONDITIONAL = "<>="
 NUMBERS = "0123456789"
 
@@ -419,6 +418,8 @@ def run(source):
         #Now, operators
         elif cmd in MATHS:
             x, y = stack.pop(), stack.pop()
+            if cmd=="Ẹ":
+                cmd="**"
             stack.append(eval("y{0}x".format(cmd)))
 
         elif cmd in CONDITIONAL:
