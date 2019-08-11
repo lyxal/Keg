@@ -353,7 +353,9 @@ def run(source):
 
         # No annoying -1's anymore!
         elif cmd == INPUT:
-            keg_input()
+            x = input()
+            for char in reversed(x):
+                stack.append(ord(char))
         
         # Unofficial functions
 
