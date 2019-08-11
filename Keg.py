@@ -1,5 +1,6 @@
 import sys
 import For, If, While, random
+import math
 
 #Functions
 
@@ -19,6 +20,8 @@ SWAP = "$" #Swap the last two items on the stack
 
 IOTA = "ï" #Replaces the top of stack with all items from [top->0]
 DECR = ";" #Decrement the top of the stack
+SINE = "Š" #Sine function
+
 #Keywords
 
 COMMENT = "#" #Creates a comment, which ignores all code thereafter
@@ -30,7 +33,7 @@ FUNCTION = "@" #Starts/ends a function definiton OR calls a function
 
 #Operators
 
-MATHS = "+-*/%Ẹ"
+MATHS = "+-*/%É"
 CONDITIONAL = "<>="
 NUMBERS = "0123456789"
 
@@ -131,7 +134,12 @@ def _eval(expression):
         elif char == DECR:
             temp.append(temp.pop()-1)
 
-        # End Unofficial
+        elif char == SINE:
+            k=temp.content[-1]
+            temp.pop()
+            temp.append(math.sin(k))
+
+            # End Unofficial
         elif char == NEWLINE: # Testing. Support for pushing 10 is weird.
             temp.append(10)
 
@@ -358,6 +366,10 @@ def run(source):
         elif cmd == DECR:
             stack.append(stack.pop()-1)
 
+        elif cmd == SINE:
+            stack.append(math.sin(stack.pop()))
+            continue
+
         #Now keywords
 
         elif cmd == COMMENT:
@@ -418,7 +430,7 @@ def run(source):
         #Now, operators
         elif cmd in MATHS:
             x, y = stack.pop(), stack.pop()
-            if cmd=="Ẹ":
+            if cmd=="É":
                 cmd="**"
             stack.append(eval("y{0}x".format(cmd)))
 
