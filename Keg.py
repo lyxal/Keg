@@ -413,7 +413,7 @@ def run(source):
                 #Must be a for loop
                 n = _eval(cmd["count"])
 
-                for q in range(n):
+                for q in range(int(n)): #avoid errors from using floating-points
                     run(cmd["body"])
 
             elif 'condition' in cmd:
