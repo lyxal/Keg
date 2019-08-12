@@ -54,29 +54,29 @@ IF_STMT = {START : "[", END : "]"}
 WHILE_LOOP = {START : "{", END : "}"}
 
 
-class Stack:
-    def __init__(self, contents=None):
-        self.content = contents if type(contents) is list else []
-        self.index = len(self.content)
+# class Stack:
+#     def __init__(self, contents=None):
+#         self.content = contents if type(contents) is list else []
+#         self.index = len(self.content)
 
-    def append(self, expr):
-        self.content.append(expr)
+#     def append(self, expr):
+#         self.content.append(expr)
 
-    def pop(self):
-        try:
-            return self.content.pop()
-        except IndexError as e: #Implict input
-            run("?^")
-            return stack.pop()
+#     def pop(self):
+#         try:
+#             return self.content.pop()
+#         except IndexError as e: #Implict input
+#             run("?^")
+#             return stack.pop()
 
-    def __len__(self):
-        return len(self.content)
+#     def __len__(self):
+#         return len(self.content)
 
-    def reverse(self):
-        return self.content.reverse()
+#     def reverse(self):
+#         return self.content.reverse()
 
 
-stack = Stack()
+stack = []
 register = None
 comment = False
 escape = False
@@ -89,7 +89,8 @@ def keg_input():
   
 def _eval(expression):
     #Evaulate the given expression as Keg code
-    temp = Stack()
+    # temp = Stack()
+    temp = []
     for char in expression:
         if char in NUMBERS:
             temp.append(int(char))
@@ -112,10 +113,14 @@ def _eval(expression):
                 temp.append(0)
 
         elif char == LENGTH:
-            temp.append(len(stack))
+            try:
+                temp.append(len(stack))
+            except:
+                stack.append(input())
+                temp.append(len(stack))
 
         elif char == DUPLICATE:
-            temp.append(stack.content[-1])
+            temp.append(stack[-1])
 
         elif char == RANDOM:
             temp.append(random.randint(0, 32767))
@@ -152,7 +157,7 @@ def _eval(expression):
         else:
             temp.append(ord(char))
 
-    return temp.content[0]
+    return temp[0]
 
 def split(source):
     source = list(source.replace(TAB, ""))
@@ -269,9 +274,6 @@ def balance(string):
                 if mapping[brackets[i]] == char:
                     brackets[i] = ""
                     break
-                    
-
-
 
     if len(brackets):
 
@@ -477,14 +479,14 @@ def grun(code, prepop):
 
     if not printed:
         printing = ""
-        for item in stack.content:
+        for item in stack:
             if item < 10 or item > 256:
                 printing += str(item) + " "
 
             else:
                 printing += chr(item)
 
-        print(printing)
+        print(printing,end="")
 
         
 
@@ -522,11 +524,11 @@ if __name__ == "__main__":
 
     if not printed:
         printing = ""
-        for item in stack.content:
+        for item in stack:
             if item < 10 or item > 256:
                 printing += str(item) + " "
 
             else:
                 printing += chr(item)
 
-        print(printing)
+        print(printing,end="")
