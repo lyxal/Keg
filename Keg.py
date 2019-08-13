@@ -84,12 +84,6 @@ printed = False
 
 def keg_input():
     x = input()
-    if x.isdecimal():
-        if x.isnumeric():
-            stack.append(int(x))
-        else:
-            stack.append(float(x))
-        return
     for char in reversed(x):
         stack.append(ord(char))
   
