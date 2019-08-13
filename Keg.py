@@ -119,7 +119,7 @@ def _eval(expression):
                 temp.append(len(stack))
 
         elif char == DUPLICATE:
-            temp.append(stack[-1])
+            temp.append(stack.content[-1])
 
         elif char == RANDOM:
             temp.append(random.randint(0, 32767))
