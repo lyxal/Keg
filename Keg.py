@@ -84,6 +84,12 @@ printed = False
 
 def keg_input():
     x = input()
+    if x.isdecimal():
+        if x.isnumeric():
+            stack.append(int(x))
+        else:
+            stack.append(float(x))
+        return
     for char in reversed(x):
         stack.append(ord(char))
   
@@ -116,7 +122,7 @@ def _eval(expression):
             try:
                 temp.append(len(stack))
             except:
-                stack.append(input())
+                stack.append(keg_input())
                 temp.append(len(stack))
 
         elif char == DUPLICATE:
@@ -355,9 +361,7 @@ def run(source):
 
         # No annoying -1's anymore!
         elif cmd == INPUT:
-            x = input()
-            for char in reversed(x):
-                stack.append(ord(char))
+            keg_input()
         
         # Unofficial functions
 
