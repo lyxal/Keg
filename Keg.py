@@ -416,10 +416,9 @@ def run(source):
                 n = _eval(cmd["count"])
 
                 for q in range(int(n)): #avoid errors from using floating-points
-                    try:
-                        run(cmd["body"])
-                    except:
-                        break
+                    run(cmd["body"])
+                        
+                        
 
             elif 'condition' in cmd:
                 #Must be a while loop
@@ -434,10 +433,13 @@ def run(source):
         
         #Now, operators
         elif cmd in MATHS:
+            if len(stack) < 2:
+                continue
             x, y = stack.pop(), stack.pop()
             if cmd=="É":
                 cmd="**"
             stack.append(eval("y{0}x".format(cmd)))
+
 
         elif cmd in CONDITIONAL:
             lhs, rhs = stack.pop(), stack.pop()
