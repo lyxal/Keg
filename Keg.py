@@ -54,29 +54,29 @@ IF_STMT = {START : "[", END : "]"}
 WHILE_LOOP = {START : "{", END : "}"}
 
 
-# class Stack:
-#     def __init__(self, contents=None):
-#         self.content = contents if type(contents) is list else []
-#         self.index = len(self.content)
+class Stack:
+    def __init__(self, contents=None):
+        self.content = contents if type(contents) is list else []
+        self.index = len(self.content)
 
-#     def append(self, expr):
-#         self.content.append(expr)
+    def append(self, expr):
+        self.content.append(expr)
 
-#     def pop(self):
-#         try:
-#             return self.content.pop()
-#         except IndexError as e: #Implict input
-#             run("?^")
-#             return stack.pop()
+    def pop(self):
+        try:
+            return self.content.pop()
+        except IndexError as e: #Implict input
+            run("?^")
+            return stack.pop()
 
-#     def __len__(self):
-#         return len(self.content)
+    def __len__(self):
+        return len(self.content)
 
-#     def reverse(self):
-#         return self.content.reverse()
+    def reverse(self):
+        return self.content.reverse()
 
 
-stack = []
+stack = Stack()
 register = None
 comment = False
 escape = False
@@ -89,8 +89,7 @@ def keg_input():
   
 def _eval(expression):
     #Evaulate the given expression as Keg code
-    # temp = Stack()
-    temp = []
+    temp = Stack()
     for char in expression:
         if char in NUMBERS:
             temp.append(int(char))
@@ -157,7 +156,7 @@ def _eval(expression):
         else:
             temp.append(ord(char))
 
-    return temp[0]
+    return temp.content[0]
 
 def split(source):
     source = list(source.replace(TAB, ""))
@@ -493,7 +492,7 @@ def grun(code, prepop):
 
     if not printed:
         printing = ""
-        for item in stack:
+        for item in stack.content:
             if item < 10 or item > 256:
                 printing += str(item) + " "
 
@@ -538,7 +537,7 @@ if __name__ == "__main__":
 
     if not printed:
         printing = ""
-        for item in stack:
+        for item in stack.content:
             if item < 10 or item > 256:
                 printing += str(item) + " "
 
