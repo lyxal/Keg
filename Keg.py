@@ -21,7 +21,7 @@ SWAP = "$" #Swap the last two items on the stack
 IOTA = "ï" #Replaces the top of stack with all items from [top->0]
 DECR = ";" #Decrement the top of the stack
 SINE = "Š" #Sine function
-
+NINP = "¿" #Friendly input
 #Keywords
 
 COMMENT = "#" #Creates a comment, which ignores all code thereafter
@@ -142,9 +142,9 @@ def _eval(expression):
         elif char == SINE:
             k=temp.content[-1]
             temp.pop()
-            temp.append(math.sin(k))
-
-            # End Unofficial
+            temp.append(math.sin(k))    
+        # End Unofficial
+    
         elif char == NEWLINE: # Testing. Support for pushing 10 is weird.
             temp.append(10)
 
@@ -371,7 +371,18 @@ def run(source):
         elif cmd == SINE:
             stack.append(math.sin(stack.pop()))
             continue
-
+        
+        elif cmd == NINP:
+            x = input()
+            if x.isdecimal():
+                if x.isnumeric():
+                    stack.append(int(x))
+                else:
+                    stack.append(float(x))
+                continue
+            for char in reversed(x):
+                stack.append(ord(char))
+        
         #Now keywords
 
         elif cmd == COMMENT:
