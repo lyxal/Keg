@@ -180,3 +180,4 @@ These commands are added to Keg in order to make Keg programs shorter. These ins
 |`;`| Decrement the top of the stack | `;` | `1-` |
 |`É`| Exponentation |`Ẹ`| `# Unknown`|
 |`Š`| Sine function |`Š`| `# Unknown` |
+|`¿`| Friendly input |`¿`| `# Unknown` |
