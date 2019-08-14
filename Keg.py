@@ -538,7 +538,12 @@ if __name__ == "__main__":
     if not printed:
         printing = ""
         for item in stack.content:
-            if item < 10 or item > 256:
+            if item < 10 or item > 256 :
+                printing += str(item) + " "
+
+            elif isinstance(item,float):
+                # Trying to make Keg beginner-friendly
+                # by supporting floating-point numbers
                 printing += str(item) + " "
 
             else:
