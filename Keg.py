@@ -374,7 +374,7 @@ def run(source):
         elif cmd == NINP:
             x = input()
             if '.' in x:
-                print(float(x))
+                stack.append(float(x))
                 continue
             try:
                 stack.append(int(x))
