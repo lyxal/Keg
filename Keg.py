@@ -373,14 +373,14 @@ def run(source):
         
         elif cmd == NINP:
             x = input()
-            if x.isdecimal():
-                if x.isnumeric():
-                    stack.append(int(x))
-                else:
-                    stack.append(float(x))
+            if '.' in x:
+                print(float(x))
                 continue
-            for char in reversed(x):
-                stack.append(ord(char))
+            try:
+                stack.append(int(x))
+            except:
+                for char in reversed(x):
+                    stack.append(ord(char))
         
         #Now keywords
 
