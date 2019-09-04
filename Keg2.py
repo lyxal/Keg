@@ -409,24 +409,14 @@ if __name__ == "__main__":
     source = open(file_location, encoding="utf-8").read().strip("\n")
 
     #Preprocess ∑ as (!;|
-
+    # Debug
     code = ""
     e = False #escaped while preprocessing?
     for c in source:
-        if e:
-            e = False
-            code += c
-            continue
-        elif c == "\\":
-            code += c
-            e = True
-            continue
-
         if c == "∑":
             code += "(!;|"
         else:
             code += c
-    
     run(Parse.parse(balance(code)))
 
     if not printed:
@@ -434,17 +424,7 @@ if __name__ == "__main__":
         for item in stack:
             if item < 10 or item > 256:
                 printing += str(item) + " "
-
             else:
                 printing += chr(item)
 
         print(printing,end="")
-        
-        
-            
-                
-
-                
-                    
-
-
