@@ -376,6 +376,9 @@ def run(source):
             if '.' in x:
                 stack.append(float(x))
                 continue
+            if '-' in x:
+                stack.append(int(x))
+                continue
             try:
                 stack.append(int(x))
             except:
