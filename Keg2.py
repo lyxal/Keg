@@ -93,8 +93,9 @@ code_page += "@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
 code_page += "∑"
 
 
-#Variables 
-stack = Stack()
+#Variables
+main_stack = Stack()
+functions = {}
 register = None #The register used
 comment = False #Whether or not in a comment
 escape = False #Escape next character?
@@ -105,7 +106,7 @@ def keg_input():
     for char in reversed(temp):
         stack.push(ord(char))
 
-def _eval(expr):
+def _eval(expr, stack=main_stack):
     #Evaluate the given expression as Keg code
     temp = Stack()
     for Token in Parse.parse(expr):
@@ -215,7 +216,7 @@ def balance(source):
                     brackets[i] = ""
                     break
 
-        
+
 
         result += char
 
@@ -226,14 +227,24 @@ def balance(source):
 
     return result
 
-def run(source):
-    global stack, register, comment, escape, printed
+def run(source, master_stack, sub_stack=None):
+    global register, comment, escape, printed
     code = source
+    stack = Stack()
+    do_repush = False #Indicate whether or not sub needs to push its contents
+                      #back onto master_stack
+
+    if sub_stack is None:
+        stack = master_stack
+    else:
+        stack = sub_stack
+        do_repush = True
+
 
     for Tkn in code:
         cmd = Tkn.data
         #print(Tkn, stack, register)
-        
+
         #Handle effect of comments and escape chars first
         if comment:
             if cmd == NEWLINE:
@@ -257,6 +268,7 @@ def run(source):
             stack.pop()
 
         elif cmd == PRINT_CHR:
+            #print(stack, stack.pop(), stack)
             print(chr(stack.pop()), end="")
             printed = True
 
@@ -302,7 +314,7 @@ def run(source):
             temp = input()
             if "." in temp:
                 stack.push(float(temp))
-            elif temp.isnumeric():
+            elif temp.isnumeric() or (temp[0] == "-" and temp[1:].isnumeric()):
                 stack.push(int(temp))
             else:
                 for char in reversed(temp):
@@ -330,20 +342,41 @@ def run(source):
         elif Tkn.name == Parse.CMDS.IF:
             condition = stack.pop()
             if condition:
-                run(Parse.parse(Tkn.data[0]))
+                run(Parse.parse(Tkn.data[0]), stack)
             else:
-                run(Parse.parse(Tkn.data[1]))
+                run(Parse.parse(Tkn.data[1]), stack)
 
         elif Tkn.name == Parse.CMDS.FOR:
-            n = _eval(Tkn.data[0])
+            n = _eval(Tkn.data[0], stack)
 
             for q in range(int(n)):
-                run(Parse.parse(Tkn.data[1]))
+                run(Parse.parse(Tkn.data[1]), stack)
 
         elif Tkn.name == Parse.CMDS.WHILE:
             condition = Tkn.data[0]
             while _eval(condition):
-                run(Parse.parse(Tkn.data[1]))
+                run(Parse.parse(Tkn.data[1]), stack)
+
+        elif Tkn.name == Parse.CMDS.FUNCTION:
+            if Tkn.data[0] == 1:
+                function_name, number_params = Tkn.data[1],\
+                int(functions[function_name]["number"])
+
+                function_stack = Stack()
+                for _ in range(number_params):
+                    function_stack.push(master_stack.pop())
+
+                run(Parse.parse(functions[function_name]["body"]),
+                stack, function_stack)
+
+            else:
+                function_name, number_params = Tkn.data[0]["name"],\
+                int(Tkn.data[0]["number"])
+
+                functions[function_name] = {
+                    "number" : number_params,
+                    "body" : Tkn.data[1]
+                }
 
         #Now, operators
         elif cmd in MATHS:
@@ -380,6 +413,11 @@ def run(source):
         else:
             stack.push(ord(cmd))
 
+    if do_repush:
+        for item in stack:
+            master_stack.push(item)
+
+
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         import argparse
@@ -411,6 +449,7 @@ if __name__ == "__main__":
     #Preprocess ∑ as (!;|
 
     code = ""
+    #print(source)
     e = False #escaped while preprocessing?
     for c in source:
         if e:
@@ -426,12 +465,12 @@ if __name__ == "__main__":
             code += "(!;|"
         else:
             code += c
-    
-    run(Parse.parse(balance(code)))
+    #print(code)
+    run(Parse.parse(balance(code)), main_stack)
 
     if not printed:
         printing = ""
-        for item in stack:
+        for item in main_stack:
             if item < 10 or item > 256:
                 printing += str(item) + " "
 
@@ -439,12 +478,3 @@ if __name__ == "__main__":
                 printing += chr(item)
 
         print(printing,end="")
-        
-        
-            
-                
-
-                
-                    
-
-
