@@ -40,9 +40,9 @@ DESCRIPTIONS = {
 #Note: Most of these are from Btup/A__/User:A, so go check out their
 #repos/esolang account/code golf userpage and upvote their answers
 
-IOTA = "ï"
+IOTA = "Ï"
 DECREMENT = ";"
-SINE = "Š"
+SINE = "§"
 APPLY_ALL = "∑"
 NICE_INPUT = "¿"
 
@@ -68,7 +68,7 @@ DESCRIPTIONS[STRING] = "Push an uncompressed string"
 DESCRIPTIONS[FUNCTION] = "Start/Call the given function"
 
 #Operators
-MATHS = "+-*/%É"
+MATHS = "+-*/%Ë"
 CONDITIONAL = "<>=≬"
 NUMBERS = "0123456789"
 
@@ -382,7 +382,7 @@ def run(source, master_stack, sub_stack=None):
         elif cmd in MATHS:
             x, y = stack.pop(), stack.pop()
             temp = cmd
-            if cmd == "É":
+            if cmd == "Ë":
                 temp = "**"
 
             stack.push(eval(f"y{temp}x"))
