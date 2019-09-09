@@ -26,7 +26,7 @@ class Stack:
         if len(self.__stack):
             return self.__stack.pop()
         else:
-            temp = input()
+            temp = input("Implicit input: ")
             for char in reversed(temp):
                 self.__stack.append(ord(char))
             return self.__stack.pop()

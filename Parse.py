@@ -33,12 +33,12 @@ def parse(prog):
         if escaped:
             escaped = not escaped
 
-                  
+
         elif char == "\\":
             escaped = True
             continue
 
-    
+
         if char in OPEN:
             if structures:
                 temp += char
@@ -116,11 +116,12 @@ def parse(prog):
                     if len(parts) == 0:
                         ast.append(CMDS.NOP)
                     if len(parts) == 1:
-                        ast.append(Token(struct, [1, parse(parts[0])]))
+                        ast.append(Token(struct, [1,
+                                                  parts[0]]))
 
                     elif len(parts) == 2:
-                        ast.append(Token(struct, [[func(parts[0]),
-                                                   parse(parts[1])]]))
+                        ast.append(Token(struct, [func(parts[0]),
+                                                   parts[1]]))
                     else:
                         # raise SyntaxError("Too many function parts)
                         ast.append(CMDS.NOP)
@@ -141,15 +142,28 @@ def parse(prog):
     return ast
 
 def func(source):
-    if source.count(" ") != 1:
+    if source.count(" ") == 1:
         name, n = source.split()
-        name = source
-        n = "0"
+
+    else:
+        n = ""
+        j = len(source) - 1
+        for i in range(len(source) - 1, -1, -1):
+            if source[i] not in "0123456789":
+                break
+            n += source[i]
+            j -= 1
+        n = n[::-1]
+        name = source[:j + 1]
 
     if n.isnumeric():
         n = int(n)
     else:
         n = 0
-    
-    return {"name": name, "n": n}
 
+    return {"name": name, "number": n}
+
+if __name__ == "__main__":
+    test = parse("@F 0|zziF(,)ƒ")
+    sub = test[0]
+    sub = sub.data[1]

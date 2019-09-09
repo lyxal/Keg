@@ -96,7 +96,7 @@ When a `while` loop is run,  `...1` (if given) will be the condition of the loop
 ## User Defined Functions
 One of the special features of _Keg_ is user-defined functions, which are defined using the following form:
 
-    @name ∆n∆ | ...ƒ
+    @name ∆n∆ | ...@
 
 Where:
 `name` = the name of the function (note that it needs to be one full word, and that it can't contain any `@`'s)
@@ -180,4 +180,3 @@ These commands are added to Keg in order to make Keg programs shorter. These ins
 |`;`| Decrement the top of the stack | `;` | `1-` |
 |`É`| Exponentation |`Ẹ`| `# Unknown`|
 |`Š`| Sine function |`Š`| `# Unknown` |
-|`¿`| Friendly input |`¿`| `# Unknown` |
