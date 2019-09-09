@@ -142,7 +142,6 @@ def parse(prog):
 
 def func(source):
     if source.count(" ") != 1:
-        name
         name, n = source.split()
         name = source
         n = "0"
