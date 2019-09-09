@@ -1,274 +1,214 @@
 import sys
-import Parse, random
+import Parse
+import random
 import math
-import If, For, While
+from Stackd import Stack
+import Keg_Nums
+#Just a nice little error. Very helpful I know
 
-#Functions
+class Bruh(Exception):
+    def __init__(self, msg):
+        print("I can't believe you've done this...")
+#All built-in functions
+LENGTH = "!"
+DUPLICATE = ":"
+POP = "_"
+PRINT_CHR = ","
+PRINT_INT = "."
+INPUT = "?"
+L_SHIFT = '"'
+R_SHIFT = "'"
+RANDOM = "~"
+REVERSE = "^"
+SWAP = "$"
 
-LENGTH = "!" #Pushes the length of the stack onto the stack
-DUPLICATE = ":" #Duplicates the last item on the stack
-POP = "_" #Pops the last item from the stack
-PRINT_CHR = "," #Prints the last item on the stack as a string (ord(char))
-PRINT_INT = "." #Prints the last item on the stack as an integer
-INPUT = "?" #Gets input from the user, pushing -1 as EOI
-L_SHIFT = "'" #Left shift stack
-R_SHIFT = '"' #Right shift stack
-RANDOM = "~" #Pushes a random number between -infinity and infinity
-REVERSE = "^" #Reverses the stack
-SWAP = "$" #Swap the last two items on the stack
+DESCRIPTIONS = {
+    LENGTH: "Push the length of the stack",
+    DUPLICATE: "Duplicate the top of stack",
+    POP: "Pop the top of stack",
+    PRINT_CHR: "Print the top of stack, calling ord(top)",
+    PRINT_INT: "Print the top of stack, as is",
+    INPUT: "Get input from user",
+    L_SHIFT: "Left shift stack",
+    R_SHIFT: "Right shift stack",
+    RANDOM: "Push a random number between -inf and inf",
+    REVERSE: "Reverse the stack",
+    SWAP: "Swap the top two items on stack"
+}
 
-#Unofficial Functions
+#Unofficial built-in functions
+#Note: Most of these are from Btup/A__/User:A, so go check out their
+#repos/esolang account/code golf userpage and upvote their answers
 
-IOTA = "ï" #Replaces the top of stack with all items from [top->0]
-DECR = ";" #Decrement the top of the stack
-SINE = "Š" #Sine function
+IOTA = "Ï"
+DECREMENT = ";"
+SINE = "§"
+APPLY_ALL = "∑"
+NICE_INPUT = "¿"
 
-#Keywords
+DESCRIPTIONS[IOTA] = "Replaces the top of stack with all items from [top->0]"
+DESCRIPTIONS[DECREMENT] = "Decrement the top of stack"
+DESCRIPTIONS[SINE] = "sin(top)"
+DESCRIPTIONS[APPLY_ALL] = "Preprocess as (!;| --> Apply to all stack"
+DESCRIPTIONS[NICE_INPUT] = "Peform nice input"
 
-COMMENT = "#" #Creates a comment, which ignores all code thereafter
-BRANCH = "|" #Switches to the other part of a structure
-ESCAPE = "\\" #Pushes the next command as a string (ord(char))
-C_STRING = "`" #Toggles string compression mode
-REGISTER = "&" #Gets/sets the register
-FUNCTION = "@" #Starts/ends a function definiton OR calls a function
+#'Keywords'
+
+COMMENT = "#"
+BRANCH = "|"
+ESCAPE = "\\"
+REGISTER = "&"
+STRING = "`"
+FUNCTION = "@"
+
+DESCRIPTIONS[COMMENT] = "Standard line comment"
+DESCRIPTIONS[BRANCH] = "Switch to the next part of the structure"
+DESCRIPTIONS[ESCAPE] = "Push the code page value of the next character"
+DESCRIPTIONS[STRING] = "Push an uncompressed string"
+DESCRIPTIONS[FUNCTION] = "Start/Call the given function"
 
 #Operators
-
-MATHS = "+-*/%É"
-CONDITIONAL = "<>="
+MATHS = "+-*/%Ë"
+CONDITIONAL = "<>=≬"
 NUMBERS = "0123456789"
 
-#Whitespace
+DESCRIPTIONS[MATHS] = "Pop x and y, and push y {0} x"
+DESCRIPTIONS[CONDITIONAL] = "Pop x and y, and push y {0} x"
+DESCRIPTIONS[NUMBERS] = "Push {0}"
 
+#Whitespace
 TAB = "\t"
 ALT_TAB = "    "
 NEWLINE = "\n"
 
 #Structures
-
 START = "start"
 END = "end"
 BODY = "body"
 
-FOR_LOOP = {START : "(", END : ")"}
-IF_STMT = {START : "[", END : "]"}
-WHILE_LOOP = {START : "{", END : "}"}
+#Code page
+
+code_page = "ÁÉÍÓÚÀÈÌÒÙė∂•ɧïŠ¿≬ƒ«ë»‘“ß¶¥£¬πĖ® !\"#$%&'()*+,-./0123456789:;<=>?"
+code_page += "@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
+code_page += "∑"
 
 
-# class Stack:
-#     def __init__(self, contents=None):
-#         self.content = contents if type(contents) is list else []
-#         self.index = len(self.content)
-
-#     def append(self, expr):
-#         self.content.append(expr)
-
-#     def pop(self):
-#         try:
-#             return self.content.pop()
-#         except IndexError as e: #Implict input
-#             run("?^")
-#             return stack.pop()
-
-#     def __len__(self):
-#         return len(self.content)
-
-#     def reverse(self):
-#         return self.content.reverse()
-
-
-stack = []
-register = None
-comment = False
-escape = False
-printed = False
+#Variables
+main_stack = Stack()
+functions = {}
+register = None #The register used
+comment = False #Whether or not in a comment
+escape = False #Escape next character?
+printed = False #Used to determine whether or not to do implicit printing
 
 def keg_input():
-    x = input()
-    for char in reversed(x):
-        stack.append(ord(char))
-  
-def _eval(expression):
-    #Evaulate the given expression as Keg code
-    # temp = Stack()
-    temp = []
-    for char in expression:
-        if char in NUMBERS:
-            temp.append(int(char))
+    temp = input()
+    for char in reversed(temp):
+        stack.push(ord(char))
 
-        elif char in MATHS:
-            x, y = temp.pop(), temp.pop()
-            temp.append(eval("y{0}x".format(char)))
-
-        elif char in CONDITIONAL:
-            lhs, rhs = temp.pop(), temp.pop()
-
-            if char == "=":
-                char = "=="
-            
-            result = eval("lhs{0}rhs".format(char))
-
-            if result:
-                temp.append(1)
-            else:
-                temp.append(0)
-
-        elif char == LENGTH:
-            try:
-                temp.append(len(stack))
-            except:
-                stack.append(keg_input())
-                temp.append(len(stack))
-
-        elif char == DUPLICATE:
-            temp.append(stack[-1])
-
-        elif char == RANDOM:
-            temp.append(random.randint(0, 32767))
-
-        elif char == POP:
-            temp.append(stack.pop())
-        
-        # Unofficial
-
-        elif char == IOTA: # IOTA in loops is useless, because it is longer than a specified constant.
-            k=temp.content[-1]
-            temp.pop()
-            for i in range(k,-1,-1):
-                temp.append(i)
-
-        elif char == DECR:
-            temp.append(temp.pop()-1)
-
-        elif char == SINE:
-            k=temp.content[-1]
-            temp.pop()
-            temp.append(math.sin(k))
-
-            # End Unofficial
-        elif char == NEWLINE: # Testing. Support for pushing 10 is weird.
-            temp.append(10)
-
-        elif char == TAB:
-            continue
-        
-        elif char in "#|`@":
-            raise SyntaxError("Invalid symbol in expression: " + expression)
+def _eval(expr, stack=main_stack):
+    #Evaluate the given expression as Keg code
+    temp = Stack()
+    for Token in Parse.parse(expr):
+        if Token.name not in [Parse.CMDS.CMD, Parse.CMDS.NOP]:
+            raise Bruh("""You can't just go placing forbidden characters in
+                       expressions and expect to get away with it.""")
 
         else:
-            temp.append(ord(char))
+            if Token.data in NUMBERS:
+                temp.push(int(Token.data))
+
+            elif Token.data in MATHS:
+                x, y = temp.pop(), temp.pop()
+                op = Token.data
+                if op == MATHS[-1]:
+                    op = "**"
+
+                temp.push(eval(f"y{op}x"))
+
+            elif Token.data in CONDITIONAL:
+                lhs, rhs = temp.pop(), temp.pop()
+                op = Token.data
+                if op == "=":
+                    op = "=="
+                elif op == "≬":
+                    op = "> 0 and y <"
+
+                result = eval(f"y{op}x")
+                if result:
+                    temp.push(1)
+                else:
+                    temp.push(0)
+
+            elif Token.data == LENGTH:
+                temp.push(len(stack))
+
+            elif Token.data == DUPLICATE:
+                item = temp.pop()
+                temp.push(item)
+                temp.push(item)
+
+            elif Token.data == RANDOM:
+                temp.push(random.randint(Keg_Nums.small_boy,
+                                           Keg_Nums.big_boy))
+
+            elif Token.data == POP:
+                temp.push(stack.pop())
+
+            elif Token.data == NEWLINE:
+                temp.push(10)
+
+            elif Token.data == TAB:
+                continue
+
+            elif Token.data in "#|@":
+                raise Bruh("You can't just do that in the expression " + expr)
+
+            #Start of Reg's extra command
+            elif Token.data == IOTA:
+                k = temp[-1]
+                temp.pop()
+
+                for i in range(k, -1, -1):
+                    temp.push(i)
+
+            elif Token.data == DECREMENT:
+                temp[-1] -= 1
+
+            elif Token.data == SINE:
+                temp.push(math.sin(temp.pop()))
+
+            else:
+                temp.push(ord(Token.data))
 
     return temp[0]
 
-def split(source):
-    source = list(source.replace(TAB, ""))
-    structures = {"If" : 0, "While" : 0, "For" : 0}
-    indexes = []
-    index = {START : 0, END : 0, BODY : None}
-    structure = None
-
-    for i in range(len(source)):
-        char = source[i]
-        
-        if char in FOR_LOOP.values():
-            if char == FOR_LOOP[START]:
-                if max(structures.values()) == 0:
-                    structure = "For"
-                    index[START] = i
-
-                structures["For"] += 1
-
-            else:
-                if list(structures.values()).count(0) == 2:
-                    if structures["For"] == 1 and structure == "For":
-                        index[END] = i
-                        index[BODY] = For.extract(
-                            "".join(source[index[START] : index[END] + 1]))
-                        indexes.append(index)
-                        index = {START : 0, END : 0, BODY : None}
-                        structure = None
-
-
-                structures["For"] -= 1
-                    
-        elif char in WHILE_LOOP.values():
-            if char == WHILE_LOOP[START]:
-                if max(structures.values()) == 0:
-                    structure = "While"
-                    index[START] = i
-
-                structures["While"] += 1
-
-            else:
-                if list(structures.values()).count(0) == 2:
-                    if structures["While"] == 1 and structure == "While":
-                        index[END] = i
-                        index[BODY] = While.extract(
-                            "".join(source[index[START] : index[END] + 1]))
-                        indexes.append(index)
-                        index = {START : 0, END : 0, BODY : None}
-                        structure = None
-
-                structures["While"] -= 1
-                    
-        elif char in IF_STMT.values():
-            if char == IF_STMT[START]:
-                if max(structures.values()) == 0:
-                    structure = "If"
-                    index[START] = i
-
-                structures["If"] += 1
-
-            else:
-                if list(structures.values()).count(0) == 2:
-                    if structures["If"] == 1 and structure == "If":
-                        index[END] = i
-                        index[BODY] = If.extract(
-                            "".join(source[index[START] : index[END] + 1]))
-                        indexes.append(index)
-                        index = {START : 0, END : 0, BODY : None}
-                        structure = None
-
-                structures["If"] -= 1
-
-        else:               
-            if structure is None:
-                index[START] = i
-                index[END] = i
-                index[BODY] = source[i]
-                indexes.append(index)
-                index = {START : 0, END : 0, BODY : None}
-            
-    new = []
-    
-    for index in indexes:
-        new.append(index[BODY])
-
-    return new
-                                
 #Bracket balancer
-
-def balance(string):
-    brackets = list()
+def balance(source):
+    brackets = []
     mapping = {"{" : "}", "[" : "]", "(" : ")", "": ""}
+    alt_brackets = {"{" : "z1-", "}" : "z3+", "(" : "85*",
+                    ")" : "85*1+", "[" : "Z1+",
+                    "]" : "Z3+"}
+
     escaped = False
 
+
     result = ""
-    for char in string:
+    for char in source:
         if escaped:
-        
+            if char in alt_brackets:
+                result += alt_brackets[char]
             escaped = False
             continue
 
         elif char == "\\":
             escaped = True
+            result += char
             continue
-        
-        if char in "[{(":
-            brackets.append(char)
 
-        elif len(brackets) and char == brackets[-1]:
-            brackets.pop()
+        if char in "[({":
+            brackets.append(char)
 
         elif char in "])}":
             for i in range(len(brackets)):
@@ -276,55 +216,59 @@ def balance(string):
                     brackets[i] = ""
                     break
 
-    if len(brackets):
 
+
+        result += char
+
+
+    if len(brackets):
         for char in reversed(brackets):
             result += mapping[char]
 
-    return string+result
-        
-    
-def run(source):
-    global stack, register, comment, escape, printed
+    return result
 
-    if type(source) == str:
-        #print(source)
-        code = split(source)
+def run(source, master_stack, sub_stack=None):
+    global register, comment, escape, printed
+    code = source
+    stack = Stack()
+    do_repush = False #Indicate whether or not sub needs to push its contents
+                      #back onto master_stack
 
-    elif type(source) != list:
-        raise TypeError("The given code is not of a supported type")
-
+    if sub_stack is None:
+        stack = master_stack
     else:
-        code = source
+        stack = sub_stack
+        do_repush = True
 
-    for cmd in code:
-        #Handle any effects from keywords first
 
+    for Tkn in code:
+        cmd = Tkn.data
+        #print(Tkn, stack, register)
+
+        #Handle effect of comments and escape chars first
         if comment:
             if cmd == NEWLINE:
                 comment = False
-        
             continue
 
         if escape:
             escape = False
-            stack.append(ord(cmd))
-            continue
-        
-        #Functions first
+            stack.push(ord(cmd))
+
+        #Now, do all the functions
         if cmd == LENGTH:
-            stack.append(len(stack))
+            stack.push(len(stack))
 
         elif cmd == DUPLICATE:
-            # If the stack is empty, simply take input. (Saves 1 byte)
-            if len(stack)==0:
-                keg_input()
-            stack.append(stack.content[-1])
+            temp = stack.pop()
+            stack.push(temp)
+            stack.push(temp)
 
         elif cmd == POP:
             stack.pop()
 
         elif cmd == PRINT_CHR:
+            #print(stack, stack.pop(), stack)
             print(chr(stack.pop()), end="")
             printed = True
 
@@ -333,201 +277,200 @@ def run(source):
             printed = True
 
         elif cmd == L_SHIFT:
-            stack.append(stack.content[0])
-            del stack.content[0]
+            stack.push(stack[0])
+            del stack[0]
 
         elif cmd == R_SHIFT:
-            stack.content.insert(0, stack.pop())
-
-        elif cmd == RANDOM:
-            stack.append(random.randint(0, 32767))
+            stack._Stack__stack.insert(0, stack.pop())
 
         elif cmd == REVERSE:
-            # If the stack is empty, take input and then reverse. (Saves 1 byte; this is more common than the duplicate instruction.)
-            if len(stack)==0:
+            if not len(stack):
                 keg_input()
-            stack.reverse()
+            stack._Stack__stack.reverse()
 
         elif cmd == SWAP:
-            stack.content[-1], stack.content[-2] = stack.content[-2], stack.content[-1]
+            stack[-1], stack[-2] = stack[-2], stack[-1]
 
-            #only in python you see this
-
-        # No annoying -1's anymore!
         elif cmd == INPUT:
             keg_input()
-        
-        # Unofficial functions
+
+        #Reg starts now
 
         elif cmd == IOTA:
-            k=stack.content[-1]
+            k = stack[-1]
             stack.pop()
-            for i in range(k,-1,-1):
-                stack.append(i)
-        
-        elif cmd == DECR:
-            stack.append(stack.pop()-1)
+
+            for i in range(k, -1, -1):
+                stack.push(i)
+
+        elif cmd == DECREMENT:
+            stack.push(stack.pop() - 1)
 
         elif cmd == SINE:
-            stack.append(math.sin(stack.pop()))
+            stack.push(math.sin(stack.pop()))
             continue
 
-        #Now keywords
+        elif cmd == NICE_INPUT:
+            temp = input()
+            if "." in temp:
+                stack.push(float(temp))
+            elif temp.isnumeric() or (temp[0] == "-" and temp[1:].isnumeric()):
+                stack.push(int(temp))
+            else:
+                for char in reversed(temp):
+                    stack.push(ord(char))
+
+        #Next step, keywords
 
         elif cmd == COMMENT:
             comment = True
 
         elif cmd == BRANCH:
-            #Just continue on this one, because hypothetically, all |'s
-            #should be dealt with earlier
             continue
 
         elif cmd == ESCAPE:
             escape = True
 
-        #elif cmd == C_STRING:
-            #Code to handle string compression
-
         elif cmd == REGISTER:
             if register is None:
                 register = stack.pop()
-
             else:
-                stack.append(register)
+                stack.push(register)
                 register = None
 
-        #elif cmd == FUNCTION:
-                #Code to handle functions here
-
         #Now, structures
-        elif type(cmd) == dict:
-            if 1 in cmd:
-                #Must be an if
-                test = stack.pop()
+        elif Tkn.name == Parse.CMDS.IF:
+            condition = stack.pop()
+            if condition:
+                run(Parse.parse(Tkn.data[0]), stack)
+            else:
+                run(Parse.parse(Tkn.data[1]), stack)
 
-                if test:
-                    run(cmd[1])
+        elif Tkn.name == Parse.CMDS.FOR:
+            n = _eval(Tkn.data[0], stack)
 
-                else:
-                    run(cmd[0])
+            for q in range(int(n)):
+                run(Parse.parse(Tkn.data[1]), stack)
 
-            elif 'count' in cmd:
-                #Must be a for loop
-                n = _eval(cmd["count"])
+        elif Tkn.name == Parse.CMDS.WHILE:
+            condition = Tkn.data[0]
+            while _eval(condition):
+                run(Parse.parse(Tkn.data[1]), stack)
 
-                for q in range(int(n)): #avoid errors from using floating-points
-                    run(cmd["body"])
-                        
-                        
+        elif Tkn.name == Parse.CMDS.FUNCTION:
+            if Tkn.data[0] == 1:
+                function_name, number_params = Tkn.data[1],\
+                int(functions[function_name]["number"])
 
-            elif 'condition' in cmd:
-                #Must be a while loop
-                condition = cmd["condition"]
-                #print(condition, _eval(condition), stack)
+                function_stack = Stack()
+                for _ in range(number_params):
+                    function_stack.push(master_stack.pop())
 
-                while _eval(condition):
-                    run(cmd["body"])
+                run(Parse.parse(functions[function_name]["body"]),
+                stack, function_stack)
 
             else:
-                raise Exception("Oh, uh, could you get me the milk!")
-        
+                function_name, number_params = Tkn.data[0]["name"],\
+                int(Tkn.data[0]["number"])
+
+                functions[function_name] = {
+                    "number" : number_params,
+                    "body" : Tkn.data[1]
+                }
+
         #Now, operators
         elif cmd in MATHS:
-            if len(stack) < 2:
-                continue
             x, y = stack.pop(), stack.pop()
-            if cmd=="É":
-                cmd="**"
-            stack.append(eval("y{0}x".format(cmd)))
+            temp = cmd
+            if cmd == "Ë":
+                temp = "**"
 
+            stack.push(eval(f"y{temp}x"))
 
         elif cmd in CONDITIONAL:
             lhs, rhs = stack.pop(), stack.pop()
-
+            temp = cmd
             if cmd == "=":
-                cmd = "=="
+                temp = "=="
 
-            result = eval("rhs{0}lhs".format(cmd))
+            result = eval(f"rhs{temp}lhs")
 
             if result:
-                stack.append(1)
+                stack.push(1)
             else:
-                stack.append(0)
+                stack.push(0)
 
         elif cmd in NUMBERS:
-            stack.append(int(cmd))
+            stack.push(int(cmd))
 
-        #Deal with whitespace
+        #Whitespace
         elif cmd == TAB:
             continue
 
-        elif cmd == ALT_TAB:
-            continue
-
         elif cmd == NEWLINE:
-            continue
-
-        #Don't do anything with normal spaces, as they are pushed
+            stack.push(10)
 
         else:
-            stack.append(ord(cmd))
+            stack.push(ord(cmd))
 
-        #print(cmd, stack)
-
-def grun(code, prepop):
-    for item in prepop.split():
-        stack.append(int(item))
-
-    run(balance(code))
-
-    if not printed:
-        printing = ""
+    if do_repush:
         for item in stack:
-            if item < 10 or item > 256:
-                printing += str(item) + " "
+            master_stack.push(item)
 
-            else:
-                printing += chr(item)
-
-        print(printing,end="")
-
-        
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         import argparse
-
         parser = argparse.ArgumentParser()
         parser.add_argument("file", help="The location of the Keg file to open")
-        parser.add_argument("-i","--input",
-                            help="The input to prepopulate the stack",
-                            type=str)
-
+        parser.add_argument('-ex', '--explain', action='store_true',
+                            help="Explains given source")
         args = parser.parse_args()
         file_location = args.file
 
-        if args.input:
-            for c in args.input:
-                if c in "0123456789":
-                    stack.append(int(c))
+        if args.explain:
+            source = open(file_location, encoding="utf-8").read().strip("\n")
+            i = 0
+            for char in source:
+                if char in DESCRIPTIONS:
+                    print(" "*i + char + " "*(len(source) - i) + "#",
+                          DESCRIPTIONS[char])
                 else:
-                    stack.append(ord(c))
+                    print(" "*i + char + " "*(len(source) - i) + "#",
+                          "Push", char, "onto the stack")
+                i += 1
+            exit()
+
     else:
         file_location = input("Enter the file location of the Keg program: ")
-        prepop = input("Enter string to populate stack: ")
 
-        for c in prepop:
-            if c in "0123456789":
-                stack.append(int(c))
-            else:
-                stack.append(ord(c))
+    source = open(file_location, encoding="utf-8").read().strip("\n")
 
-    code = open(file_location, encoding="utf-8").read().strip("\n")
-    run(balance(code))
+    #Preprocess ∑ as (!;|
+
+    code = ""
+    #print(source)
+    e = False #escaped while preprocessing?
+    for c in source:
+        if e:
+            e = False
+            code += c
+            continue
+        elif c == "\\":
+            code += c
+            e = True
+            continue
+
+        if c == "∑":
+            code += "(!;|"
+        else:
+            code += c
+    #print(code)
+    run(Parse.parse(balance(code)), main_stack)
 
     if not printed:
         printing = ""
-        for item in stack:
+        for item in main_stack:
             if item < 10 or item > 256:
                 printing += str(item) + " "
 
