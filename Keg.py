@@ -119,6 +119,9 @@ def generate_range(*args):
     low, high = sorted(args[:2])
     if "e" in args:
         low += 1
+    else:
+        high += 1
+        low -= 1
     return range(low, high)
 
 def _eval(expr, stack=main_stack):
