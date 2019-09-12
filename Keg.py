@@ -52,6 +52,15 @@ DESCRIPTIONS[SINE] = "sin(top)"
 DESCRIPTIONS[APPLY_ALL] = "Preprocess as (!;| --> Apply to all stack"
 DESCRIPTIONS[NICE_INPUT] = "Peform nice input"
 
+#Some Reg commands not by Btup but by JonoCode9374
+EXCLUSIVE_RANGE = "∂"
+INCLUSIVE_RANGE = "•"
+GENERATE_RANGE = "ɧ"
+NUMBER_SPLIT = "÷"
+FACTORIAL = "¡"
+
+'''Remind me to create descriptions later'''
+
 #'Keywords'
 
 COMMENT = "#"
@@ -105,6 +114,12 @@ def keg_input():
     temp = input()
     for char in reversed(temp):
         stack.push(ord(char))
+
+def generate_range(*args):
+    low, high = sorted(args[:2])
+    if "e" in args:
+        low += 1
+    return range(low, high)
 
 def _eval(expr, stack=main_stack):
     #Evaluate the given expression as Keg code
@@ -164,7 +179,7 @@ def _eval(expr, stack=main_stack):
             elif Token.data in "#|@":
                 raise Bruh("You can't just do that in the expression " + expr)
 
-            #Start of Reg's extra command
+            #Start of Reg's extra commands
             elif Token.data == IOTA:
                 k = temp[-1]
                 temp.pop()
@@ -172,11 +187,40 @@ def _eval(expr, stack=main_stack):
                 for i in range(k, -1, -1):
                     temp.push(i)
 
+            elif Token.data == EXCLUSIVE_RANGE:
+                    query = temp.pop()
+                    _range = generate_range(temp.pop(), temp.pop(), "e")
+                    if query in _range:
+                        temp.push(1)
+                    else:
+                        temp.push(0)
+                        
+            elif Token.data == INCLUSIVE_RANGE:
+                    query = temp.pop()
+                    _range = generate_range(temp.pop(), temp.pop() + 1)
+                    if query in _range:
+                        temp.push(1)
+                    else:
+                        temp.push(0)
+
+            elif Token.data == GENERATE_RANGE:
+                _range = generate_range(temp.pop(), temp.pop() + 1)
+                for item in _range:
+                    temp.push(item)
+                    
             elif Token.data == DECREMENT:
                 temp[-1] -= 1
 
             elif Token.data == SINE:
                 temp.push(math.sin(temp.pop()))
+
+            elif Token.data == NUMBER_SPLIT:
+                item = str(temp.pop())
+                for thing in item:
+                    temp.push(int(thing))
+
+            elif Token.data == FACTORIAL:
+                temp.push(math.factorial(temp.pop()))
 
             else:
                 temp.push(ord(Token.data))
@@ -319,6 +363,36 @@ def run(source, master_stack, sub_stack=None):
             else:
                 for char in reversed(temp):
                     stack.push(ord(char))
+
+        elif cmd == EXCLUSIVE_RANGE:
+            query = stack.pop()
+            _range = generate_range(stack.pop(), stack.pop(), "e")
+            
+            if query in _range:
+                stack.push(1)
+            else:
+                stack.push(0)
+                        
+        elif cmd == INCLUSIVE_RANGE:
+            query = stack.pop()
+            _range = generate_range(stack.pop(), stack.pop() + 1)
+            if query in _range:
+                stack.push(1)
+            else:
+                stack.push(0)
+
+        elif cmd == GENERATE_RANGE:
+            _range = generate_range(stack.pop(), stack.pop() + 1)
+            for item in _range:
+                stack.push(item)
+
+        elif cmd == NUMBER_SPLIT:
+            temp = str(stack.pop())
+            for thing in temp:
+                stack.push(int(thing))
+
+        elif cmd == FACTORIAL:
+            stack.push(math.factorial(stack.pop()))
 
         #Next step, keywords
 
