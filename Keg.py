@@ -26,7 +26,7 @@ DESCRIPTIONS = {
     LENGTH: "Push the length of the stack",
     DUPLICATE: "Duplicate the top of stack",
     POP: "Pop the top of stack",
-    PRINT_CHR: "Print the top of stack, calling ord(top)",
+    PRINT_CHR: "Print the top of stack, calling _ord(top)",
     PRINT_INT: "Print the top of stack, as is",
     INPUT: "Get input from user",
     L_SHIFT: "Left shift stack",
@@ -97,9 +97,14 @@ BODY = "body"
 
 #Code page
 
-code_page = "ÁÉÍÓÚÀÈÌÒÙė∂•ɧïŠ¿≬ƒ«ë»‘“ß¶¥£¬πĖ® !\"#$%&'()*+,-./0123456789:;<=>?"
-code_page += "@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
-code_page += "∑"
+unicode = "Ï§∑¿∂•ɧ÷¡Ëė≬ƒß‘“"
+unicode += "„«®©ëλº√₳¬≤Š≠≥Ėπ"
+unicode += " !\"#$%&'()*+,-./"
+unicode += "0123456789:;<=>?"
+unicode += "@ABCDEFGHIJKLMNO"
+unicode += "PQRSTUVWXYZ[\\]^_"
+unicode += "`abcdefghijklmno"
+unicode += "pqrstyvwxyz{|}~"
 
 
 #Variables
@@ -113,7 +118,7 @@ printed = False #Used to determine whether or not to do implicit printing
 def keg_input():
     temp = input()
     for char in reversed(temp):
-        stack.push(ord(char))
+        stack.push(_ord(char))
 
 def generate_range(*args):
     low, high = sorted(args[:2])
@@ -123,6 +128,18 @@ def generate_range(*args):
         high += 1
         low -= 1
     return range(low, high)
+
+def _ord(char):
+    if char in code_page:
+        return code_page.find(char)
+    else:
+        return ord(char)
+
+def _chr(integer):
+    if integer > 0 and integer < len(code_page):
+        return code_page[integer]
+    else:
+        return chr(integer)
 
 def _eval(expr, stack=main_stack):
     #Evaluate the given expression as Keg code
@@ -150,9 +167,9 @@ def _eval(expr, stack=main_stack):
                 if op == "=":
                     op = "=="
                 elif op == "≬":
-                    op = "> 0 and y <"
+                    op = "> 0 and lhs <"
 
-                result = eval(f"y{op}x")
+                result = eval(f"lhs{op}rhs")
                 if result:
                     temp.push(1)
                 else:
@@ -226,7 +243,7 @@ def _eval(expr, stack=main_stack):
                 temp.push(math.factorial(temp.pop()))
 
             else:
-                temp.push(ord(Token.data))
+                temp.push(_ord(Token.data))
 
     return temp[0]
 
@@ -300,7 +317,7 @@ def run(source, master_stack, sub_stack=None):
 
         if escape:
             escape = False
-            stack.push(ord(cmd))
+            stack.push(_ord(cmd))
 
         #Now, do all the functions
         if cmd == LENGTH:
@@ -316,7 +333,7 @@ def run(source, master_stack, sub_stack=None):
 
         elif cmd == PRINT_CHR:
             #print(stack, stack.pop(), stack)
-            print(chr(stack.pop()), end="")
+            print(_chr(stack.pop()), end="")
             printed = True
 
         elif cmd == PRINT_INT:
@@ -365,7 +382,7 @@ def run(source, master_stack, sub_stack=None):
                 stack.push(int(temp))
             else:
                 for char in reversed(temp):
-                    stack.push(ord(char))
+                    stack.push(_ord(char))
 
         elif cmd == EXCLUSIVE_RANGE:
             query = stack.pop()
@@ -488,7 +505,7 @@ def run(source, master_stack, sub_stack=None):
             stack.push(10)
 
         else:
-            stack.push(ord(cmd))
+            stack.push(_ord(cmd))
 
     if do_repush:
         for item in stack:
@@ -526,6 +543,9 @@ if __name__ == "__main__":
     #Preprocess ∑ as (!;|
 
     code = ""
+    code_page = ""
+    if any([char in unicode for char in source]):
+        code_page = unicode
     #print(source)
     e = False #escaped while preprocessing?
     for c in source:
@@ -552,6 +572,6 @@ if __name__ == "__main__":
                 printing += str(item) + " "
 
             else:
-                printing += chr(item)
+                printing += _chr(item)
 
         print(printing,end="")
