@@ -13,6 +13,7 @@ class CMDS:
     WHILE = "while"
     NOP = "nop"
     FUNCTION = "function"
+    ESC = "escape"
 
 
 class Token():
@@ -27,15 +28,17 @@ class Token():
 def parse(prog):
     temp, parts, structures, escaped = "", [], [], False
     ast = []
-
+    #print(prog)
     for char in prog:
-        #print(temp, parts, structures, [str(x) for x in ast])
+        #print(char, temp, parts, structures, [str(x) for x in ast])
         if escaped:
-            escaped = not escaped
-
+            escaped = False
+            ast.append(Token(CMDS.ESC, char))
+            continue
 
         elif char == "\\":
             escaped = True
+            ast.append(Token(CMDS.CMD, "\\"))
             continue
 
 

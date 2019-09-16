@@ -263,6 +263,8 @@ def balance(source):
         if escaped:
             if char in alt_brackets:
                 result += alt_brackets[char]
+            else:
+                result += char
             escaped = False
             continue
 
@@ -315,9 +317,11 @@ def run(source, master_stack, sub_stack=None):
                 comment = False
             continue
 
-        if escape:
+        if escape or Tkn.name == Parse.CMDS.ESC:
+            #print(cmd, _ord(cmd))
             escape = False
             stack.push(_ord(cmd))
+            continue
 
         #Now, do all the functions
         if cmd == LENGTH:
@@ -424,6 +428,7 @@ def run(source, master_stack, sub_stack=None):
 
         elif cmd == ESCAPE:
             escape = True
+            #print("ESCCAPE")
 
         elif cmd == REGISTER:
             if register is None:
@@ -562,7 +567,7 @@ if __name__ == "__main__":
             code += "(!;|"
         else:
             code += c
-    #print(code)
+    print(balance(code))
     run(Parse.parse(balance(code)), main_stack)
 
     if not printed:
