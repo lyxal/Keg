@@ -104,7 +104,7 @@ unicode += "0123456789:;<=>?"
 unicode += "@ABCDEFGHIJKLMNO"
 unicode += "PQRSTUVWXYZ[\\]^_"
 unicode += "`abcdefghijklmno"
-unicode += "pqrstyvwxyz{|}~"
+unicode += "pqrstuvwxyz{|}~"
 
 
 #Variables
