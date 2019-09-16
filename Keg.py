@@ -567,7 +567,7 @@ if __name__ == "__main__":
             code += "(!;|"
         else:
             code += c
-    print(balance(code))
+    #print(balance(code))
     run(Parse.parse(balance(code)), main_stack)
 
     if not printed:
