@@ -1,5 +1,13 @@
 #Stackd library for Keg
 
+def _ord(char):
+    if char in code_page:
+        return code_page.find(char)
+    else:
+        return ord(char)
+
+code_page = "Set me in Keg.py"
+
 class Stack:
     def __init__(self, iterable=()):
         if iterable:
@@ -26,9 +34,9 @@ class Stack:
         if len(self.__stack):
             return self.__stack.pop()
         else:
-            temp = input("Implicit input: ")
+            temp = input()
             for char in reversed(temp):
-                self.__stack.append(ord(char))
+                self.__stack.append(_ord(char))
             return self.__stack.pop()
 
     def __repr__(self):

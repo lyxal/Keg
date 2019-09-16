@@ -3,6 +3,7 @@ import Parse
 import random
 import math
 from Stackd import Stack
+import Stackd
 import Keg_Nums
 #Just a nice little error. Very helpful I know
 
@@ -126,7 +127,6 @@ def generate_range(*args):
         low += 1
     else:
         high += 1
-        low -= 1
     return range(low, high)
 
 def _ord(char):
@@ -208,16 +208,18 @@ def _eval(expr, stack=main_stack):
                     temp.push(i)
 
             elif Token.data == EXCLUSIVE_RANGE:
-                    query = temp.pop()
+                    
                     _range = generate_range(temp.pop(), temp.pop(), "e")
+                    query = temp.pop()
                     if query in _range:
                         temp.push(1)
                     else:
                         temp.push(0)
                         
             elif Token.data == INCLUSIVE_RANGE:
-                    query = temp.pop()
                     _range = generate_range(temp.pop(), temp.pop() + 1)
+                    query = temp.pop()
+                    
                     if query in _range:
                         temp.push(1)
                     else:
@@ -389,24 +391,23 @@ def run(source, master_stack, sub_stack=None):
                     stack.push(_ord(char))
 
         elif cmd == EXCLUSIVE_RANGE:
-            query = stack.pop()
             _range = generate_range(stack.pop(), stack.pop(), "e")
-            
+            query = stack.pop()
             if query in _range:
                 stack.push(1)
             else:
                 stack.push(0)
                         
         elif cmd == INCLUSIVE_RANGE:
+            _range = generate_range(stack.pop(), stack.pop())
             query = stack.pop()
-            _range = generate_range(stack.pop(), stack.pop() + 1)
             if query in _range:
                 stack.push(1)
             else:
                 stack.push(0)
 
         elif cmd == GENERATE_RANGE:
-            _range = generate_range(stack.pop(), stack.pop() + 1)
+            _range = generate_range(stack.pop(), stack.pop())
             for item in _range:
                 stack.push(item)
 
@@ -551,7 +552,9 @@ if __name__ == "__main__":
     code_page = ""
     if any([char in unicode for char in source]):
         code_page = unicode
-    #print(source)
+
+    Stackd.code_page = code_page
+
     e = False #escaped while preprocessing?
     for c in source:
         if e:
