@@ -116,7 +116,7 @@ comment = False #Whether or not in a comment
 escape = False #Escape next character?
 printed = False #Used to determine whether or not to do implicit printing
 
-def keg_input():
+def keg_input(stack):
     temp = input()
     for char in reversed(temp):
         stack.push(_ord(char))
@@ -362,7 +362,7 @@ def run(source, master_stack, sub_stack=None):
             stack[-1], stack[-2] = stack[-2], stack[-1]
 
         elif cmd == INPUT:
-            keg_input()
+            keg_input(stack)
 
         #Reg starts now
 
