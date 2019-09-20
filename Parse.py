@@ -11,9 +11,10 @@ class CMDS:
     IF = "if"
     FOR = "for"
     WHILE = "while"
-    NOP = "nop"
+    NOP = ""
     FUNCTION = "function"
     ESC = "escape"
+    STRING = "string"
 
 
 class Token():
@@ -27,10 +28,29 @@ class Token():
 
 def parse(prog):
     temp, parts, structures, escaped = "", [], [], False
+    string_mode, string = False, ""
     ast = []
     #print(prog)
     for char in prog:
         #print(char, temp, parts, structures, [str(x) for x in ast])
+
+        if string_mode:
+            if escaped:
+                escaped = False
+                string += char
+            else:
+                if char == "`":
+                    string_mode = False
+                    ast.append(Token(CMDS.STRING, string))
+                    string = ""
+                elif char == "\\":
+                    escaped = True
+                    string += char
+                else:
+                    string += char
+            continue
+
+        
         if escaped:
             escaped = False
             ast.append(Token(CMDS.ESC, char))
@@ -39,6 +59,10 @@ def parse(prog):
         elif char == "\\":
             escaped = True
             ast.append(Token(CMDS.CMD, "\\"))
+            continue
+
+        elif char == "`":
+            string_mode = True
             continue
 
 
@@ -167,6 +191,6 @@ def func(source):
     return {"name": name, "number": n}
 
 if __name__ == "__main__":
-    test = parse("@F 0|zziF(,)ƒ")
+    test = parse("`Hello, World!`")
     sub = test[0]
-    sub = sub.data[1]
+    print(sub)

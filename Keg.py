@@ -5,6 +5,8 @@ import math
 from Stackd import Stack
 import Stackd
 import Keg_Nums
+import uncompress
+import preprocess
 #Just a nice little error. Very helpful I know
 
 class Bruh(Exception):
@@ -57,9 +59,11 @@ DESCRIPTIONS[NICE_INPUT] = "Peform nice input"
 EXCLUSIVE_RANGE = "∂"
 INCLUSIVE_RANGE = "•"
 GENERATE_RANGE = "ɧ"
+GENERATE_RANGE_0 = "ø"
 NUMBER_SPLIT = "÷"
 FACTORIAL = "¡"
-
+EMPTY = "ø"
+PRINT_ALL = "Ω"
 '''Remind me to create descriptions later'''
 
 #'Keywords'
@@ -105,7 +109,8 @@ unicode += "0123456789:;<=>?"
 unicode += "@ABCDEFGHIJKLMNO"
 unicode += "PQRSTUVWXYZ[\\]^_"
 unicode += "`abcdefghijklmno"
-unicode += "pqrstuvwxyz{|}~"
+unicode += "pqrstuvwxyz{|}~ø"
+unicode += "¶"
 
 
 #Variables
@@ -217,7 +222,7 @@ def _eval(expr, stack=main_stack):
                         temp.push(0)
                         
             elif Token.data == INCLUSIVE_RANGE:
-                    _range = generate_range(temp.pop(), temp.pop() + 1)
+                    _range = generate_range(temp.pop(), temp.pop())
                     query = temp.pop()
                     
                     if query in _range:
@@ -226,7 +231,11 @@ def _eval(expr, stack=main_stack):
                         temp.push(0)
 
             elif Token.data == GENERATE_RANGE:
-                _range = generate_range(temp.pop(), temp.pop() + 1)
+                _range = generate_range(temp.pop(), temp.pop())
+                for item in _range:
+                    temp.push(item)
+            elif Token.data == GENERATE_RANGE_0:
+                _range = generate_range(0, temp.pop())
                 for item in _range:
                     temp.push(item)
                     
@@ -355,7 +364,7 @@ def run(source, master_stack, sub_stack=None):
 
         elif cmd == REVERSE:
             if not len(stack):
-                keg_input()
+                keg_input(stack)
             stack._Stack__stack.reverse()
 
         elif cmd == SWAP:
@@ -408,6 +417,11 @@ def run(source, master_stack, sub_stack=None):
 
         elif cmd == GENERATE_RANGE:
             _range = generate_range(stack.pop(), stack.pop())
+            for item in _range:
+                stack.push(item)
+
+        elif cmd == GENERATE_RANGE_0:
+            _range = generate_range(0, stack.pop())
             for item in _range:
                 stack.push(item)
 
@@ -493,6 +507,9 @@ def run(source, master_stack, sub_stack=None):
             if cmd == "=":
                 temp = "=="
 
+            elif cmd == "≬":
+                    temp = "> 0 and lhs <"
+
             result = eval(f"rhs{temp}lhs")
 
             if result:
@@ -502,6 +519,9 @@ def run(source, master_stack, sub_stack=None):
 
         elif cmd in NUMBERS:
             stack.push(int(cmd))
+
+        elif Tkn.name == Parse.CMDS.STRING:
+            stack.push(Tkn.data)
 
         #Whitespace
         elif cmd == TAB:
@@ -570,13 +590,14 @@ if __name__ == "__main__":
             code += "(!;|"
         else:
             code += c
-    #print(balance(code))
+    code = preprocess.process(code)#; print("After preprocess:", code)
+    code = uncompress.Uncompress(code)#; print("After uncom:", code)
     run(Parse.parse(balance(code)), main_stack)
 
     if not printed:
         printing = ""
         for item in main_stack:
-            if item < 10 or item > 256:
+            if type(item) is str or item < 10 or item > 256:
                 printing += str(item) + " "
 
             else:

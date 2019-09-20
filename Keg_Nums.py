@@ -1,5 +1,6 @@
 #Keg nums
 
-big_boy = 9 * int("9"*99999)
+big_boy = int("9"*3234)
 big_boy *= big_boy * big_boy
+big_boy += 21
 small_boy = -big_boy
