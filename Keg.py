@@ -110,7 +110,7 @@ unicode += "@ABCDEFGHIJKLMNO"
 unicode += "PQRSTUVWXYZ[\\]^_"
 unicode += "`abcdefghijklmno"
 unicode += "pqrstuvwxyz{|}~ø"
-unicode += "¶"
+unicode += "¶\n\t⊂"
 
 
 #Variables
