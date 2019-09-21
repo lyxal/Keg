@@ -150,12 +150,16 @@ def _eval(expr, stack=main_stack):
     #Evaluate the given expression as Keg code
     temp = Stack()
     for Token in Parse.parse(expr):
-        if Token.name not in [Parse.CMDS.CMD, Parse.CMDS.NOP]:
+        #print(Token.name, Token.data, temp)
+        if Token.name not in [Parse.CMDS.CMD, Parse.CMDS.NOP,
+                              Parse.CMDS.ESC]:
             raise Bruh("""You can't just go placing forbidden characters in
                        expressions and expect to get away with it.""")
 
         else:
-            if Token.data in NUMBERS:
+            if Token.name == Parse.CMDS.ESC:
+                temp.push(_ord(Token.data))
+            elif Token.data in NUMBERS:
                 temp.push(int(Token.data))
 
             elif Token.data in MATHS:
@@ -253,9 +257,9 @@ def _eval(expr, stack=main_stack):
             elif Token.data == FACTORIAL:
                 temp.push(math.factorial(temp.pop()))
 
+
             else:
                 temp.push(_ord(Token.data))
-
     return temp[0]
 
 #Bracket balancer
@@ -328,7 +332,7 @@ def run(source, master_stack, sub_stack=None):
                 comment = False
             continue
 
-        if escape:
+        if Tkn.name == Parse.CMDS.ESC:
             #print(cmd, _ord(cmd))
             escape = False
             stack.push(_ord(cmd))
@@ -591,7 +595,7 @@ if __name__ == "__main__":
         else:
             code += c
     code = preprocess.process(code); #print("After preprocess:", code)
-    code = uncompress.Uncompress(code); #print("After uncom:", code)
+    #code = uncompress.Uncompress(code); print("After uncom:", code)
     run(Parse.parse(balance(code)), main_stack)
 
     if not printed:

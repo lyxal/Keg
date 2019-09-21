@@ -53,12 +53,16 @@ def parse(prog):
         
         if escaped:
             escaped = False
-            ast.append(Token(CMDS.ESC, char))
+            if structures:
+                temp += char
+            else:
+                ast.append(Token(CMDS.ESC, char))
             continue
 
         elif char == "\\":
             escaped = True
-            ast.append(Token(CMDS.CMD, "\\"))
+            if structures:
+                temp += char
             continue
 
         elif char == "`":
@@ -191,6 +195,5 @@ def func(source):
     return {"name": name, "number": n}
 
 if __name__ == "__main__":
-    test = parse("`Hello, World!`")
-    sub = test[0]
-    print(sub)
+    test = parse("(\\2|\\*)")
+    print([str(x) for x in test])
