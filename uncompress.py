@@ -12,7 +12,9 @@ chars += "OPQRSTUVWX"
 chars += "YZ!@#$%^&*"
 chars += "()_+~[]{}:"
 chars += "<>?,./\"'¿"
-chars += ""
+chars += "¿∂⊂ø®©ëλº√"
+chars +=  "₳¬≤Š≠≥Ėπ§∑"
+chars += "•™÷‡∞"
 def Uncompress(source):
     result = ""
     string_type = ""
@@ -21,6 +23,7 @@ def Uncompress(source):
     
     for char in source:
         if cont:
+            temp["data"] += char
             cont = False
             continue
         if string_type != "":
@@ -43,6 +46,9 @@ def Uncompress(source):
 
         else:
             result += char
+
+    if temp["type"] is None:
+        result += temp["data"]
 
     return result
 
@@ -149,3 +155,4 @@ if __name__ == "__main__":
     assert (Uncompress("`Hello, World!`") == "`Hello, World!`")
     assert Uncompress("`ab;`") == "`<SCC:ab>`"
     assert Uncompress("¶ab;cd;¶") == "`<SCC:ab> <SCC:cd> `"
+    assert Uncompress("123") == "123"

@@ -328,7 +328,7 @@ def run(source, master_stack, sub_stack=None):
                 comment = False
             continue
 
-        if escape or Tkn.name == Parse.CMDS.ESC:
+        if escape:
             #print(cmd, _ord(cmd))
             escape = False
             stack.push(_ord(cmd))
@@ -590,8 +590,8 @@ if __name__ == "__main__":
             code += "(!;|"
         else:
             code += c
-    code = preprocess.process(code)#; print("After preprocess:", code)
-    code = uncompress.Uncompress(code)#; print("After uncom:", code)
+    code = preprocess.process(code); #print("After preprocess:", code)
+    code = uncompress.Uncompress(code); #print("After uncom:", code)
     run(Parse.parse(balance(code)), main_stack)
 
     if not printed:
