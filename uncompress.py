@@ -14,145 +14,145 @@ chars += "()_+~[]{}:"
 chars += "<>?,./\"'¿"
 chars += "¿∂⊂ø®©ëλº√"
 chars +=  "₳¬≤Š≠≥Ėπ§∑"
-chars += "•™÷‡∞"
+chars += "•™÷‡∞\t\n½±"
+chars += "¦ė≬ƒßɧË-=Ï¡"
+chars += "→←↶↷✏█↗↘□"
+chars += "²ⁿ║ṡ⟰⟱⟷"
+chars += "ℤℝ⅍℠א∀≌᠀⊙᠈⅀"
+chars += "ȦƁƇƉƐƑƓǶȊȷǨȽƜƝǪǷɊƦȘȚȔƲɅƛƳƵ" #push'n'print
+chars += "☭"
+chars += "⬠⬡⬢⬣⬤⬥⬦⬧⬨⬩⬪⬫⬬⬭⬮⬯"
+chars += "⯑"
+chars += "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑴⑵⑶⑷⑸⑹⑺⑻⑼⑽⑾⑿⒀⒁⒂⒃⒄⒅⒆"
+chars += "↫"
+
+for n in range(127234, 127243): chars += chr(n)
+
+def _ord(char):
+    if char in chars:
+        return chars.find(char)
+    else:
+        return ord(char) + 256
+
+def numberToBase(n, b): #https://stackoverflow.com/a/28666223/9363594
+    if n == 0:
+        return [0]
+    digits = []
+    while n:
+        digits.append(int(n % b))
+        n //= b
+    return digits[::-1]
+
+class STRINGS:
+    STANDARD = "`"
+    STANDARD_SPACED = "¶"
+    SCC = "‘"
+    SCC_SPACED = "“"
+    SPECIAL = "„"
+    SPECIAL_SPACED = "«"
+    NONE = ""
+
 def Uncompress(source):
-    result = ""
-    string_type = ""
-    temp = {"type" : None, "data" : ""}
-    cont = False
-    
+    parts = []
+    temp = ""
+    string_type = STRINGS.NONE
+    escaped = False
+
     for char in source:
-        if cont:
-            temp["data"] += char
-            cont = False
+        if escaped:
+            temp += char
+            escaped = False
             continue
-        if string_type != "":
-            if char is string_type:
-                string_type = ""
-                result += standard(temp)
-                temp = {"type" : None, "data" : ""}
+        
+        if string_type == STRINGS.NONE:
+            if char in "`¶‘“„«":
+                string_type = char
+                parts.append(temp)
+                temp = ""
             else:
-                temp["data"] += char
+                parts.append(char)
+
+        elif char == string_type:
+            parts.append("`" + to_standard(temp, string_type) + "`")
+            string_type = STRINGS.NONE
+            temp = ""
 
         elif char == "\\":
-            temp["data"] += char
-            cont = True
-            continue
-
-        elif char in "`¶‘“«„":
-            string_type = char
-            #temp["data"] += char
-            temp["type"] = char
+            temp += char
+            escaped = True
 
         else:
-            result += char
+            temp += char
 
-    if temp["type"] is None:
-        result += temp["data"]
+    return "".join(parts)
 
+def to_standard(source, s_type):
+    result = ""
+    compression_code = ""
+
+    if s_type in [STRINGS.STANDARD, STRINGS.STANDARD_SPACED]:
+        spaces = " " * [STRINGS.STANDARD, STRINGS.STANDARD_SPACED].index(s_type)
+        for char in source:
+            if char == ";":
+                result += f"{get_scc(compression_code)}{spaces}"
+                compression_code = ""
+            else:
+                compression_code += char
+                if len(compression_code) > 2:
+                    result += compression_code[0]
+                    compression_code = compression_code[1:]
+                    
+    elif s_type in [STRINGS.SCC, STRINGS.SCC_SPACED]:
+        spaces = " " * [STRINGS.SCC, STRINGS.SCC_SPACED].index(s_type)
+
+        if len(source) % 2: source += " "
+        codes = [source[i] + source[i + 1] for i in range(0, len(source),
+                                                          2)]
+        for code in codes:
+            result += f"{get_scc(code)}{spaces}"
+
+    elif s_type in [STRINGS.SPECIAL, STRINGS.SPECIAL_SPACED]:
+        spaces = " " * [STRINGS.SPECIAL, STRINGS.SPECIAL_SPACED].index(s_type)
+        codes, joins = source.split("|", 1)
+
+        codes = [codes[i] + codes[i + 1] for i in range(0, len(codes),
+                                                          2)]
+
+        if len(joins) < len(codes):
+            for _ in range(len(codes) - len(joins)):
+                joins += " "
+
+        for i in range(len(codes)):
+            result += f"{get_scc(codes[i])}{joins[i]}{spaces}"
+        
+        
+        
+    if compression_code:
+        result += compression_code
+
+    if s_type in [STRINGS.STANDARD_SPACED,
+                  STRINGS.SCC_SPACED,
+                  STRINGS.SPECIAL_SPACED] and result[-1] == " ":
+        result = result[:-1]
+                
     return result
 
-def standard(string):
-    result = "`"
-    escaped = False
-    #print(string["type"])
-    
-    if string["type"] == "`":
-        code = ""
-        for char in string["data"]:
-            if escaped:
-                escaped = False
-                continue
-            elif char == ";":
-                if len(code) == 2:
-                    result += f"<SCC:{code}>"
-                else:
-                    result += code + ";"
+def get_scc(code):
+    index = _ord(code[1]) + (len(chars) * _ord(code[0]))
+    return sccs[index]
 
-                code = ""
-            elif char == "\\":
-                escaped = True
-                continue
 
-            elif len(code) == 2:
-                result += code[0]
-                code = code[1] + char
-
-            else:
-                code += char
-        result += code
-    elif string["type"] == "¶":
-        code = ""
-        escaped = False
-        for char in string["data"]:
-            if escaped:
-                escaped = False
-                continue
-            elif char == ";":
-                if len(code) == 2:
-                    result += f"<SCC:{code}>"
-                    result += " "
-                else:
-                    result += code + ";"
-
-                code = ""
-            elif char == "\\":
-                escaped = True
-                continue
-
-            elif len(code) == 2:
-                result += code[0]
-                code = code[1] + char
-
-            else:
-                code += char
-
-    elif string["type"] == "\u2018":
-        if len(string["data"]) % 2 != 0:
-            string["data"] += " "
-
-        #print(string["data"])
-        for scc in [string["data"][i:i+2] for i in range\
-                    (0, len(string["data"]), 2)]:
-            result += f"<SCC:{scc}>"
-
-    elif string["type"] == "“":
-        if len(string["data"]) % 2 != 0:
-            string["data"] += " "
-
-        #print(string["data"])
-        for scc in [string["data"][i:i+2] for i in range\
-                    (0, len(string["data"]), 2)]:
-            result += f"<SCC:{scc}>" + " "
             
-    elif string["type"] == "«":
-        codes, seps = string["data"].split("|")
-        codes = [codes[i:i+2] for i in range(0, len(codes), 2)]
-
-        if len(codes) > len(seps):
-            seps += " "*(len(codes) - len(seps))
-
-
-        for i in range(len(codes)):
-            scc = codes[i]
-            result += f"<SCC:{scc}>" + seps[i] + " "
-    elif string["type"] == "„":
-        codes, seps = string["data"].split("|")
-        codes = [codes[i:i+2] for i in range(0, len(codes), 2)]
-
-        if len(codes) > len(seps):
-            seps += " "*(len(codes) - len(seps))
-
-
-        for i in range(len(codes)):
-            scc = codes[i]
-            result += f"<SCC:{scc}>" + seps[i]
-        
-
-    return result + "`"
-
 if __name__ == "__main__":
-    assert (Uncompress("`Hello, World!`") == "`Hello, World!`")
-    assert Uncompress("`ab;`") == "`<SCC:ab>`"
-    assert Uncompress("¶ab;cd;¶") == "`<SCC:ab> <SCC:cd> `"
-    assert Uncompress("123") == "123"
+    while 1:
+        term = input("Enter a search term: ")
+        if term in sccs:
+            x = sccs.index(term)
+            numbers = numberToBase(x, 248)
+            code = "".join([chars[i] for i in numbers])
+            print(code, numbers)
+        else:
+            print(-1)
+
+    
+ 

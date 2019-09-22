@@ -12,7 +12,7 @@ def generate_list():
         if word.startswith("#!comment:"):
             continue
 
-        if any([x in "ABCDEFFGHIJKLMNOPQRSTUVWXYZ" for x in word]):
+        if all([x in "ABCDEFFGHIJKLMNOPQRSTUVWXYZ" for x in word]):
             continue
         
         words.append(word.strip("\n"))

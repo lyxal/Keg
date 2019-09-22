@@ -110,8 +110,17 @@ unicode += "@ABCDEFGHIJKLMNO"
 unicode += "PQRSTUVWXYZ[\\]^_"
 unicode += "`abcdefghijklmno"
 unicode += "pqrstuvwxyz{|}~ø"
-unicode += "¶\n\t⊂"
+unicode += "¶\n\t⊂½‡™±¦→←↶↷"
+unicode += "✏█↗↘□²ⁿ║ṡ⟰⟱⟷"
+unicode += "ℤℝ⅍℠א∀≌᠀⊙᠈⅀"
+unicode += "ȦƁƇƉƐƑƓǶȊȷǨȽƜƝǪǷɊƦȘȚȔƲɅƛƳƵ" #push'n'print
+unicode += "☭" #I don't know what this'll do. But it looks cool
+unicode += "⬠⬡⬢⬣⬤⬥⬦⬧⬨⬩⬪⬫⬬⬭⬮⬯"#drawing
+unicode += "⯑" #Do something random
+unicode += "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳⑴⑵⑶⑷⑸⑹⑺⑻⑼⑽⑾⑿⒀⒁⒂⒃⒄⒅⒆⒇"
 
+
+for n in range(127234, 127243): unicode += chr(n)
 
 #Variables
 main_stack = Stack()
@@ -595,11 +604,16 @@ if __name__ == "__main__":
         else:
             code += c
     code = preprocess.process(code); #print("After preprocess:", code)
-    #code = uncompress.Uncompress(code); print("After uncom:", code)
+    code = uncompress.Uncompress(code); #print("After uncom:", code)
     run(Parse.parse(balance(code)), main_stack)
 
     if not printed:
         printing = ""
+        if not main_stack:
+            try:
+                keg_input(main_stack)
+            except:
+                pass
         for item in main_stack:
             if type(item) is str or item < 10 or item > 256:
                 printing += str(item) + " "
