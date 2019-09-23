@@ -51,6 +51,8 @@ class STRINGS:
     SPECIAL = "„"
     SPECIAL_SPACED = "«"
     NONE = ""
+    STRINGS = {STANDARD, STANDARD_SPACED, SCC, SCC_SPACED, SPECIAL,
+               SPECIAL_SPACED}
 
 def Uncompress(source):
     parts = []
@@ -76,6 +78,9 @@ def Uncompress(source):
             parts.append("`" + to_standard(temp, string_type) + "`")
             string_type = STRINGS.NONE
             temp = ""
+
+        elif char in STRINGS.STRINGS - {string_type}:
+            temp += "\\" + char
 
         elif char == "\\":
             temp += char
@@ -153,6 +158,3 @@ if __name__ == "__main__":
             print(code, numbers)
         else:
             print(-1)
-
-    
- 
