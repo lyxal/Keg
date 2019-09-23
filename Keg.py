@@ -588,8 +588,12 @@ if __name__ == "__main__":
 
     code = ""
     code_page = ""
-    if any([char in unicode for char in source]):
+    import string
+    unicode_set = set(unicode) - set(string.printable)
+    if any([char in unicode_set for char in source]):
         code_page = unicode
+
+    #print(code_page)
 
     Stackd.code_page = code_page
 
