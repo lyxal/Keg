@@ -129,8 +129,10 @@ register = None #The register used
 comment = False #Whether or not in a comment
 escape = False #Escape next character?
 printed = False #Used to determine whether or not to do implicit printing
+pushed = False #Used to determine whether or not to implicit cat
 
 def keg_input(stack):
+    global pushed; pushed = True
     temp = input()
     for char in reversed(temp):
         stack.push(_ord(char))
@@ -318,7 +320,7 @@ def balance(source):
     return result
 
 def run(source, master_stack, sub_stack=None):
-    global register, comment, escape, printed
+    global register, comment, escape, printed, pushed
     code = source
     stack = Stack()
     do_repush = False #Indicate whether or not sub needs to push its contents
@@ -385,6 +387,7 @@ def run(source, master_stack, sub_stack=None):
 
         elif cmd == INPUT:
             keg_input(stack)
+            pushed = True
 
         #Reg starts now
 
@@ -411,6 +414,8 @@ def run(source, master_stack, sub_stack=None):
             else:
                 for char in reversed(temp):
                     stack.push(_ord(char))
+
+            pushed = True
 
         elif cmd == EXCLUSIVE_RANGE:
             _range = generate_range(stack.pop(), stack.pop(), "e")
@@ -609,9 +614,9 @@ if __name__ == "__main__":
 
     if not printed:
         printing = ""
-        if not main_stack:
+        if not pushed:
             try:
-                keg_input(main_stack)
+                print(input())
             except:
                 pass
         for item in main_stack:
