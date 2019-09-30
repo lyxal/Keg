@@ -41,7 +41,10 @@ def parse(prog):
             else:
                 if char == "`":
                     string_mode = False
-                    ast.append(Token(CMDS.STRING, string))
+                    if structures:
+                        temp += "`" + string + "`"
+                    else:
+                        ast.append(Token(CMDS.STRING, string))
                     string = ""
                 elif char == "\\":
                     escaped = True
