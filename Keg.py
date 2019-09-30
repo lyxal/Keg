@@ -67,6 +67,8 @@ for n in range(127234, 127243): PUSH_N_PRINT += chr(n)
 #Don't go trying to print PUSH_N_PRINT in IDLE... Tkinter doesn't like some of
 #the characters
 
+ALPHA_MAP = "abcdefghijklmnopqrstuvwxyz1234567890"
+
 
 INTEGER_SCAN = "‡"
 TO_INT, TO_FLOAT, TO_STRING, TO_STACK = "ℤℝ⅍℠"
@@ -341,6 +343,11 @@ def transpile(source: str, stack="stack"):
 
         elif command == NEWLINE:
             result += f"integer({stack}, 10)"
+
+        #Keg+
+
+        elif command in PUSH_N_PRINT:
+            result += f"print('{ALPHA_MAP[PUSH_N_PRINT.index(command)]}')"
 
         else:
             result += f"character({stack}, '" + command + "')"
