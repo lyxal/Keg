@@ -355,9 +355,9 @@ if __name__ == "__main__":
         parser = argparse.ArgumentParser()
         parser.add_argument("file", help="The location of the Keg file to open")
         parser.add_argument('-ex', '--explain',
-                            help="Explains given source")
+                            help="Explains given source", action='store_true')
         parser.add_argument("-cm", "--compiled",
-                            help="Shows the compiled code")
+                            help="Shows the compiled code", action='store_true')
         args = parser.parse_args()
         file_location = args.file
 
