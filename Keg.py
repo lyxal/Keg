@@ -294,7 +294,7 @@ def transpile(source: str, stack="stack"):
             if command[0] == "":
                 result += tab_format("pass")
             else:
-                result += tab_format(transpile(command[1]))
+                result += tab_format(transpile(command[0]))
 
             if command[1]:
                 result += "\nelse:\n"
