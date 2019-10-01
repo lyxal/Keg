@@ -43,8 +43,8 @@ def special_divide(lhs: list, rhs: list) -> list:
         for item_1 in rhs:
             result += operate(item, item_1, "/")
     return result
-        
-    
+
+
 relations = {"Number": {
                     "Number": ["x + y", "x - y", "x * y", "x / y", "x % y"],
                     "Character": ["x + ord(y.v)", "x - ord(y.v)",
@@ -56,7 +56,7 @@ relations = {"Number": {
                     "Stack": ["y + [x]", "y.remove(x)", "y * x",
                                 "split_list(y, x)", "split_list(y, x)[-1]"]
                     },
-             
+
              "Character": {
 
                      "Number": ["y + ord(x.v)", "ord(x.v) - y",
@@ -68,11 +68,11 @@ relations = {"Number": {
                                     "ord(x.v) * ord(y.v)",
                                     "ord(x.v) / ord(y.v)",
                                     "ord(x.v) % ord(y.v)"],
-                                
+
                      "String" : ["x.v + y", "y.replace(x.v, '')",
                                  "y * ord(x.v)", "y.split(x.v)",
                                  "y.split(x.v)[-1]"],
-                                
+
                      "Stack" : ["y + [x.v]", "y.remove(x.v)", "y * ord(x.v)",
                                 "split_list(y, ord(x.v))",
                                 "split_list(y, ord(x.v))[-1]"]
@@ -106,7 +106,54 @@ relations = {"Number": {
                  "Stack": ["x + y", "list(set(x) - set(y))", "zip(x, y)",
                            "special_divide(x, y)", "special_divide(x, y)[-1]"]}
              }
-                                    
+
+
+second = {
+"Number" : {
+        "Number" : ["x < y", "x > y", "x <= y", "x >= y", "x == y", "x != y",
+        "x < y and x > 0"],
+        "Character" : ["x < ord(y.v)", "x > ord(y.v)", "x <= ord(y.v)",
+         "x >= ord(y.v)", "x == ord(y.v)", "x != ord(y.v)",
+        "x < ord(y.v) and x > 0"],
+        "String" : ["str(x) < y", "str(x) > y", "str(x) <= y", "str(x) >= y",
+         "str(x) == y", "str(x) != y",
+        "str(x) < y and str(x) > '0'"],
+        "Stack": ["1", "1", "1", "1", "1", "1", "1"]
+    },
+"Character" : {
+        "Number": ["x < ord(y.v)", "x > ord(y.v)", "x <= ord(y.v)",
+         "x >= ord(y.v)", "x == ord(y.v)", "x != ord(y.v)",
+        "x < ord(y.v) and x > 0"],
+        "Character" : ["ord(x.v) < ord(y.v)", "ord(x.v) > ord(y.v)",
+         "ord(x.v) <= ord(y.v)", "ord(x.v) >= ord(y.v)",
+          "ord(x.v) == ord(y.v)", "ord(x.v) != ord(y.v)",
+        "ord(x.v) < ord(y.v) and ord(x.v) > 0"],
+        "String": ["x.v < y", "x.v > y", "x.v <= y", "x.v >= y", "x.v == y",
+         "x.v != y",
+        "x.v < y and x.v > '0'"],
+        "Stack": ["1", "1", "1", "1", "1", "1", "1"]
+    },
+
+"String" : {
+    "Number" :  ["str(y) > x", "str(y) < x", "str(y) >= x", "str(y) <= x",
+             "str(y) == x", "str(x) != y",
+            "str(y) > x and y > '0'"],
+    "Character" : ["y.v > x", "y.v < x", "y.v >= x", "y.v <= x", "y.v == x",
+     "y.v != x",
+    "y.v > x and y.v < '0'"],
+    "String" : ["x < y", "x > y", "x <= y", "x >= y", "x == y", "x != y",
+    "x < y and x > 0"],
+    "Stack": ["1", "1", "1", "1", "1", "1", "1"]
+    },
+
+"Stack" : {
+        #TODO: Replace everything here with something more reasonable
+        "Number" : ["1", "1", "1", "1", "1", "1", "1"],
+        "Character": ["1", "1", "1", "1", "1", "1", "1"],
+        "String": ["1", "1", "1", "1", "1", "1", "1"],
+        "Stack": ["1", "1", "1", "1", "1", "1", "1"],
+    }
+}
 
 def _type(item):
     if type(item) in [float, int]:
@@ -130,3 +177,10 @@ def operate(lhs, rhs, op):
     return eval(expr)
 
 
+def do_compare(lhs, rhs, op):
+    tLhs, tRhs = _type(lhs), _type(rhs)
+    choices = second[tLhs][tRhs]
+    expr = choices["<>≤≥=≠≬".index(op)]
+    x, y = lhs, rhs
+
+    return 1 if eval(expr) else 0

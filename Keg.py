@@ -357,10 +357,7 @@ def transpile(source: str, stack="stack"):
             result += f"maths({stack}, '" + command + "')"
 
         elif command in CONDITIONAL:
-            mapping = {"<" : "lt", ">" : "gt", "≤" : "le", "≥" : "ge",
-                       "=" : "eq", "≠" : "nq", "≬" : "l0"}
-
-            result += mapping[command] + f"({stack})"
+            result += f"comparative({stack}, '{command}')"
 
         elif command in NUMBERS:
             result += f"integer({stack}, " + command + ")"

@@ -33,60 +33,11 @@ def maths(stack, operator, debug=False):
 
 # LOGIC
 
-def eq(stack):
-    lhs, rhs = stack.pop(), stack.pop()
-    if lhs == rhs:
-        stack.push(1)
-    else:
-        stack.push(0)
-
-def nq(stack):
-    lhs, rhs = stack.pop(), stack.pop()
-    if lhs != rhs:
-        stack.push(1)
-    else:
-        stack.push(0)
-
-def lt(stack):
-    lhs, rhs = stack.pop(), stack.pop()
-    if str(lhs) < str(rhs):
-        stack.push(1)
-    else:
-        stack.push(0)
-
-def gt(stack):
-    lhs, rhs = stack.pop(), stack.pop()
-    if str(lhs) > str(rhs):
-        stack.push(1)
-    else:
-        stack.push(0)
-
-def le(stack):
-    #Let me tell you this. I am SO freaking glad Python compares strings nicely
-    #I.e. "3" < "4" apparently works just like 3 < 4
-    #Not sure about lists though.
-    #I'll have to see about that
-    lhs, rhs = stack.pop(), stack.pop()
-    if str(lhs) <= str(rhs):
-        stack.push(1)
-    else:
-        stack.push(0)
-
-def ge(stack):
-    lhs, rhs = stack.pop(), stack.pop()
-    if str(lhs) >= str(rhs):
-        stack.push(1)
-    else:
-        stack.push(0)
-
-def l0(stack):
-    #Less than but bigger than 0
-    lhs, rhs = stack.pop(), stack.pop()
-
-    if str(lhs) < str(rhs) and str(lhs) > "0":
-        stack.push(1)
-    else:
-        stack.push(0)
+def comparative(stack, operator):
+    rhs, lhs = stack.pop(), stack.pop()
+    result = Coherse.do_compare(lhs, rhs, operator)
+    stack.push(result)
+    
 
 # BUILT-IN FUNCTIONS
 
