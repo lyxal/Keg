@@ -291,7 +291,10 @@ def transpile(source: str, stack="stack"):
 
         elif name == Parse.CMDS.IF:
             result += f"if bool({stack}.pop()):\n"
-            result += tab_format(transpile(command[0]))
+            if command[0] == "":
+                result += tab_format("pass")
+            else:
+                result += tab_format(transpile(command[1]))
 
             if command[1]:
                 result += "\nelse:\n"
@@ -300,14 +303,31 @@ def transpile(source: str, stack="stack"):
         elif name == Parse.CMDS.FOR:
             result += transpile(command[0])
             result += f"\nfor _ in loop_eval({stack}.pop()):"
-            result += "\n" + tab_format(transpile(command[1]))
+            result += "\n"
+
+
+
+            if command[1] == "":
+                result += tab_format("pass")
+            else:
+                result += tab_format(transpile(command[1]))
 
         elif name == Parse.CMDS.WHILE:
-            result += "exec('condition = " + transpile(command[0]) + "')"
+            if command[0] == "":
+                result += "condition = " + transpile(command[0])
+            else:
+                result += "condition = 1"
             result += "\nwhile condition:\n"
-            result += tab_format(transpile(command[1]))
+
+            if command[1] == "":
+                result += tab_format("pass")
+            else:
+                result += tab_format(transpile(command[1]))
             result += "\n"
-            result += "exec('condition = " + transpile(command[0]) + "')"
+            if command[0] == "":
+                result += tab_format("condition = " + transpile(command[0]))
+            else:
+                result += tab_format("condition = 1")
 
         elif name == Parse.CMDS.FUNCTION:
             if command[0] == 1:
