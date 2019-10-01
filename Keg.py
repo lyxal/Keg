@@ -367,7 +367,7 @@ def transpile(source: str, stack="stack"):
 
         result += "\n"
 
-    return result
+    return result.rstrip("\n")
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
