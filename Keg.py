@@ -79,6 +79,10 @@ ALL_TRUE = "∀"
 ALL_EQUAL = "≌"
 SUMMATE = "⅀"
 
+VARIABLE_SET = "©"
+VARIAGE_GET = "®"
+
+
 #'Keywords'
 
 COMMENT = "#"
@@ -232,8 +236,8 @@ def transpile(source: str, stack="stack"):
             result += f"raw({stack})"
 
         elif command in [L_SHIFT, R_SHIFT]:
-            result += f"shift({stack}, " + ["left", "right"]\
-                      [L_SHIFT, R_SHIFT].index(command) + ")"
+            result += f"shift({stack}, '" + ["left", "right"]\
+                      [[L_SHIFT, R_SHIFT].index(command)]+ "')"
 
         elif command == REVERSE:
             result += f"reverse({stack})"
@@ -318,6 +322,13 @@ def transpile(source: str, stack="stack"):
                 result += "\n" + tab_format(transpile(command[1]))
                 result += f"\n    for item in temp: {stack}.push(item)"
 
+        elif name == Parse.CMDS.VARIABLE:
+            if command[1] == "set":
+                result += f"var_set(stack, '{command[0]}')"
+
+            else:
+                result += f"var_get(stack, '{command[0]}')"
+
         #Now, operators.
         elif command in MATHS:
             if command == "Ë":
@@ -336,6 +347,8 @@ def transpile(source: str, stack="stack"):
 
         elif name == Parse.CMDS.STRING:
             result += f"iterable({stack}, '" + command + "')"
+
+
 
         #Whitespace
         elif command == TAB:
@@ -423,7 +436,6 @@ from KegLib import *
 from Stackd import Stack
 stack = Stack()
 printed = False
-_register = None
 """
 
     footer = """

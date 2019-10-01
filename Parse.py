@@ -15,6 +15,7 @@ class CMDS:
     FUNCTION = "function"
     ESC = "escape"
     STRING = "string"
+    VARIABLE = "variable"
 
 
 class Token():
@@ -29,6 +30,9 @@ class Token():
 def parse(prog):
     temp, parts, structures, escaped = "", [], [], False
     string_mode, string = False, ""
+    variable_mode, variable, call_set = False, "", ""
+    #call_set will be whether or not to set the variable
+    
     ast = []
     #print(prog)
     for char in prog:
@@ -53,6 +57,18 @@ def parse(prog):
                     string += char
             continue
 
+        if variable_mode:
+            import string
+            if char not in string.ascii_letters:
+                variable_mode = False
+                ast.append(Token(CMDS.VARIABLE, [variable, call_set]))
+                variable = ""
+                call_set = ""
+
+            else:
+                variable += char
+                continue
+
         
         if escaped:
             escaped = False
@@ -71,6 +87,17 @@ def parse(prog):
         elif char == "`":
             string_mode = True
             continue
+
+        elif char == "®":
+            variable_mode = True
+            call_set = "set"
+            continue
+
+        elif char == "©":
+            variable_mode = True
+            call_set = "call"
+            continue
+        
 
 
         if char in OPEN:
@@ -173,6 +200,8 @@ def parse(prog):
         else:
             ast.append(Token(CMDS.CMD, char))
 
+    if variable_mode:
+        ast.append(Token(CMDS.VARIABLE, [variable, call_set]))
     return ast
 
 def func(source):
@@ -198,5 +227,5 @@ def func(source):
     return {"name": name, "number": n}
 
 if __name__ == "__main__":
-    test = parse("(\\2|\\*)")
+    test = parse("8®abc8©abc")
     print([str(x) for x in test])

@@ -82,6 +82,9 @@ def Uncompress(source):
         elif char in STRINGS.STRINGS - {string_type}:
             temp += "\\" + char
 
+        elif char in ["'", '"']:
+            temp += "\\" + char
+
         elif char == "\\":
             temp += char
             escaped = True
