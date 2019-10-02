@@ -110,7 +110,7 @@ def raw(stack):
     else:
         print("`" + custom_format(item) + "`", end="") #Makes quines possible
 
-def _input(stack):
+def Input(stack):
     #This is the first of many input functions.
     #"Why are there more than one input function though?"
     #Well, because ?¿᠀ and implict input. That's why.

@@ -246,7 +246,7 @@ def transpile(source: str, stack="stack"):
             result += f"swap({stack})"
 
         elif command == INPUT:
-            result += f"_input({stack})"
+            result += f"Input({stack})"
 
         #Now, for Reg's commands
         elif command == IOTA:
@@ -387,6 +387,8 @@ def transpile(source: str, stack="stack"):
     return result.rstrip("\n")
 
 if __name__ == "__main__":
+    '''print(unicode)
+    '''
     if len(sys.argv) > 1:
         import argparse
         parser = argparse.ArgumentParser()
