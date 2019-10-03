@@ -69,7 +69,7 @@ def nice(stack):
     #This takes the top of the stack and prints it "nicely"
     #i.e. str() but even nicer. Also, implements some other rules a standard
     #call to a fn like str() might not handle
-
+    
     item = stack.pop()
     if type(item) == int:
         print(chr(item),
@@ -88,9 +88,9 @@ def nice(stack):
     else:
         print(custom_format(item), end="")
 
+
 def raw(stack):
     #Like nice(), but Keg's version of repr()
-
 
     item = stack.pop()
     if type(item) == int:
@@ -147,6 +147,13 @@ def loop_eval(expr):
         return range(ord(expr.v))
     else:
         return expr
+
+def condition_eval(expr_list, stack):
+    for expr in expr_list:
+        eval(expr)
+
+    return stack.pop()
+    
 
 
 # REG EXTENSION

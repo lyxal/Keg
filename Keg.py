@@ -230,10 +230,10 @@ def transpile(source: str, stack="stack"):
             result += f"pop_top({stack})"
 
         elif command == PRINT_CHR:
-            result += f"nice({stack})"
+            result += f"nice({stack}); printed = True"
 
         elif command == PRINT_INT:
-            result += f"raw({stack})"
+            result += f"raw({stack}); printed = True"
 
         elif command in [L_SHIFT, R_SHIFT]:
             result += f"shift({stack}, '" + ["left", "right"]\
@@ -241,6 +241,9 @@ def transpile(source: str, stack="stack"):
 
         elif command == REVERSE:
             result += f"reverse({stack})"
+
+        elif command == RANDOM:
+            result += f"random({stack})"
 
         elif command == SWAP:
             result += f"swap({stack})"
@@ -275,6 +278,9 @@ def transpile(source: str, stack="stack"):
 
         elif command == FACTORIAL:
             result += f"factorial({stack})"
+
+        elif command == STRING_INPUT:
+            result += f"string_input({stack})"
 
         #Now, keywords and structures
         elif command == COMMENT:
@@ -313,8 +319,12 @@ def transpile(source: str, stack="stack"):
                 result += tab_format(transpile(command[1]))
 
         elif name == Parse.CMDS.WHILE:
-            if command[0] == "":
-                result += "condition = " + transpile(command[0])
+            if command[0] != "":
+                result += "condition = condition_eval(["
+                result += ", ".join([f"\"{fn}\"" for fn in transpile(command[0])\
+                                     .split("\n")])
+                result += f"], {stack})"
+                print(result)
             else:
                 result += "condition = 1"
             result += "\nwhile condition:\n"
@@ -324,8 +334,12 @@ def transpile(source: str, stack="stack"):
             else:
                 result += tab_format(transpile(command[1]))
             result += "\n"
-            if command[0] == "":
-                result += tab_format("condition = " + transpile(command[0]))
+            if command[0] != "":
+                result += "condition = condition_eval(["
+                result += ", ".join([f"\"{fn}\"" for fn in transpile(command[0])\
+                                     .split("\n")])
+                result += f"], {stack})"
+                print(result)
             else:
                 result += tab_format("condition = 1")
 
@@ -448,6 +462,7 @@ if __name__ == "__main__":
         else:
             code += c
     code = preprocess.process(code); #print("After preprocess:", code)
+    code = preprocess.balance_strings(code);
     code = uncompress.Uncompress(code); #print("After uncom:", code)
 
     header = """
@@ -474,7 +489,7 @@ if not printed:
     print(printing)
 """
 
-    code = transpile(code)
+    code = transpile(balance(code))
     if args.compiled:
         import sys
         sys.stderr.write("-----\nTranspiled Code:")
