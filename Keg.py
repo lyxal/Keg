@@ -300,11 +300,11 @@ def transpile(source: str, stack="stack"):
             if command[0] == "":
                 result += tab_format("pass")
             else:
-                result += tab_format(transpile(command[0]))
+                result += tab_format(transpile(command[0], stack))
 
             if command[1]:
                 result += "\nelse:\n"
-                result += tab_format(transpile(command[1]))
+                result += tab_format(transpile(command[1], stack))
 
         elif name == Parse.CMDS.FOR:
             result += transpile(command[0])
@@ -351,9 +351,9 @@ def transpile(source: str, stack="stack"):
                 result += "def " + command[0]["name"] + f"({stack}):\n"
                 result += "    temp = Stack()"
                 result += "\n    for _ in range(" + str(command[0]["number"])\
-                          + "):"
-                result += f"\n    temp.push({stack}.pop())"
-                result += "\n" + tab_format(transpile(command[1]))
+                          + "): "
+                result += f"temp.push({stack}.pop())"
+                result += "\n" + tab_format(transpile(command[1], "temp"))
                 result += f"\n    for item in temp: {stack}.push(item)"
 
         elif name == Parse.CMDS.VARIABLE:

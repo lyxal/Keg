@@ -37,7 +37,7 @@ def comparative(stack, operator):
     rhs, lhs = stack.pop(), stack.pop()
     result = Coherse.do_compare(lhs, rhs, operator)
     stack.push(result)
-    
+
 
 # BUILT-IN FUNCTIONS
 
@@ -69,7 +69,7 @@ def nice(stack):
     #This takes the top of the stack and prints it "nicely"
     #i.e. str() but even nicer. Also, implements some other rules a standard
     #call to a fn like str() might not handle
-    
+
     item = stack.pop()
     if type(item) == int:
         print(chr(item),
@@ -153,7 +153,7 @@ def condition_eval(expr_list, stack):
         eval(expr)
 
     return stack.pop()
-    
+
 
 
 # REG EXTENSION
@@ -171,7 +171,7 @@ def sine(stack):
 
 def decrement(stack):
     item = stack.pop()
-    stack.push(operate(item, 1, "-"))
+    stack.push(Coherse.operate(item, 1, "-"))
 
 def nice_input(stack):
     #As aforementioned, round 2 of input has arrived.
@@ -311,13 +311,13 @@ def custom_format(source):
     var_mode = False
 
     import string
-    
+
     for char in source:
         if escaped:
             escaped = False
             result += char
             continue
-            
+
         elif char == "\\":
             escaped = True
             result += char
@@ -344,8 +344,3 @@ def custom_format(source):
     if var_mode:
         result += variables.get(temp, '©' + temp)
     return result
-
-
-
-
-
