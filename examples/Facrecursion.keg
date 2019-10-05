@@ -1,0 +1,3 @@
+#Factorial w/ recursion
+@factorial 1|:1<[_1|:;@factorialƒ*]ƒ#
+¿@factorialƒ.
