@@ -55,7 +55,10 @@ def balance_strings(source):
     for char in source:
         if escaped:
             if char in alt_strings:
-                result += alt_strings[char]
+                if string_mode:
+                    result += "\\" + char
+                else:
+                    result += alt_strings[char]
             else:
                 result += "\\" + char
             escaped = False
@@ -67,20 +70,19 @@ def balance_strings(source):
 
         elif string_mode:
             if char == symbol:
+                symbol = None
                 string_mode = False
-                result += char
-                symbol = ""
-            else:
-                result += "\\" + char
+
+            result += char
             continue
 
-        if char in "`¶‘“„«":
+        elif char in alt_strings:
+            string_mode = True
             symbol = char
             result += char
 
-
-
-        result += char
+        else:
+            result += char
 
 
     if symbol:
