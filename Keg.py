@@ -331,7 +331,6 @@ def transpile(source: str, stack="stack"):
                 result += ", ".join([f"\"{fn}\"" for fn in transpile(command[0])\
                                      .split("\n")])
                 result += f"], {stack})"
-                print(result)
             else:
                 result += "condition = 1"
             result += "\nwhile condition:\n"
@@ -346,7 +345,6 @@ def transpile(source: str, stack="stack"):
                 result += ", ".join([f"\"{fn}\"" for fn in transpile(command[0])\
                                      .split("\n")])
                 result += f"], {stack})"
-                print(result)
             else:
                 result += tab_format("condition = 1")
 
@@ -386,7 +384,6 @@ def transpile(source: str, stack="stack"):
         elif name == Parse.CMDS.STRING:
             import KegStrings
             item = KegStrings.obj_str_extract("`" + command + "`")
-            print(item)
             if type(item) != str:
                 if type(item) is list:
                     result += f"{stack}.push(Stack({item}))"
