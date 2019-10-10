@@ -58,10 +58,13 @@ def parse(prog):
             continue
 
         if variable_mode:
-            import string
-            if char not in string.ascii_letters:
+            import string as STRING_MODULE
+            if char not in STRING_MODULE.ascii_letters:
                 variable_mode = False
-                ast.append(Token(CMDS.VARIABLE, [variable, call_set]))
+                if structures:
+                    temp += {"call" : "©", "set" : "®"}[call_set] + variable
+                else:
+                    ast.append(Token(CMDS.VARIABLE, [variable, call_set]))
                 variable = ""
                 call_set = ""
 
@@ -227,5 +230,5 @@ def func(source):
     return {"name": name, "number": n}
 
 if __name__ == "__main__":
-    test = parse("8®abc8©abc")
+    test = parse("91+®T(©T|©T.)")
     print([str(x) for x in test])

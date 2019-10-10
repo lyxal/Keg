@@ -1,6 +1,7 @@
 #utf-8
 #The Uncompressor
 from Word_List import *
+import KegStrings
 sccs = generate_list()
 
 chars = "0123456789"
@@ -97,6 +98,10 @@ def Uncompress(source):
 def to_standard(source, s_type):
     result = ""
     compression_code = ""
+
+    if KegStrings.obj_str_extract(source) and s_type == STRINGS.STANDARD:
+        print(source)
+        return source
 
     if s_type in [STRINGS.STANDARD, STRINGS.STANDARD_SPACED]:
         spaces = " " * [STRINGS.STANDARD, STRINGS.STANDARD_SPACED].index(s_type)

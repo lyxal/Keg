@@ -35,9 +35,18 @@ class Stack:
             return self.__stack.pop()
         else:
             temp = input()
-            for char in reversed(temp):
-                self.__stack.append(_ord(char))
-            return self.__stack.pop()
+            try:
+                if type(eval(temp)) is float:
+                    temp = float(temp)
+                elif type(eval(temp)) is int:
+                    temp = int(temp)
+                elif type(eval(temp)) is list:
+                    temp = Stack(eval(temp))
+                elif type(eval(temp)) is str:
+                    temp = temp[-1]
+            except:
+                temp = temp[-1]
+            return temp
 
     def __repr__(self):
         return str(self.__stack)

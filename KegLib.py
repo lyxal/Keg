@@ -6,6 +6,7 @@ from Stackd import Stack
 
 _register = None
 variables = {}
+code_page = ""
 
 
 # BASIC STACK PUSHING
@@ -186,7 +187,9 @@ def nice_input(stack):
             stack.push(int(temp))
         except:
             try:
-                stack.push(eval(temp))
+                x = eval(temp)
+                if type(x) is list:
+                    stack.push(Stack(x))
             except:
                 stack.push(temp)
 
@@ -329,7 +332,7 @@ def custom_format(source):
                 continue
 
             else:
-                result += variables.get(temp, '©' + temp)
+                result += to_string(variables.get(temp, '©' + temp))
                 temp = ""
                 var_mode = False
                 if char == " ":
@@ -342,5 +345,65 @@ def custom_format(source):
         result += char
 
     if var_mode:
-        result += variables.get(temp, '©' + temp)
+        result += to_string(variables.get(temp, '©' + temp))
     return result
+
+def to_string(item):
+    if type(item) in [float, int]:
+        return str(item)
+
+    elif type(item) == char:
+        return str(_ord(item.v))
+
+    elif type(item) == str:
+        return item
+
+    else:
+        return str(item)
+
+def _ord(character):
+    if character in code_page:
+        return code_page.index(character)
+    else:
+        return ord(character)
+
+def _chr(i):
+    if code_page:
+        if 0 < i < 256:
+            return code_page[i]
+        else:
+            return chr(i)
+    else:
+        return chr(i)
+
+def try_cast(stack, what_type):
+    INTEGER, FLOAT, STRING, STACK, CHARACTER = "ℤℝ⅍℠ⁿ"
+    if what_type == INTEGER:
+        item = stack.pop()
+        try:
+            item = int(item)
+        except:
+            pass
+        stack.push(item)
+
+    elif what_type == FLOAT:
+        item = stack.pop()
+        try:
+            item = float(item)
+        except:
+            pass
+        stack.push(item)
+
+    elif what_type == STRING:
+        stack.push(str(stack.pop()))
+
+    elif what_type == CHARACTER:
+        item = stack.pop()
+        if Coherse._type(item) == "Number":
+            stack.push(_chr(int(item)))
+        elif Coherse._type(item) == "Character":
+            stack.push(item)
+        elif Coherse._type(item) == "String":
+            stack.push(char(item[0]))
+        elif Coherse._type(item) == "Stack":
+            stack.push(try_cast(item, CHARACTER))

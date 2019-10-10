@@ -169,12 +169,21 @@ def _type(item):
         return "Stack"
 
 def operate(lhs, rhs, op):
+    from Stackd import Stack
     tLhs, tRhs = _type(lhs), _type(rhs)
     choices = relations[tLhs][tRhs]
     expr = choices["+-*/%".index(op)]
     x, y = lhs, rhs
 
-    return eval(expr)
+    if type(lhs) is Stack:
+        x = eval(str(lhs))
+    if type(rhs) is Stack:
+        y = eval(str(rhs))
+
+    z = eval(expr)
+    if type(z) is list:
+        z = Stack(z)
+    return z
 
 
 def do_compare(lhs, rhs, op):

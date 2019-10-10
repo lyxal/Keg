@@ -35,7 +35,7 @@ DESCRIPTIONS = {
 }
 
 #Unofficial built-in functions
-#Note: Most of these are from Btup/A__/User:A, so go check out their
+#Note: Most of these are from A_ee/A__/User:A, so go check out their
 #repos/esolang account/code golf userpage and upvote their answers
 
 IOTA = "Ï"
@@ -54,11 +54,14 @@ DESCRIPTIONS[NICE_INPUT] = "Peform nice input"
 EXCLUSIVE_RANGE = "∂"
 INCLUSIVE_RANGE = "•"
 GENERATE_RANGE = "ɧ"
-GENERATE_RANGE_0 = "ø"
 NUMBER_SPLIT = "÷"
 FACTORIAL = "¡"
 EMPTY = "ø"
 PRINT_ALL = "Ω"
+NOT = "¬" #!top
+IS_TRUTHY = "λ" #[1|0]
+PI = "π"
+
 '''Remind me to create descriptions later'''
 
 #Keg+ Section
@@ -71,7 +74,7 @@ ALPHA_MAP = "abcdefghijklmnopqrstuvwxyz1234567890"
 
 
 INTEGER_SCAN = "‡"
-TO_INT, TO_FLOAT, TO_STRING, TO_STACK = "ℤℝ⅍℠"
+TO_INT, TO_FLOAT, TO_STRING, TO_STACK, TO_CHAR = "ℤℝ⅍℠ⁿ"
 UPPER, LOWER, TOGGLE = "⟰⟱⟷"
 SQUARE_OPERATOR = "²"
 STRING_INPUT = "᠀"
@@ -81,6 +84,16 @@ SUMMATE = "⅀"
 
 VARIABLE_SET = "©"
 VARIAGE_GET = "®"
+
+PERFORM_INDEX = "⊙"
+INDEX_LEVEL_DOWN = "᠈"
+INDEX_LEVEL_0 = "º"
+INFINITY = "א"
+RANDOM_INSTRUCTION = "⯑" #Chooses an instruction from
+#all avaliable commands and puts it in.
+
+DIV_MOD, EQUAL_TYPES, INDEX_LEVEL_UP, MD5_HASH = "①②③④"
+FUNCTION_MODIFIERS = "⑤⑥⑦⑧"
 
 
 #'Keywords'
@@ -100,7 +113,7 @@ DESCRIPTIONS[FUNCTION] = "Start/Call the given function"
 
 #Operators
 MATHS = "+-*/%Ë"
-CONDITIONAL = "<>=≬"
+CONDITIONAL = "<>=≬≤≠≥"
 NUMBERS = "0123456789"
 
 DESCRIPTIONS[MATHS] = "Pop x and y, and push y {0} x"
@@ -109,13 +122,7 @@ DESCRIPTIONS[NUMBERS] = "Push {0}"
 
 #Whitespace
 TAB = "\t"
-ALT_TAB = "    "
 NEWLINE = "\n"
-
-#Structures
-START = "start"
-END = "end"
-BODY = "body"
 
 #Code page
 unicode = "Ï§∑¿∂•ɧ÷¡Ëė≬ƒß‘“"
@@ -377,8 +384,16 @@ def transpile(source: str, stack="stack"):
             result += f"integer({stack}, " + command + ")"
 
         elif name == Parse.CMDS.STRING:
-            result += f"iterable({stack}, '" + command + "')"
-
+            import KegStrings
+            item = KegStrings.obj_str_extract("`" + command + "`")
+            print(item)
+            if type(item) != str:
+                if type(item) is list:
+                    result += f"{stack}.push(Stack({item}))"
+                else:
+                    result += f"{stack}.push({item})"
+            else:
+                result += f"iterable({stack}, '" + command + "')"
 
 
         #Whitespace
@@ -392,6 +407,11 @@ def transpile(source: str, stack="stack"):
 
         elif command in PUSH_N_PRINT:
             result += f"print('{ALPHA_MAP[PUSH_N_PRINT.index(command)]}')"
+
+        elif command in [TO_INT, TO_FLOAT, TO_STRING, TO_STACK, TO_CHAR]:
+            result += f"try_cast({stack}, '{command}')"
+
+        #Default case
 
         else:
             result += f"character({stack}, '" + command + "')"
@@ -443,8 +463,9 @@ if __name__ == "__main__":
         code_page = unicode
 
     #print(code_page)
-
+    import KegLib
     Stackd.code_page = code_page
+    KegLib.code_page = code_page
 
     e = False #escaped while preprocessing?
     for c in source:
@@ -478,7 +499,7 @@ if not printed:
     printing = ""
     for item in stack:
         if type(item) in [str, Stack]:
-            printing += item
+            printing += str(item)
         elif type(item) == Coherse.char:
             printing += item.v
 
