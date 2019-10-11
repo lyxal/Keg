@@ -176,9 +176,21 @@ These commands are added to Keg in order to make Keg programs shorter. These ins
 
 |Command|Description|Usage|Notes&Implementation|
 |-------|-----------|-----|--------------------|
-|`ï`| Replaces the top of stack with all items from `top to 0`|`ï`| this is under EASCII, of course;<br/>```(:\|:1-)```|
+|`Ï`| Replaces the top of stack with all items from `top to 0`|`Ï`| this is under EASCII, of course;<br/>```(:\|:1-)```|
 |`;`| Decrement the top of the stack | `;` | `1-` |
-|`É`| Exponentation |`Ẹ`| `# Unknown`|
-|`Š`| Sine function |`Š`| `# Unknown` |
+|`Ë`| Exponentation |`Ë`| `# Unknown`|
+|`§`| Sine function |`§`| `# Unknown` |
+|`¿`| Nice input | `¿`| Tries to eval as Float > Integer > List > String|
+|`∂`| Exclusive range | `∂` | Pops `x`, `y` and `z` and pushes `z in range(y, x)`|
+|`•`| Inclusive range | `•` | Pops `x`, `y` and `z` and pushes `z in range(y, x + 1)`|
+|`ɧ`| Generate range | `ɧ` | Pops `x` and `y` and pushes `range(y, x + 1)`|
+|`÷`| Item split | `÷`| Splits the top of stack into seperate parts|
+|`¡`| Factorial| `¡` | Takes the factorial of the top of the stack|
+|`ø`| Empties the stack |`ø`|None|
+|`Ω`|Prints the entire stack|`Ω`|None|
+|`∑`|Apply to all the stack|`∑`|Preprocesses to `(!;|`|
+|`¬`|Logically nots the top of the stack|`¬`|None|
+|`½`|Halves the top of the stack|`½`|None|
+
 
 <!-- TODO: Document everything else -->
