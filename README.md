@@ -192,5 +192,18 @@ These commands are added to Keg in order to make Keg programs shorter. These ins
 |`¬`|Logically nots the top of the stack|`¬`|None|
 |`½`|Halves the top of the stack|`½`|None|
 
+## Keg+ Extension
 
-<!-- TODO: Document everything else -->
+| Command | Description                                                                                               | Usage       | Notes                                                          | Implemented? |
+|---------|-----------------------------------------------------------------------------------------------------------|-------------|----------------------------------------------------------------|--------------|
+| `‡`     | Reads the source code until a non-number character is found                                               | `‡<number>` | Non-number character means that it isn't a valid float/integer | No           |
+| `ℤℝ⅍℠ⁿ` | Converts the top of the stack to the desired type (integer, float, stack, string, character respectively) | `<type>`    |                                                                | Yes          |
+| `⟰⟱⟷`   | Takes the top of the stack and uppercases it, lowercases it or togglecases it respectively                | `<mode>`    | Doesn't do anything to non-strings                             | Yes          |
+| `²`     | Squares the top of the stack                                                                              | `²`         | Performs `top * top`                                           | Yes          |
+| `᠀`     | Take input as a string                                                                                    | `᠀`         |                                                                | Yes          |
+| `∀`     | Pushes 1 if everything on the stack is true, otherwise 0                                                  | `∀`         | Doesn't pop things from the stack                              | Yes          |
+| `≌`     | Like above, but if everything is the same                                                                 | `≌`         |                                                                | Yes          |
+| `⅀`     | Summates the entire stack                                                                                 | `⅀`         | Pretty much just `∑+)`                                         | Yes          |
+| `ß`     | Takes the top of the stack and executes it as Keg code                                                    | `ß`         |                                                                | Kind of      |
+| `©`     | Get the value of a variable                                                                               | `©name`     | `name` has to only contain letters                             | Yes          |
+| `®`     | Set the value of a variable to the top of the stack (popping it)                                          | `®name`     | Same as above                                                  | Yes          |
