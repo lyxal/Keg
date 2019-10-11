@@ -51,6 +51,9 @@ class Stack:
     def __repr__(self):
         return str(self.__stack)
 
+    def clear(self):
+        self.__stack.clear()
+
 if __name__ == "__main__":
     x = Stack()
     y = x.pop() + x.pop()
