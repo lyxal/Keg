@@ -142,8 +142,8 @@ def register(stack):
 
 # FOR-LOOP HELPER
 def loop_eval(expr):
-    if type(expr) is int:
-        return range(expr)
+    if type(expr) in [float, int]:
+        return range(int(expr))
     elif type(expr) is char:
         return range(ord(expr.v))
     else:
@@ -173,6 +173,10 @@ def sine(stack):
 def decrement(stack):
     item = stack.pop()
     stack.push(Coherse.operate(item, 1, "-"))
+
+def increment(stack):
+    item = stack.pop()
+    stack.push(Coherse.operate(item, 1, "+"))
 
 def nice_input(stack):
     #As aforementioned, round 2 of input has arrived.
@@ -252,6 +256,20 @@ def print_all(stack):
     for item in stack:
         nice(stack)
 
+def not_top(stack):
+    item = stack.pop()
+    stack.push(0 if item else 1)
+
+def pi(stack):
+    import math
+    stack.push(math.pi)
+
+def halve_top(stack):
+    item = stack.pop()
+    stack.push(Coherse.operate(item, 2, "/"))
+
+#Keg+ Functions
+
 def convert(stack, _type):
     item = stack.pop()
     try:
@@ -262,7 +280,9 @@ def convert(stack, _type):
 
 def case_switch(stack, how):
     string = stack.pop()
-    if type(string) is not string: stack.push(string)
+    if type(string) is not string:
+        stack.push(string)
+        return
     if how == "upper": stack.push(string.upper())
     elif how == "lower": stack.push(string.lower())
     else: stack.push(string.swapcase())
@@ -296,7 +316,7 @@ def all_equal(stack):
 
 def summate(stack):
     for item in stack:
-        stack.push(add(stack.pop(), stack.pop()))
+        stack.push(maths(stack, "+"))
 
 def var_set(stack, name):
     variables[name] = stack.pop()
@@ -407,3 +427,25 @@ def try_cast(stack, what_type):
             stack.push(char(item[0]))
         elif Coherse._type(item) == "Stack":
             stack.push(try_cast(item, CHARACTER))
+
+def keg_exec(big_stack):
+    import Keg
+    code = big_stack.pop()
+    code = Keg.transpile(code)
+
+    header = """
+    from KegLib import *
+    from Stackd import Stack
+    stack = Stack()
+    """
+
+    footer = """
+    for item in stack:
+        big_stack.push(item)
+    """
+
+    exec(header + code + footer)
+
+def item_in(stack):
+    #Returns true if my name is jeff
+    return False

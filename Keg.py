@@ -59,8 +59,10 @@ FACTORIAL = "¡"
 EMPTY = "ø"
 PRINT_ALL = "Ω"
 NOT = "¬" #!top
-IS_TRUTHY = "λ" #[1|0]
+PREDEFINED_CONSTANT = "λ"
 PI = "π"
+HALVE_TOP = "½" #math(stack, "/")
+INCREMENT = "⑨" #perhaps an upside down semi-colon
 
 '''Remind me to create descriptions later'''
 
@@ -81,6 +83,8 @@ STRING_INPUT = "᠀"
 ALL_TRUE = "∀"
 ALL_EQUAL = "≌"
 SUMMATE = "⅀"
+EVAL_EXEC = "ß"
+END_EFCOM = "™"
 
 VARIABLE_SET = "©"
 VARIAGE_GET = "®"
@@ -94,6 +98,7 @@ RANDOM_INSTRUCTION = "⯑" #Chooses an instruction from
 
 DIV_MOD, EQUAL_TYPES, INDEX_LEVEL_UP, MD5_HASH = "①②③④"
 FUNCTION_MODIFIERS = "⑤⑥⑦⑧"
+ITEM_IN = "⊂"
 
 
 #'Keywords'
@@ -289,6 +294,9 @@ def transpile(source: str, stack="stack"):
         elif command == STRING_INPUT:
             result += f"string_input({stack})"
 
+        elif command == INCREMENT:
+            result += f"increment({stack})"
+
         #Now, keywords and structures
         elif command == COMMENT:
             comment = True
@@ -408,6 +416,33 @@ def transpile(source: str, stack="stack"):
         elif command in [TO_INT, TO_FLOAT, TO_STRING, TO_STACK, TO_CHAR]:
             result += f"try_cast({stack}, '{command}')"
 
+        elif command == SQUARE_OPERATOR:
+            result += f"square({stack})"
+
+        elif command == ALL_TRUE:
+            result += f"all_true{stack}"
+
+        elif command == ALL_EQUAL:
+            result += f"all_equal({stack})"
+
+        elif command == UPPER:
+            result += f"case_switch({stack}, 'upper')"
+
+        elif command == LOWER:
+            result += f"case_switch({stack}, 'lower')"
+
+        elif command == TOGGLE:
+            result += f"case_switch({stack}, 'toggle')"
+
+        elif command == SUMMATE:
+            result += f"summate({stack})"
+
+        elif command == EMPTY:
+            result += f"empty({stack})"
+
+        elif command == PRINT_ALL:
+            result += f"print_all({stack})"
+
         #Default case
 
         else:
@@ -495,8 +530,11 @@ printed = False
 if not printed:
     printing = ""
     for item in stack:
-        if type(item) in [str, Stack]:
+        if type(item) is Stack:
             printing += str(item)
+
+        elif type(item) is str:
+            printing += custom_format(item)
         elif type(item) == Coherse.char:
             printing += item.v
 
