@@ -230,8 +230,19 @@ def transpile(source: str, stack="stack"):
             result += f"integer(stack, {ord(command)})\n"
             continue
 
+        if name == Parse.CMDS.STRING:
+            import KegStrings
+            item = KegStrings.obj_str_extract("`" + command + "`")
+            if type(item) != str:
+                if type(item) is list:
+                    result += f"{stack}.push(Stack({item}))"
+                else:
+                    result += f"{stack}.push({item})"
+            else:
+                result += f"iterable({stack}, '" + command + "')"
+
         #Handle all functions (built-in)
-        if command == LENGTH:
+        elif command == LENGTH:
             result += f"length({stack})"
 
         elif command == DUPLICATE:
@@ -388,16 +399,7 @@ def transpile(source: str, stack="stack"):
         elif command in NUMBERS:
             result += f"integer({stack}, " + command + ")"
 
-        elif name == Parse.CMDS.STRING:
-            import KegStrings
-            item = KegStrings.obj_str_extract("`" + command + "`")
-            if type(item) != str:
-                if type(item) is list:
-                    result += f"{stack}.push(Stack({item}))"
-                else:
-                    result += f"{stack}.push({item})"
-            else:
-                result += f"iterable({stack}, '" + command + "')"
+
 
 
         #Whitespace
@@ -447,7 +449,7 @@ def transpile(source: str, stack="stack"):
         else:
             result += f"character({stack}, '" + command + "')"
 
-        result += "\n"
+        result += ("\n")
 
     return result.rstrip("\n")
 
