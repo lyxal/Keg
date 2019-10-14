@@ -543,7 +543,7 @@ if not printed:
             printing += str(item)
         else:
             printing += chr(item)
-    print(printing)
+    print(printing, end="")
 """
 
     code = transpile(balance(code))
