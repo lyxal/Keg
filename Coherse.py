@@ -6,6 +6,9 @@ class char():
     def __init__(self, what):
         self.v = what
 
+    def __str__(self):
+        return self.v
+
 def split_list(list_obj: list, n: int) -> list:
     return [list_obj[i:i+n] for i in range(0, len(list_obj), n)]
 
