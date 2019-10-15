@@ -166,13 +166,13 @@ def balance(source):
             if char in alt_brackets:
                 result += alt_brackets[char]
             else:
-                result += char
+                result += "\\" + char
             escaped = False
             continue
 
         elif char == "\\":
             escaped = True
-            result += char
+
             continue
 
         if char in "[({":
