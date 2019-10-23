@@ -118,8 +118,8 @@ def Input(stack):
 
     #This one is "take input and push as ord"
     item = input()
-    for char in reversed(item):
-        stack.push(char)
+    for character in reversed(item):
+        stack.push(char(character))
 
     #See you soon with another input fn!
 
