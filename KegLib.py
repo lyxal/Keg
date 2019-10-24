@@ -280,7 +280,7 @@ def convert(stack, _type):
 
 def case_switch(stack, how):
     string = stack.pop()
-    if type(string) is not string:
+    if type(string) is not str:
         stack.push(string)
         return
     if how == "upper": stack.push(string.upper())
