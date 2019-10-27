@@ -554,4 +554,12 @@ if not printed:
         sys.stderr.write(full)
         sys.stderr.write("-----\n")
 
-    exec(header + code + footer)
+
+    if code.strip():
+        print("code =", repr(code))
+        exec(header + code + footer)
+    else:
+        try:
+            print(input())
+        except:
+            pass
