@@ -345,10 +345,12 @@ def transpile(source: str, stack="stack"):
 
         elif name == Parse.CMDS.WHILE:
             if command[0] != "":
-                result += "condition = condition_eval(["
-                result += ", ".join([f"\"{fn}\"" for fn in transpile(command[0])\
+                temp_string = "condition = condition_eval(["
+                temp_string += ", ".join([f"\"{fn}\"" for\
+                                          fn in transpile(command[0])\
                                      .split("\n")])
-                result += f"], {stack})"
+                temp_string += f"], {stack})"
+                result += (temp_string)
             else:
                 result += "condition = 1"
             result += "\nwhile condition:\n"
@@ -359,10 +361,12 @@ def transpile(source: str, stack="stack"):
                 result += tab_format(transpile(command[1]))
             result += "\n"
             if command[0] != "":
-                result += "condition = condition_eval(["
-                result += ", ".join([f"\"{fn}\"" for fn in transpile(command[0])\
+                temp_string = "condition = condition_eval(["
+                temp_string += ", ".join([f"\"{fn}\"" for\
+                                          fn in transpile(command[0])\
                                      .split("\n")])
-                result += f"], {stack})"
+                temp_string += f"], {stack})"
+                result += tab_format(temp_string)
             else:
                 result += tab_format("condition = 1")
 
@@ -556,7 +560,6 @@ if not printed:
 
 
     if code.strip():
-        print("code =", repr(code))
         exec(header + code + footer)
     else:
         try:
