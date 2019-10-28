@@ -201,7 +201,8 @@ def nice_input(stack):
 
 def excl_range(stack):
     query = stack.pop()
-    values = [stack.pop(), stack.pop()]
+    x, y = stack.pop(), stack.pop()
+    values = [to_integer(x), to_integer(y)]
     start, stop = sorted(values)
     range_object = range(start, stop)
     if query in range_object:
@@ -211,7 +212,8 @@ def excl_range(stack):
 
 def incl_range(stack):
     query = stack.pop()
-    values = [stack.pop(), stack.pop()]
+    x, y = stack.pop(), stack.pop()
+    values = [to_integer(x), to_integer(y)]
     start, stop = sorted(values)
     range_object = range(start, stop + 1)
     if query in range_object:
@@ -220,11 +222,15 @@ def incl_range(stack):
         stack.push(0)
 
 def smart_range(stack):
-    values = [stack.pop(), stack.pop()]
+    x, y = stack.pop(), stack.pop()
+    values = [to_integer(x), to_integer(y)]
     start, stop = sorted(values)
     range_object = range(start, stop + 1)
     for item in range_object:
         stack.push(item)
+
+def to_integer(item):
+    return _ord(item) if type(item) is char else item
 
 def item_split(stack):
     item = stack.pop()
@@ -382,8 +388,8 @@ def to_string(item):
         return str(item)
 
 def _ord(character):
-    if character in code_page:
-        return code_page.index(character)
+    if str(character) in code_page:
+        return code_page.index(str(character))
     else:
         return ord(character)
 

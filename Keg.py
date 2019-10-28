@@ -227,7 +227,7 @@ def transpile(source: str, stack="stack"):
 
         if name == Parse.CMDS.ESC:
             escape = False
-            result += f"integer(stack, {ord(command)})\n"
+            result += f"integer(stack, {KegLib._ord(command)})\n"
             continue
 
         if name == Parse.CMDS.STRING:
