@@ -118,8 +118,8 @@ def Input(stack):
 
     #This one is "take input and push as ord"
     item = input()
-    for character in reversed(item):
-        stack.push(char(character))
+    for char in reversed(item):
+        stack.push(char)
 
     #See you soon with another input fn!
 
@@ -280,7 +280,7 @@ def convert(stack, _type):
 
 def case_switch(stack, how):
     string = stack.pop()
-    if type(string) is not str:
+    if type(string) is not string:
         stack.push(string)
         return
     if how == "upper": stack.push(string.upper())
@@ -289,7 +289,7 @@ def case_switch(stack, how):
 
 def square(stack):
     item = stack.pop()
-    stack.push(operate(item, item, "*"))
+    stack.push(Coherse.operate(item, item, "*"))
 
 def string_input(stack):
     #The third and final method of input: string input
