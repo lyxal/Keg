@@ -124,9 +124,9 @@ second = {
         "Stack": ["1", "1", "1", "1", "1", "1", "1"]
     },
 "Character" : {
-        "Number": ["x < ord(y.v)", "x > ord(y.v)", "x <= ord(y.v)",
-         "x >= ord(y.v)", "x == ord(y.v)", "x != ord(y.v)",
-        "x < ord(y.v) and x > 0"],
+        "Number": ["ord(x.v) < y", "ord(x.v) > y", "ord(x.v) <= y",
+         "ord(x.v) >= y", "y == ord(x.v)", "y != ord(x.v)",
+        "ord(x.v) < y and y > 0"],
         "Character" : ["ord(x.v) < ord(y.v)", "ord(x.v) > ord(y.v)",
          "ord(x.v) <= ord(y.v)", "ord(x.v) >= ord(y.v)",
           "ord(x.v) == ord(y.v)", "ord(x.v) != ord(y.v)",
