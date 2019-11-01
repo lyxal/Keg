@@ -1,10 +1,12 @@
-import sys
-import Parse
-import uncompress
-import preprocess
-import Stackd
+import sys #Used for file parsing
+import Parse #Used for Keg source parsing
+import uncompress #Used for uncompressing Keg strings
+import preprocess #Used for expanding preprocessor cues
+import Stackd #The main data type of Keg
 
 '''Constants Section'''
+'''The following lines will define all the commands and place them into
+more readable/modular constants'''
 
 #Built-ins
 
@@ -64,12 +66,10 @@ PI = "π"
 HALVE_TOP = "½" #math(stack, "/")
 INCREMENT = "⑨" #perhaps an upside down semi-colon
 
-'''Remind me to create descriptions later'''
-
 #Keg+ Section
 PUSH_N_PRINT = "ȦƁƇƉƐƑƓǶȊȷǨȽƜƝǪǷɊƦȘȚȔƲɅƛƳƵ"
 for n in range(127234, 127243): PUSH_N_PRINT += chr(n)
-#Don't go trying to print PUSH_N_PRINT in IDLE... Tkinter doesn't like some of
+#NOTE: Don't go trying to print PUSH_N_PRINT in IDLE... Tkinter doesn't like some of
 #the characters
 
 ALPHA_MAP = "abcdefghijklmnopqrstuvwxyz1234567890"
@@ -129,7 +129,7 @@ DESCRIPTIONS[NUMBERS] = "Push {0}"
 TAB = "\t"
 NEWLINE = "\n"
 
-#Code page
+#Code page - Special to Keg
 unicode = "Ï§∑¿∂•ɧ÷¡Ëė≬ƒß‘“"
 unicode += "„«®©ëλº√₳¬≤Š≠≥Ėπ"
 unicode += " !\"#$%&'()*+,-./"
@@ -149,20 +149,38 @@ unicode += "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳⑴⑵�
 
 
 for n in range(127234, 127243): unicode += chr(n)
+
 '''Transpiler Helpers'''
 
-def balance(source):
-    brackets = []
+def balance(source: str) -> str:
+    '''
+
+    Takes: source [str]
+    Does: Balances any unclosed brackets and replaces any escaped brackets with
+    an expression that evaluates to the ordinal value of the bracket. This is
+    because it was too hard to have literal brackets in the source and have
+    them escaped like other characters.
+    Returns: str
+
+    "abc" -> "abc"
+    "(+" -> "(+)"
+    "{[{[" -> "{[{[]}]}"
+    "\{" -> "z1-"
+
+    '''
+
+    brackets = [] #This is kind of equivalent to the loops list found commonly
+    #in Python BF interpreters.
     mapping = {"{" : "}", "[" : "]", "(" : ")", "": ""}
     alt_brackets = {"{" : "z1-", "}" : "z3+", "(" : "85*",
                     ")" : "85*1+", "[" : "Z1+",
                     "]" : "Z3+"}
 
-    escaped = False
+    escaped = False #Whether or not there is currently an escape sequence
 
     result = ""
     for char in source:
-        if escaped:
+        if escaped: #Either escape the bracket or keep the escape
             if char in alt_brackets:
                 result += alt_brackets[char]
             else:
@@ -179,7 +197,7 @@ def balance(source):
             brackets.append(char)
 
         elif char in "])}":
-            for i in range(len(brackets)):
+            for i in range(len(brackets)): #Close an open bracket
                 if mapping[brackets[i]] == char:
                     brackets[i] = ""
                     break
@@ -187,12 +205,23 @@ def balance(source):
         result += char
 
     if len(brackets):
-        for char in reversed(brackets):
+        for char in reversed(brackets): #Close all brackets
             result += mapping[char]
 
     return result
 
-def tab_format(string):
+def tab_format(string: str) -> str:
+    '''
+    Takes: string [str]
+    Does: Formats the line with tabs at the start. This also happens to
+    recursively format lines within for|while loops/if stmts/functions, which
+    is nice.
+    Returns: str
+
+
+    "abc" -> "    abc\n"
+
+    '''
     result = ""
     for line in string.rstrip().split("\n"):
         result += "    " + line + "\n"
@@ -201,7 +230,15 @@ def tab_format(string):
 '''Actual Transpiler'''
 
 def transpile(source: str, stack="stack"):
+    '''
+    Takes: source [str], stack (default="stack") [str]
+    Does: This is the primary function here, as it does the actual transpilation
+    of Keg programs. Without it, there would be no Keg. It first of all parses
+    the source into a list of tokens as defined in `Parse.py`. It then goes
+    through and turns these tokens into python.
+    Returns: str
 
+    '''
     source = Parse.parse(source)
 
     comment = False #Whether or not the transpiler is parsing a comment
@@ -218,6 +255,8 @@ def transpile(source: str, stack="stack"):
     for Token in source:
         name, command = Token.name, Token.data
         #print(name, command)
+        #^^ used only for debugging while working on the Transpiler
+
 
         #Deal with comments and potential escaped characters first
         if comment == True:
@@ -231,14 +270,14 @@ def transpile(source: str, stack="stack"):
             continue
 
         if name == Parse.CMDS.STRING:
-            import KegStrings
+            import KegStrings #Allow for the usage of object strings
             item = KegStrings.obj_str_extract("`" + command + "`")
-            if type(item) != str:
-                if type(item) is list:
+            if type(item) != str: #The object is an object string
+                if type(item) is list: #this is generally raw python.
                     result += f"{stack}.push(Stack({item}))"
                 else:
                     result += f"{stack}.push({item})"
-            else:
+            else: #It isn't an object string
                 result += f"iterable({stack}, '" + command + "')"
 
         #Handle all functions (built-in)
@@ -321,54 +360,108 @@ def transpile(source: str, stack="stack"):
             result += f"register({stack})"
 
         elif name == Parse.CMDS.IF:
+
+            '''
+
+            [ifTrue|ifFalse] -->
+
+            if bool(stack.pop()):
+                ifTrue
+            else:
+                ifFalse
+
+            [ifTrue] -->
+
+            if bool(stack.pop()):
+                ifTrue
+
+            [|ifFalse] -->
+
+            if bool(stack.pop()):
+                pass
+            else:
+                ifFalse
+            '''
+
             result += f"if bool({stack}.pop()):\n"
-            if command[0] == "":
+            if Token.data[0] == "":
                 result += tab_format("pass")
             else:
                 result += tab_format(transpile(command[0], stack))
 
-            if command[1]:
+            if Token.data[1]:
                 result += "\nelse:\n"
                 result += tab_format(transpile(command[1], stack))
 
         elif name == Parse.CMDS.FOR:
-            result += transpile(command[0])
+
+            '''
+
+            (count|code) -->
+
+            count
+            for _ in loop_eval(stack.pop()):
+                code
+
+
+            (code) -->
+
+            length(stack)
+            for _ in loop_eval(stack.pop()):
+                code
+
+            '''
+
+            result += transpile(Token.data[0])
             result += f"\nfor _ in loop_eval({stack}.pop()):"
             result += "\n"
 
 
 
-            if command[1] == "":
+            if Token.data[1] == "":
                 result += tab_format("pass")
             else:
-                result += tab_format(transpile(command[1]))
+                result += tab_format(transpile(Token.data[1]))
 
         elif name == Parse.CMDS.WHILE:
-            if command[0] != "":
-                temp_string = "condition = condition_eval(["
-                temp_string += ", ".join([f"\"{fn}\"" for\
-                                          fn in transpile(command[0])\
-                                     .split("\n")])
-                temp_string += f"], {stack})"
-                result += (temp_string)
-            else:
-                result += "condition = 1"
-            result += "\nwhile condition:\n"
 
-            if command[1] == "":
+            '''
+            {condition|code} -->
+
+            for expr in condition: eval(expr)
+            while stack.pop():
+                code
+                for expr in condition: eval(expr)
+
+
+            {code} -->
+
+            while 1:
+                code
+
+            '''
+
+            if Token.data[0]:
+                template = "for expr in {0}: eval(expr)\n"
+
+                functions = [] #Transpile all functions into a nice list
+                for function in transpile(Token.data[0]).split("\n"):
+                    functions.append(function)
+
+
+                result += template.format(functions)
+                result += f"while {stack}.pop():\n"
+            else:
+                result += "while 1:\n"
+
+            if not Token.data[1]:
                 result += tab_format("pass")
             else:
-                result += tab_format(transpile(command[1]))
+                result += tab_format(transpile(Token.data[1]))
             result += "\n"
-            if command[0] != "":
-                temp_string = "condition = condition_eval(["
-                temp_string += ", ".join([f"\"{fn}\"" for\
-                                          fn in transpile(command[0])\
-                                     .split("\n")])
-                temp_string += f"], {stack})"
-                result += tab_format(temp_string)
-            else:
-                result += tab_format("condition = 1")
+
+            if Token.data[0]:
+                result += tab_format(template.format(functions))
 
         elif name == Parse.CMDS.FUNCTION:
             if command[0] == 1:

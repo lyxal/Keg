@@ -230,5 +230,5 @@ def func(source):
     return {"name": name, "number": n}
 
 if __name__ == "__main__":
-    test = parse("91+®T(©T|©T.)")
+    test = parse("{1}")
     print([str(x) for x in test])

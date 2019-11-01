@@ -7,6 +7,7 @@ from Stackd import Stack
 _register = None
 variables = {}
 code_page = ""
+function_list = []
 
 
 # BASIC STACK PUSHING
@@ -118,8 +119,8 @@ def Input(stack):
 
     #This one is "take input and push as ord"
     item = input()
-    for char in reversed(item):
-        stack.push(char)
+    for Char in reversed(item):
+        stack.push(char(Char))
 
     #See you soon with another input fn!
 
@@ -185,11 +186,13 @@ def nice_input(stack):
     temp = input()
 
     try:
-        stack.push(float(temp))
-    except:
-        try:
+        x = int(temp)
+        y = float(temp)
+        if x == y:
             stack.push(int(temp))
-        except:
+        else:
+            stack.push(float(temp))
+    except:
             try:
                 x = eval(temp)
                 if type(x) is list:
@@ -205,7 +208,7 @@ def excl_range(stack):
     values = [to_integer(x), to_integer(y)]
     start, stop = sorted(values)
     range_object = range(start, stop)
-    if query in range_object:
+    if to_integer(query) in range_object:
         stack.push(1)
     else:
         stack.push(0)
@@ -216,7 +219,7 @@ def incl_range(stack):
     values = [to_integer(x), to_integer(y)]
     start, stop = sorted(values)
     range_object = range(start, stop + 1)
-    if query in range_object:
+    if to_integer(query) in range_object:
         stack.push(1)
     else:
         stack.push(0)
@@ -230,14 +233,18 @@ def smart_range(stack):
         stack.push(item)
 
 def to_integer(item):
-    return _ord(item) if type(item) is char else item
+    return _ord(item) if type(item) is char else int(item)
 
 def item_split(stack):
     item = stack.pop()
     _type = type(item)
     if _type is int:
         for number in str(item):
-            stack.push(int(item))
+            stack.push(int(number) if number in "0123456789" else number)
+
+    elif _type is float:
+        for number in str(item):
+            stack.push(int(number) if number in "0123456789" else number)
     elif _type is char:
         for number in str(ord(item.v)):
             stack.push(int(item))
