@@ -266,7 +266,7 @@ def transpile(source: str, stack="stack"):
 
         if name == Parse.CMDS.ESC:
             escape = False
-            result += f"integer(stack, {KegLib._ord(command)})\n"
+            result += f"character(stack, '{command}')\n"
             continue
 
         if name == Parse.CMDS.STRING:
@@ -561,6 +561,23 @@ if __name__ == "__main__":
                             help="Explains given source", action='store_true')
         parser.add_argument("-cm", "--compiled",
                             help="Shows the compiled code", action='store_true')
+
+        #Custom Keg flags
+        #-hd --head : prints only the head of the stack upon finishing
+
+        parser.add_argument("-hd", "--head",
+                            help="Only prints the top item",
+                            action='store_true')
+
+        #-no --newoutput : prints everything 'as-is'/no conversion of ints to
+        #chars
+
+        parser.add_argument("-no", "--newoutput",
+                    help="Prints everything 'as-is'",
+                    action='store_true')
+
+        
+        
         args = parser.parse_args()
         file_location = args.file
 
@@ -623,7 +640,22 @@ stack = Stack()
 printed = False
 """
 
-    footer = """
+    #Conditionally determine the footer
+
+    if args.head:
+        footer = """
+if not printed:
+    nice(stack)
+"""
+
+    elif args.newoutput:
+        footer = """
+if not printed:
+    x = len(stack) - 1
+    for _ in range(x):
+        nice(stack)"""
+    else:
+        footer = """
 
 if not printed:
     printing = ""

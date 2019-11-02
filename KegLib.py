@@ -328,8 +328,10 @@ def all_equal(stack):
     stack.push(equal)
 
 def summate(stack):
-    for item in stack:
-        stack.push(maths(stack, "+"))
+    x = len(stack) - 1
+    for n in range(x):
+        maths(stack, "+")
+        
 
 def var_set(stack, name):
     variables[name] = stack.pop()
