@@ -541,6 +541,9 @@ def transpile(source: str, stack="stack"):
         elif command == PRINT_ALL:
             result += f"print_all({stack})"
 
+        elif command == Parse.CMDS.INTEGER:
+            result += f"integer({stack}, {data})"
+
         #Default case
 
         else:
@@ -576,8 +579,28 @@ if __name__ == "__main__":
                     help="Prints everything 'as-is'",
                     action='store_true')
 
-        
-        
+        #-hr --headraw : prints only the top of stack raw
+
+        parser.add_argument("-hr", "--headraw",
+            help="Only prints the top item raw",
+            action='store_true')
+
+        #-rr --reverseraw : reverse then perform -hr
+
+        parser.add_argument("-rr", "--reverseraw",
+            help="Reverse stack then -rr",
+            action='store_true')
+
+        #-rn --reversenice : reverse then perform -hd
+
+        parser.add_argument("-rn", "--reversenice",
+            help="Reverse stack then -rd",
+            action='store_true')
+    
+
+
+
+
         args = parser.parse_args()
         file_location = args.file
 
@@ -654,6 +677,27 @@ if not printed:
     x = len(stack) - 1
     for _ in range(x):
         nice(stack)"""
+
+    elif args.headraw:
+        footer = """
+if  not printed:
+    raw(stack)
+"""
+
+    elif args.reverseraw:
+        footer = """
+if not printed:
+    reverse(stack)
+    raw(stack)
+"""
+
+    elif args.reversenice:
+        footer = """
+if not printed:
+    reverse(stack)
+    nice(stack)
+"""
+        
     else:
         footer = """
 
