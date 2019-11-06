@@ -2,6 +2,7 @@ SQUARE = ["[", "]"]
 ROUND = ["(", ")"]
 CURLY = ["{", "}"]
 FUNCTION = ["@", "ƒ"]
+INTEGER_SCAN = "‡"
 
 OPEN, CLOSE = "[({@", "])}ƒ"
 
@@ -16,6 +17,7 @@ class CMDS:
     ESC = "escape"
     STRING = "string"
     VARIABLE = "variable"
+    INTEGER = "integer"
 
 
 class Token():
@@ -31,12 +33,25 @@ def parse(prog):
     temp, parts, structures, escaped = "", [], [], False
     string_mode, string = False, ""
     variable_mode, variable, call_set = False, "", ""
+    integer_mode, number = False, ""
     #call_set will be whether or not to set the variable
-    
+
     ast = []
     #print(prog)
     for char in prog:
         #print(char, temp, parts, structures, [str(x) for x in ast])
+
+        if integer_mode:
+            if char not in "1234567890":
+                integer_mode = False
+                if structures:
+                    temp += "‡" + number
+                else:
+                    ast.append(Token(CMDS.INTEGER, number))
+                number = ""
+            else:
+                number += char
+            continue
 
         if string_mode:
             if escaped:
@@ -72,7 +87,7 @@ def parse(prog):
                 variable += char
                 continue
 
-        
+
         if escaped:
             escaped = False
             if structures:
@@ -100,7 +115,7 @@ def parse(prog):
             variable_mode = True
             call_set = "call"
             continue
-        
+
 
 
         if char in OPEN:
