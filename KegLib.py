@@ -233,7 +233,7 @@ def smart_range(stack):
         stack.push(item)
 
 def to_integer(item):
-    return _ord(item) if type(item) is char else int(item)
+    return _ord(item.v) if type(item) is char else int(item)
 
 def item_split(stack):
     item = stack.pop()

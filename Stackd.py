@@ -7,6 +7,7 @@ def _ord(char):
         return ord(char)
 
 code_page = "Set me in Keg.py"
+input_raw = False #Set me in Keg.py using flags
 
 class Stack:
     def __init__(self, iterable=()):
@@ -35,6 +36,13 @@ class Stack:
             return self.__stack.pop()
         else:
             temp = input()
+
+            if input_raw:
+                from Coherse import char
+                for Char in reversed(temp):
+                    self.__stack.append(char(Char))
+                return self.__stack.pop()
+
             try:
                 if type(eval(temp)) is float:
                     temp = float(temp)
@@ -43,9 +51,11 @@ class Stack:
                 elif type(eval(temp)) is list:
                     temp = Stack(eval(temp))
                 elif type(eval(temp)) is str:
-                    temp = temp[-1]
+                    for Char in reversed(temp):
+                        self.__stack.append(Char)
+                    return self.__stack.pop()
             except:
-                temp = temp[-1]
+                temp = temp
             return temp
 
     def __repr__(self):

@@ -496,6 +496,8 @@ def transpile(source: str, stack="stack"):
         elif command in NUMBERS:
             result += f"integer({stack}, " + command + ")"
 
+        elif command == HALVE_TOP:
+            result += f"halve_top({stack})"
 
 
 
@@ -596,7 +598,15 @@ if __name__ == "__main__":
         parser.add_argument("-rn", "--reversenice",
             help="Reverse stack then -rd",
             action='store_true')
-    
+
+        parser.add_argument("-ir", "--inputraw",
+            help="Make implicit input _not_ evaluate everything",
+            action='store_true')
+
+        parser.add_argument("-oc", "--outputcharacters",
+            help="Output _everything_ as characters if possible",
+            action='store_true')
+
 
 
 
@@ -663,6 +673,9 @@ stack = Stack()
 printed = False
 """
 
+    if args.inputraw:
+        Stackd.input_raw = True
+
     #Conditionally determine the footer
 
     if args.head:
@@ -697,7 +710,17 @@ if not printed:
     reverse(stack)
     nice(stack)
 """
-        
+
+    elif args.outputcharacters:
+        footer = """
+if not printed:
+    for item in stack:
+        if type(item) in [int, float]:
+            print(chr(int(item)), end="")
+        else:
+            print(str(item), end="")
+"""
+
     else:
         footer = """
 
