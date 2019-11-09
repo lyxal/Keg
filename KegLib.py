@@ -104,7 +104,7 @@ def raw(stack):
               end="") #Floats -> Floats
 
     elif type(item) == char:
-        print(ord(item.v), end="") #Char -> Integer
+        print(_ord(item.v), end="") #Char -> Integer
 
     elif type(item) == Stack:
         print(repr(stack), end="") #I actually made a repr() fn for Stacks
@@ -331,7 +331,7 @@ def summate(stack):
     x = len(stack) - 1
     for n in range(x):
         maths(stack, "+")
-        
+
 
 def var_set(stack, name):
     variables[name] = stack.pop()
