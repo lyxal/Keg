@@ -462,5 +462,13 @@ def keg_exec(big_stack):
     exec(header + code + footer)
 
 def item_in(stack):
-    #Returns true if my name is jeff
-    return False
+    query = stack.pop()
+
+    if query in stack:
+        stack.push(1)
+    else:
+        stack.push(0)
+
+def perform_index(stack):
+    position = stack.pop()
+    stack.push(stack.index(position))

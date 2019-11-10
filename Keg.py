@@ -90,13 +90,11 @@ VARIABLE_SET = "©"
 VARIAGE_GET = "®"
 
 PERFORM_INDEX = "⊙"
-INDEX_LEVEL_DOWN = "᠈"
-INDEX_LEVEL_0 = "º"
 INFINITY = "א"
 RANDOM_INSTRUCTION = "⯑" #Chooses an instruction from
 #all avaliable commands and puts it in.
 
-DIV_MOD, EQUAL_TYPES, INDEX_LEVEL_UP, MD5_HASH = "①②③④"
+DIV_MOD, EQUAL_TYPES, FIND_POS, MD5_HASH = "①②③④"
 FUNCTION_MODIFIERS = "⑤⑥⑦⑧"
 ITEM_IN = "⊂"
 
@@ -543,8 +541,14 @@ def transpile(source: str, stack="stack"):
         elif command == PRINT_ALL:
             result += f"print_all({stack})"
 
-        elif command == Parse.CMDS.INTEGER:
-            result += f"integer({stack}, {data})"
+        elif command == EVAL_EXEC:
+            result += f"keg_exec({stack})"
+
+        elif name == Parse.CMDS.INTEGER:
+            result += f"integer({stack}, {command})"
+
+        elif command == PERFORM_INDEX:
+            result += f"perform_index({stack})"
 
         #Default case
 
@@ -558,6 +562,9 @@ def transpile(source: str, stack="stack"):
 if __name__ == "__main__":
     '''print(unicode)
     '''
+
+
+
     if len(sys.argv) > 1:
         import argparse
         parser = argparse.ArgumentParser()
@@ -629,6 +636,7 @@ if __name__ == "__main__":
 
     else:
         file_location = input("Enter the file location of the Keg program: ")
+        args = 0
 
     source = open(file_location, encoding="utf-8").read()
 
@@ -665,6 +673,7 @@ if __name__ == "__main__":
     code = preprocess.process(code); #print("After preprocess:", code)
     code = preprocess.balance_strings(code);
     code = uncompress.Uncompress(code); #print("After uncom:", code)
+    code += "\t"
 
     header = """
 from KegLib import *
@@ -673,45 +682,45 @@ stack = Stack()
 printed = False
 """
 
-    if args.inputraw:
+    if args and args.inputraw:
         Stackd.input_raw = True
 
     #Conditionally determine the footer
 
-    if args.head:
+    if args and args.head:
         footer = """
 if not printed:
     nice(stack)
 """
 
-    elif args.newoutput:
+    elif args and args.newoutput:
         footer = """
 if not printed:
     x = len(stack) - 1
     for _ in range(x):
         nice(stack)"""
 
-    elif args.headraw:
+    elif args and args.headraw:
         footer = """
 if  not printed:
     raw(stack)
 """
 
-    elif args.reverseraw:
+    elif args and args.reverseraw:
         footer = """
 if not printed:
     reverse(stack)
     raw(stack)
 """
 
-    elif args.reversenice:
+    elif args and args.reversenice:
         footer = """
 if not printed:
     reverse(stack)
     nice(stack)
 """
 
-    elif args.outputcharacters:
+    elif args and args.outputcharacters:
         footer = """
 if not printed:
     for item in stack:
@@ -743,12 +752,22 @@ if not printed:
 """
 
     code = transpile(balance(code))
-    if args.compiled:
+    if args and args.compiled:
         import sys
         sys.stderr.write("-----\nTranspiled Code:")
         full = header + code + footer
         sys.stderr.write(full)
         sys.stderr.write("-----\n")
+
+
+    #First, load the BFL
+
+    import os
+
+    prepend = os.path.dirname(__file__)
+    source = open(prepend + "/docs/BFL.keg", encoding="utf-8").read()
+    exec(header + transpile(source))
+
 
 
     if code.strip():

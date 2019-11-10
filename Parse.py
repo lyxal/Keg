@@ -42,7 +42,7 @@ def parse(prog):
         #print(char, temp, parts, structures, [str(x) for x in ast])
 
         if integer_mode:
-            if char not in "1234567890":
+            if char not in "0123456789":
                 integer_mode = False
                 if structures:
                     temp += "‡" + number
@@ -51,7 +51,7 @@ def parse(prog):
                 number = ""
             else:
                 number += char
-            continue
+                continue
 
         if string_mode:
             if escaped:
@@ -87,7 +87,6 @@ def parse(prog):
                 variable += char
                 continue
 
-
         if escaped:
             escaped = False
             if structures:
@@ -100,6 +99,10 @@ def parse(prog):
             escaped = True
             if structures:
                 temp += char
+            continue
+
+        elif char == "‡":
+            integer_mode = True
             continue
 
         elif char == "`":

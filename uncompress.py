@@ -66,7 +66,7 @@ def Uncompress(source):
             temp += char
             escaped = False
             continue
-        
+
         if string_type == STRINGS.NONE:
             if char in "`¶‘“„«":
                 string_type = char
@@ -76,7 +76,12 @@ def Uncompress(source):
                 parts.append(char)
 
         elif char == string_type:
-            parts.append("`" + to_standard(temp, string_type) + "`")
+            import KegStrings
+            item = KegStrings.obj_str_extract("`" + temp + "`")
+            if type(item) != str: #The object is an object string
+                parts.append("`" + temp + "`")
+            else:
+                parts.append("`" + to_standard(temp, string_type) + "`")
             string_type = STRINGS.NONE
             temp = ""
 
@@ -113,7 +118,7 @@ def to_standard(source, s_type):
                 if len(compression_code) > 2:
                     result += compression_code[0]
                     compression_code = compression_code[1:]
-                    
+
     elif s_type in [STRINGS.SCC, STRINGS.SCC_SPACED]:
         spaces = " " * [STRINGS.SCC, STRINGS.SCC_SPACED].index(s_type)
 
@@ -136,9 +141,9 @@ def to_standard(source, s_type):
 
         for i in range(len(codes)):
             result += f"{get_scc(codes[i])}{joins[i]}{spaces}"
-        
-        
-        
+
+
+
     if compression_code:
         result += compression_code
 
@@ -146,7 +151,7 @@ def to_standard(source, s_type):
                   STRINGS.SCC_SPACED,
                   STRINGS.SPECIAL_SPACED] and result[-1] == " ":
         result = result[:-1]
-                
+
     return result
 
 def get_scc(code):
@@ -154,7 +159,7 @@ def get_scc(code):
     return sccs[index]
 
 
-            
+
 if __name__ == "__main__":
     while 1:
         term = input("Enter a search term: ")
@@ -165,4 +170,3 @@ if __name__ == "__main__":
             print(code, numbers)
         else:
             print(-1)
- 

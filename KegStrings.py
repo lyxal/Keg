@@ -56,7 +56,7 @@ def obj_str_extract(string):
 
 
 if __name__ == "__main__":
-    assert obj_str_extract("`@N|[1, 2, 3];`") == [1, 2, 3]
+    print(obj_str_extract("`09;`"))
     
 
  

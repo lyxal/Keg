@@ -13,8 +13,12 @@ class Stack:
     def __init__(self, iterable=()):
         if iterable:
             self.__stack = list(iterable)
+            self.stacks = self.__stack.copy()
         else:
             self.__stack = []
+            self.stacks = [self.__stack]
+
+        self.level = 0
 
     def __len__(self):
         return len(self.__stack)
@@ -64,6 +68,16 @@ class Stack:
     def clear(self):
         self.__stack.clear()
 
+    def index(self, *pos_list):
+        #Iteratively index the stack
+
+        temp = self.__stack
+        for indx in pos_list:
+            temp = temp[indx]
+
+        return temp
+
+
 if __name__ == "__main__":
-    x = Stack()
-    y = x.pop() + x.pop()
+    x = Stack([1, 2, 3, [4, 5, [6, 7, 8]]])
+    print(x.index(3, 2, 2))
