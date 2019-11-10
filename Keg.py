@@ -494,9 +494,9 @@ def transpile(source: str, stack="stack"):
         #Now, operators.
         elif command in MATHS:
             if command == "Ë":
-                command = "^"
-
-            result += f"maths({stack}, '" + command + "')"
+                result += f"exponate({stack})"
+            else:
+                result += f"maths({stack}, '" + command + "')"
 
         elif command in CONDITIONAL:
             result += f"comparative({stack}, '{command}')"

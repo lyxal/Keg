@@ -67,7 +67,7 @@ def shift(stack, direction):
         stack._Stack__stack.insert(0, stack.pop()) #Wow, reeeal cryptic
         #Legit just put the last item at position 0
 
-def nice(stack):
+def nice(stack, keep=False):
     #This takes the top of the stack and prints it "nicely"
     #i.e. str() but even nicer. Also, implements some other rules a standard
     #call to a fn like str() might not handle
@@ -90,8 +90,11 @@ def nice(stack):
     else:
         print(custom_format(item), end="")
 
+    if keep:
+        stack.push(item)
 
-def raw(stack):
+
+def raw(stack, keep=False):
     #Like nice(), but Keg's version of repr()
 
     item = stack.pop()
@@ -111,6 +114,9 @@ def raw(stack):
 
     else:
         print("`" + custom_format(item) + "`", end="") #Makes quines possible
+
+    if keep:
+        stack.push(item)
 
 def Input(stack):
     #This is the first of many input functions.
@@ -485,3 +491,13 @@ def multiline(stack):
             stack.push(char(Char))
         stack.push("\n")
     stack.pop()
+
+def exponate(stack):
+    power = stack.pop()
+    base = stack.pop()
+    result = base
+
+    for n in loop_eval(Coherse.operate(power, 1, "-")):
+        base = Coherse.operate(base, result, "*")
+
+    stack.push(base)
