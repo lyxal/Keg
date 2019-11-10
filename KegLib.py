@@ -281,6 +281,10 @@ def halve_top(stack):
     item = stack.pop()
     stack.push(Coherse.operate(item, 2, "/"))
 
+def double(stack):
+    item = stack.pop()
+    stack.push(Coherse.operate(item, 2, "*"))
+
 #Keg+ Functions
 
 def convert(stack, _type):
@@ -472,3 +476,12 @@ def item_in(stack):
 def perform_index(stack):
     position = stack.pop()
     stack.push(stack.index(position))
+
+def multiline(stack):
+    temp = 1
+    while temp:
+        temp = input()
+        for Char in temp:
+            stack.push(char(Char))
+        stack.push("\n")
+    stack.pop()

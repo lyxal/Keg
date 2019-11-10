@@ -243,10 +243,13 @@ def func(source):
     if n.isnumeric():
         n = int(n)
     else:
-        n = 0
+        if n == "*":
+            n = "!"
+        else:
+            n = 0
 
     return {"name": name, "number": n}
 
 if __name__ == "__main__":
-    test = parse("{1}")
+    test = parse("@AB *|(+)ƒ")
     print([str(x) for x in test])

@@ -65,12 +65,13 @@ PREDEFINED_CONSTANT = "λ"
 PI = "π"
 HALVE_TOP = "½" #math(stack, "/")
 INCREMENT = "⑨" #perhaps an upside down semi-colon
+DOUBLE = "⑵" #dobule the top of stack
 
 #Keg+ Section
 PUSH_N_PRINT = "ȦƁƇƉƐƑƓǶȊȷǨȽƜƝǪǷɊƦȘȚȔƲɅƛƳƵ"
 for n in range(127234, 127243): PUSH_N_PRINT += chr(n)
-#NOTE: Don't go trying to print PUSH_N_PRINT in IDLE... Tkinter doesn't like some of
-#the characters
+#NOTE: Don't go trying to print PUSH_N_PRINT in IDLE...
+#Tkinter doesn't like some of the characters
 
 ALPHA_MAP = "abcdefghijklmnopqrstuvwxyz1234567890"
 
@@ -85,6 +86,7 @@ ALL_EQUAL = "≌"
 SUMMATE = "⅀"
 EVAL_EXEC = "ß"
 END_EFCOM = "™"
+MULTILINE_INPUT = "᠈"
 
 VARIABLE_SET = "©"
 VARIAGE_GET = "®"
@@ -97,6 +99,7 @@ RANDOM_INSTRUCTION = "⯑" #Chooses an instruction from
 DIV_MOD, EQUAL_TYPES, FIND_POS, MD5_HASH = "①②③④"
 FUNCTION_MODIFIERS = "⑤⑥⑦⑧"
 ITEM_IN = "⊂"
+
 
 
 #'Keywords'
@@ -344,6 +347,9 @@ def transpile(source: str, stack="stack"):
         elif command == INCREMENT:
             result += f"increment({stack})"
 
+        elif command == DOUBLE:
+            result += f"double({stack})"
+
         #Now, keywords and structures
         elif command == COMMENT:
             comment = True
@@ -468,9 +474,12 @@ def transpile(source: str, stack="stack"):
             else:
                 result += "def " + command[0]["name"] + f"({stack}):\n"
                 result += "    temp = Stack()"
-                result += "\n    for _ in range(" + str(command[0]["number"])\
-                          + "): "
-                result += f"temp.push({stack}.pop())"
+                if command[0]["number"] == "!":
+                    result += f"\n    temp = {stack}.copy()"
+                else:
+                    result += "\n    for _ in range(" + str(command[0]["number"]\
+                    ) + "): "
+                    result += f"temp.push({stack}.pop())"
                 result += "\n" + tab_format(transpile(command[1], "temp"))
                 result += f"\n    for item in temp: {stack}.push(item)"
 
@@ -549,6 +558,9 @@ def transpile(source: str, stack="stack"):
 
         elif command == PERFORM_INDEX:
             result += f"perform_index({stack})"
+
+        elif command == MULTILINE_INPUT:
+            result += f"multiline({stack})"
 
         #Default case
 
