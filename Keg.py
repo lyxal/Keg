@@ -96,8 +96,9 @@ INFINITY = "א"
 RANDOM_INSTRUCTION = "⯑" #Chooses an instruction from
 #all avaliable commands and puts it in.
 
-DIV_MOD, EQUAL_TYPES, FIND_POS, MD5_HASH = "①②③④"
+DIV_MOD, EQUAL_TYPES, FIND_POS, PRINT_RAW_NO_POP = "①②③④"
 FUNCTION_MODIFIERS = "⑤⑥⑦⑧"
+PRINT_NICE_NO_POP = "⑩"
 ITEM_IN = "⊂"
 
 
@@ -561,6 +562,12 @@ def transpile(source: str, stack="stack"):
 
         elif command == MULTILINE_INPUT:
             result += f"multiline({stack})"
+
+        elif command == PRINT_RAW_NO_POP:
+            result += f"raw({stack}, True)"
+
+        elif command == PRINT_NICE_NO_POP:
+            result += f"nice({stack}, True)"
 
         #Default case
 
