@@ -280,7 +280,7 @@ def transpile(source: str, stack="stack"):
                 else:
                     result += f"{stack}.push({item})"
             else: #It isn't an object string
-                result += f"iterable({stack}, '" + command + "')"
+                result += f"iterable({stack}, \"" + command + "\")"
 
         #Handle all functions (built-in)
         elif command == LENGTH:
