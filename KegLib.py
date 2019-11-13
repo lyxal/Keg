@@ -74,7 +74,7 @@ def nice(stack, keep=False):
 
     item = stack.pop()
     if type(item) == int:
-        print(chr(item),
+        print(_chr(item),
               end="") #Preserve Keg's ability to print integers as chars
 
     elif type(item) == float:
@@ -414,7 +414,9 @@ def _ord(character):
 
 def _chr(i):
     if code_page:
-        if 0 < i < 256:
+        if i == 10:
+            return "\n"
+        elif 0 < i < 256:
             return code_page[i]
         else:
             return chr(i)
@@ -501,3 +503,7 @@ def exponate(stack):
         base = Coherse.operate(base, result, "*")
 
     stack.push(base)
+
+def to_percentage(stack):
+    item = stack.pop()
+    stack.push(Coherse.operate(item, 100, "/"))

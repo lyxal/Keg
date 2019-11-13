@@ -99,6 +99,7 @@ RANDOM_INSTRUCTION = "⯑" #Chooses an instruction from
 DIV_MOD, EQUAL_TYPES, FIND_POS, PRINT_RAW_NO_POP = "①②③④"
 FUNCTION_MODIFIERS = "⑤⑥⑦⑧"
 PRINT_NICE_NO_POP = "⑩"
+TO_PERCENTAGE = "⑪"
 ITEM_IN = "⊂"
 
 
@@ -568,6 +569,9 @@ def transpile(source: str, stack="stack"):
 
         elif command == PRINT_NICE_NO_POP:
             result += f"nice({stack}, True)"
+
+        elif command == TO_PERCENTAGE:
+            result += f"to_percentage({stack})"
 
         #Default case
 
