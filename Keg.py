@@ -565,10 +565,10 @@ def transpile(source: str, stack="stack"):
             result += f"multiline({stack})"
 
         elif command == PRINT_RAW_NO_POP:
-            result += f"raw({stack}, True)"
+            result += f"raw({stack}, True); printed = True"
 
         elif command == PRINT_NICE_NO_POP:
-            result += f"nice({stack}, True)"
+            result += f"nice({stack}, True); printed = True"
 
         elif command == TO_PERCENTAGE:
             result += f"to_percentage({stack})"
