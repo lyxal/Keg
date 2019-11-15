@@ -674,9 +674,10 @@ if __name__ == "__main__":
         code_page = unicode
 
     #print(code_page)
-    import KegLib
+    import KegLib, Coherse
     Stackd.code_page = code_page
     KegLib.code_page = code_page
+    Coherse.code_page = code_page
 
     e = False #escaped while preprocessing?
     for c in source:
