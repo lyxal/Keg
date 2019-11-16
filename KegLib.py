@@ -43,7 +43,10 @@ def comparative(stack, operator):
 
 # BUILT-IN FUNCTIONS
 
-def length(stack):
+def length(stack, pop_if_empty=False):
+    if pop_if_empty:
+        if len(stack) == 0:
+            stack.push(stack.pop())
     stack.push(len(stack))
 
 def reverse(stack):

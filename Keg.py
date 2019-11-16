@@ -285,7 +285,10 @@ def transpile(source: str, stack="stack"):
 
         #Handle all functions (built-in)
         elif command == LENGTH:
-            result += f"length({stack})"
+            if args and args.lengthpops:
+                result += f"length({stack}, True)"
+            else:
+                result += f"length({stack})"
 
         elif command == DUPLICATE:
             result += f"duplicate({stack})"
@@ -629,13 +632,23 @@ if __name__ == "__main__":
             help="Reverse stack then -rd",
             action='store_true')
 
+        #-ir --inputraw : implicit input uses ? not ¿
+
         parser.add_argument("-ir", "--inputraw",
             help="Make implicit input _not_ evaluate everything",
             action='store_true')
 
+        #-oc --outputcharacters : Output everything as characters if possible
         parser.add_argument("-oc", "--outputcharacters",
             help="Output _everything_ as characters if possible",
             action='store_true')
+
+        #-lp --lengthpops : Length pops if the stack has 0 items
+        parser.add_argument("-lp", "--lengthpops",
+            help="Length (!) pops if the stack has 0 items",
+            action='store_true')
+
+        
 
 
 
