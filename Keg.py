@@ -102,8 +102,8 @@ PRINT_NICE_NO_POP = "⑩"
 TO_PERCENTAGE = "⑪"
 ITEM_IN = "⊂"
 
-
-
+EMPTY_STRING, SPACE_STRING = "⑫⑬"
+ 
 #'Keywords'
 
 COMMENT = "#"
@@ -575,6 +575,12 @@ def transpile(source: str, stack="stack"):
 
         elif command == TO_PERCENTAGE:
             result += f"to_percentage({stack})"
+
+        elif command == EMPTY_STRING:
+            result += f"iterable({stack}, \"\")"
+
+        elif command == SPACE_STRING:
+            result += f"iterable({stack}, \" \")"
 
         #Default case
 
