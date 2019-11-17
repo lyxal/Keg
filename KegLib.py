@@ -195,19 +195,22 @@ def nice_input(stack):
     temp = input()
 
     try:
-        x = int(temp)
-        y = float(temp)
-        if x == y:
-            stack.push(int(temp))
+        if type(eval(temp)) is float:
+            temp = float(temp)
+        elif type(eval(temp)) is int:
+            temp = int(temp)
+        elif type(eval(temp)) is list:
+            temp = Stack(eval(temp))
+        elif type(eval(temp)) is str:
+            temp = temp
         else:
-            stack.push(float(temp))
+            for char in reversed(temp):
+                stack.push(char)
+            return
     except:
-            try:
-                x = eval(temp)
-                if type(x) is list:
-                    stack.push(Stack(x))
-            except:
-                stack.push(temp)
+        temp = temp
+
+    stack.push(temp)
 
     #Float > Integer > List > String
 
@@ -255,8 +258,8 @@ def item_split(stack):
         for number in str(item):
             stack.push(int(number) if number in "0123456789" else number)
     elif _type is char:
-        for number in str(ord(item.v)):
-            stack.push(int(item))
+        for number in str(_ord(item.v)):
+            stack.push(int(number))
     else:
         for value in item:
             stack.push(value)
@@ -502,10 +505,13 @@ def exponate(stack):
     base = stack.pop()
     result = base
 
-    for n in loop_eval(Coherse.operate(power, 1, "-")):
-        base = Coherse.operate(base, result, "*")
+    if type(power) in [float, int] and type(base) in [float, int]:
+        stack.push(pow(base, power))
+    else:
+        for n in loop_eval(Coherse.operate(power, 1, "-")):
+            base = Coherse.operate(base, result, "*")
 
-    stack.push(base)
+        stack.push(base)
 
 def to_percentage(stack):
     item = stack.pop()

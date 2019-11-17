@@ -111,7 +111,8 @@ relations = {"Number": {
                  "String": ["x + [y]", "x.remove(y)", "list_mult(x, y)",
                             "list_divide(x, y)", "list_divide(x, y)[-1]"],
 
-                 "Stack": ["x + y", "list(set(x) - set(y))", "zip(x, y)",
+                 "Stack": ["x + y", "list(set(x) - set(y))",
+                           "[list(pair) for pair in zip(x, y)]",
                            "special_divide(x, y)", "special_divide(x, y)[-1]"]}
              }
 

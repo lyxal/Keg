@@ -779,7 +779,7 @@ if not printed:
 if not printed:
     printing = ""
     for item in stack:
-        if type(item) is Stack:
+        if type(item) in [Stack, list]:
             printing += str(item)
 
         elif type(item) is str:
