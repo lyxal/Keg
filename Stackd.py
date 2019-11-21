@@ -39,7 +39,10 @@ class Stack:
         if len(self.__stack):
             return self.__stack.pop()
         else:
-            temp = input()
+            try:
+                temp = input()
+            except:
+                return None
 
             if input_raw:
                 from Coherse import char
