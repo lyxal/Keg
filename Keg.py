@@ -103,7 +103,7 @@ TO_PERCENTAGE = "⑪"
 ITEM_IN = "⊂"
 
 EMPTY_STRING, SPACE_STRING = "⑫⑬"
- 
+
 #'Keywords'
 
 COMMENT = "#"
@@ -490,10 +490,10 @@ def transpile(source: str, stack="stack"):
 
         elif name == Parse.CMDS.VARIABLE:
             if command[1] == "set":
-                result += f"var_set(stack, '{command[0]}')"
+                result += f"var_set({stack}, '{command[0]}')"
 
             else:
-                result += f"var_get(stack, '{command[0]}')"
+                result += f"var_get({stack}, '{command[0]}')"
 
         #Now, operators.
         elif command in MATHS:
@@ -654,7 +654,7 @@ if __name__ == "__main__":
             help="Length (!) pops if the stack has 0 items",
             action='store_true')
 
-        
+
 
 
 
