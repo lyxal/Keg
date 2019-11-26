@@ -297,6 +297,10 @@ def double(stack):
     item = stack.pop()
     stack.push(Coherse.operate(item, 2, "*"))
 
+def negate(stack):
+    item = stack.pop()
+    stack.push(Coherse.operate(item, -1, "*"))
+
 #Keg+ Functions
 
 def convert(stack, _type):

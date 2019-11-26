@@ -3,8 +3,9 @@ ROUND = ["(", ")"]
 CURLY = ["{", "}"]
 FUNCTION = ["@", "ƒ"]
 INTEGER_SCAN = "‡"
+SWITCH = ["¦", "™"]
 
-OPEN, CLOSE = "[({@", "])}ƒ"
+OPEN, CLOSE = "[({@¦", "])}ƒ™"
 
 
 class CMDS:
@@ -18,6 +19,7 @@ class CMDS:
     STRING = "string"
     VARIABLE = "variable"
     INTEGER = "integer"
+    SWITCH = "switch"
 
 
 class Token():
@@ -137,6 +139,9 @@ def parse(prog):
             elif char == FUNCTION[0]:
                 structures.append(CMDS.FUNCTION)
 
+            elif char == SWITCH[0]:
+                structures.append(CMDS.SWITCH)
+
         elif char in CLOSE:
 
             struct = structures.pop()
@@ -209,12 +214,27 @@ def parse(prog):
                         ast.append(CMDS.NOP)
                     parts = []
 
+                elif struct == CMDS.SWITCH:
+                    if len(parts) == 0:
+                        ast.append(CMDS.NOP)
+                    else:
+                        tempTEMP = [parse(part) for part in parts]
+                        ast.append(Token(struct, tempTEMP))
+
             else:
                 temp += char
 
         elif char == "|" and len(structures) == 1:
             parts.append(temp)
             temp = ""
+
+        elif char == "║":
+            if len(structures) == 1 and structures[-1] == CMDS.SWITCH:
+                parts.append("║" + temp)
+                temp = ""
+
+            else:
+                temp += char
 
         elif structures:
             temp += char
@@ -251,5 +271,5 @@ def func(source):
     return {"name": name, "number": n}
 
 if __name__ == "__main__":
-    test = parse("@AB *|(+)ƒ")
+    test = parse("¦b8|e3|i1|s5™")
     print([str(x) for x in test])

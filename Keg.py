@@ -66,6 +66,7 @@ PI = "π"
 HALVE_TOP = "½" #math(stack, "/")
 INCREMENT = "⑨" #perhaps an upside down semi-colon
 DOUBLE = "⑵" #dobule the top of stack
+NEGATE = "±" #*-1
 
 #Keg+ Section
 PUSH_N_PRINT = "ȦƁƇƉƐƑƓǶȊȷǨȽƜƝǪǷɊƦȘȚȔƲɅƛƳƵ"
@@ -85,7 +86,7 @@ ALL_TRUE = "∀"
 ALL_EQUAL = "≌"
 SUMMATE = "⅀"
 EVAL_EXEC = "ß"
-END_EFCOM = "™"
+END_SWITCH = "™"
 MULTILINE_INPUT = "᠈"
 
 VARIABLE_SET = "©"
@@ -242,7 +243,9 @@ def transpile(source: str, stack="stack"):
     Returns: str
 
     '''
-    source = Parse.parse(source)
+
+    if type(source) == str:
+        source = Parse.parse(source)
 
     comment = False #Whether or not the transpiler is parsing a comment
     escaped = False #Whether or not the transpiler needs to use escape()
@@ -354,6 +357,9 @@ def transpile(source: str, stack="stack"):
 
         elif command == DOUBLE:
             result += f"double({stack})"
+
+        elif command == NEGATE:
+            result += f"negate({stack})"
 
         #Now, keywords and structures
         elif command == COMMENT:
@@ -495,6 +501,25 @@ def transpile(source: str, stack="stack"):
             else:
                 result += f"var_get({stack}, '{command[0]}')"
 
+        elif name == Parse.CMDS.SWITCH:
+            result += f"\nSWITCH_VARIABLE = {stack}.pop()\n"
+            result += "for _ in range(1):\n"
+            for case in command:
+                if len(case) == 1:
+                    result += tab_format("else: \n")
+                    result += tab_format(tab_format(\
+                        f"{stack}.push(SWITCH_VARIABLE)"))
+                    result += tab_format(tab_format(transpile(case[:])))
+                    result += tab_format(tab_format("\nbreak\n"))
+                else:
+                    result += tab_format(transpile([case[0]]) + "\n")
+                    result += tab_format(f"{stack}.push(SWITCH_VARIABLE)")
+                    result += tab_format(f"comparative({stack}, '=')")
+                    result += tab_format(f"if bool({stack}.pop()):\n")
+                    result += tab_format(tab_format(transpile(case[1:])))
+                    result += tab_format(tab_format("\nbreak\n"))
+
+
         #Now, operators.
         elif command in MATHS:
             if command == "Ë":
@@ -518,7 +543,10 @@ def transpile(source: str, stack="stack"):
             continue
 
         elif command == NEWLINE:
-            result += f"integer({stack}, 10)"
+            if args and args.ignorenewlines:
+                pass
+            else:
+                result += f"integer({stack}, 10)"
 
         #Keg+
 
@@ -652,6 +680,12 @@ if __name__ == "__main__":
         #-lp --lengthpops : Length pops if the stack has 0 items
         parser.add_argument("-lp", "--lengthpops",
             help="Length (!) pops if the stack has 0 items",
+            action='store_true')
+
+        #-in --ignorenewlines : newlines DON'T push 10
+
+        parser.add_argument("-in", "--ignorenewlines",
+            help="newlines DON'T push 10",
             action='store_true')
 
 
