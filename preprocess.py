@@ -1,44 +1,68 @@
-#The Preprocessor
-
-
+#The Keg Preprocessor
 STRING_CHARS = "`¶“‘«„"
 
-def process(source):
+def process(string):
     final = ""
-    string_type = ""
+    string_mode = [False, ""]
     escaped = False
-    SSL_needed = False
-
-    for char in source:
+    ssl_reference = [False, ""]
+    
+    for char in string:
+        if string_mode[0]:
+            if escaped:
+                final += char
+                escaped = False
+                continue
+            
+            elif char == "\\":
+                escaped = True
+                final += char
+                continue
+            else:
+                if char == string_mode[1]:
+                    string_mode = [False, ""]
+                final += char
+                continue
+        
         if char in STRING_CHARS:
-            if string_type == char:
-                if escaped:
-                    escaped = False
-                else:
-                    string_type = ""
-            elif string_type == "":
-                if escaped:
-                    escaped = False
-                else:
-                    string_type = char
-
-        elif char == "\\":
-            if escaped: escaped = False
-            else: escaped = True
-
-        elif char == "₳":
-            SSL_needed = True
+            string_mode = [True, char]
+            final += char
             continue
-
-        elif SSL_needed:
-            final += f"<SSL:{char}>"
-            SSL_needed = False
+            
+        if escaped:
+            final += char
+            escaped = False
             continue
-
+        
+        if char == "\\":
+            escaped = True
+            final += char
+            continue
+        
+        if char == "₳":
+            ssl_reference = [True, ""]
+            continue
+        
+        if ssl_reference[0] and len(ssl_reference[1]) != 2:
+            ssl_reference[1] += char
+            if len(ssl_reference[1]) == 2:
+                ssl_reference[0] = False
+                final += f"<SSL:{ssl_reference[1]}>"
+                ssl_reference[1] = ""
+            continue
+        
+        if char == "∑":
+            final += "(!;|"
+            continue
+        
+        if char == "⑳":
+            final += "{!|"
+            continue
+        
         final += char
-
     return final
 
+	
 def balance_strings(source):
     symbol = ""
     string_mode = False
@@ -89,11 +113,10 @@ def balance_strings(source):
         result += symbol
 
     return result
-
+        
 if __name__ == "__main__":
-    assert process("₳a") == "<SSL:a>"
-    assert process("₳a₳b") == "<SSL:a><SSL:b>"
-    assert process("a₳b") == "a<SSL:b>"
-    assert process("a₳bc") == "a<SSL:b>c"
-    assert process("m₳em₳E") == "m<SSL:e>m<SSL:E>"
-    assert process("\\`") == "834**"
+    assert process("₳0a") == "<SSL:0a>"
+    assert process("₳0a₳0b") == "<SSL:0a><SSL:0b>"
+    assert process("a₳0b") == "a<SSL:0b>"
+    assert process("a₳0bc") == "a<SSL:0b>c"
+    assert process("m₳0em₳0E") == "m<SSL:0e>m<SSL:0E>"       

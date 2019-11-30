@@ -493,7 +493,7 @@ def item_in(stack):
 
 def perform_index(stack):
     position = stack.pop()
-    stack.push(stack.index(position))
+    stack.push(stack.index([position]))
 
 def multiline(stack):
     temp = 1
@@ -520,3 +520,14 @@ def exponate(stack):
 def to_percentage(stack):
     item = stack.pop()
     stack.push(Coherse.operate(item, 100, "/"))
+
+def reciprocal(stack):
+    item = stack.pop()
+    stack.push(Coherse.operate(1, item, "/"))
+
+def keg_round(stack):
+    item = stack.pop()
+    if type(item) in [int, float]:
+        stack.push(round(item))
+    else:
+        stack.push(item)

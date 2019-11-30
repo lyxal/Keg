@@ -37,7 +37,7 @@ DESCRIPTIONS = {
 }
 
 #Unofficial built-in functions
-#Note: Most of these are from A_ee/A__/User:A, so go check out their
+#Note: Most of these are from myu-sername/A̲̲/User:A, so go check out their
 #repos/esolang account/code golf userpage and upvote their answers
 
 IOTA = "Ï"
@@ -67,6 +67,9 @@ HALVE_TOP = "½" #math(stack, "/")
 INCREMENT = "⑨" #perhaps an upside down semi-colon
 DOUBLE = "⑵" #dobule the top of stack
 NEGATE = "±" #*-1
+ONE_ON_X = "⑱" #1/tos
+ROUND = "⑲" #uses round function
+WHILE_STUFF = "⑳" #Preprocesses as {!|
 
 #Keg+ Section
 PUSH_N_PRINT = "ȦƁƇƉƐƑƓǶȊȷǨȽƜƝǪǷɊƦȘȚȔƲɅƛƳƵ"
@@ -104,6 +107,10 @@ TO_PERCENTAGE = "⑪"
 ITEM_IN = "⊂"
 
 EMPTY_STRING, SPACE_STRING = "⑫⑬"
+SORT_STACK = "⑭"
+SINGULAR_SCC = "⑮"
+POP_ITEM = "⑯" #Takes the TOS and removes all instances of TOS
+FILTER_BY = "⑰" #Takes a keg-string and pops all items not matching condition
 
 #'Keywords'
 
@@ -360,6 +367,12 @@ def transpile(source: str, stack="stack"):
 
         elif command == NEGATE:
             result += f"negate({stack})"
+
+        elif command == ONE_ON_X:
+            result += f"reciprocal({stack})"
+
+        elif command == ROUND:
+            result += f"keg_round({stack})"
 
         #Now, keywords and structures
         elif command == COMMENT:
@@ -717,9 +730,8 @@ if __name__ == "__main__":
     source = open(file_location, encoding="utf-8").read()
 
 
-    #Preprocess ∑ as (!;|
 
-    code = ""
+    code = source
     code_page = ""
     import string
     unicode_set = set(unicode) - set(string.printable)
@@ -732,21 +744,6 @@ if __name__ == "__main__":
     KegLib.code_page = code_page
     Coherse.code_page = code_page
 
-    e = False #escaped while preprocessing?
-    for c in source:
-        if e:
-            e = False
-            code += c
-            continue
-        elif c == "\\":
-            code += c
-            e = True
-            continue
-
-        if c == "∑":
-            code += "(!;|"
-        else:
-            code += c
     code = preprocess.process(code); #print("After preprocess:", code)
     code = preprocess.balance_strings(code);
     code = uncompress.Uncompress(code); #print("After uncom:", code)
