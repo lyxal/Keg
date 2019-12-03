@@ -531,3 +531,41 @@ def keg_round(stack):
         stack.push(round(item))
     else:
         stack.push(item)
+
+def length_top(stack):
+    item = stack.pop()
+    if type(item) in [int, float]:
+        stack.push(len(str(item)))
+    else:
+        stack.push(len(item))
+
+def reverse_top(stack):
+    item = stack.pop()
+    if type(item) == int:
+        if item < 0:
+            item = int(str(item)[::-1][:-1]) * -1
+        else:
+            item = int(str(item)[::-1])
+
+    elif type(item) == float:
+        if item < 0:
+            item = float(str(item)[::-1][:-1]) * -1
+        else:
+            item = float(str(item)[::-1])
+    else:
+        item = item[::-1]
+
+    stack.push(item)
+
+def pop_item(stack):
+    item = stack.pop()
+    for i in range(len(stack)):
+        temp = stack.pop()
+        if not Coherse.do_compare(item, temp, '='):
+            stack.push(temp)
+
+def sort_stack(stack):
+    stack.__stack.sort()
+            
+            
+        

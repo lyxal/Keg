@@ -112,6 +112,8 @@ SINGULAR_SCC = "⑮"
 POP_ITEM = "⑯" #Takes the TOS and removes all instances of TOS
 FILTER_BY = "⑰" #Takes a keg-string and pops all items not matching condition
 
+LENGTH_TOP, REVERSE_TOP = "⑴⑶"
+
 #'Keywords'
 
 COMMENT = "#"
@@ -622,6 +624,19 @@ def transpile(source: str, stack="stack"):
 
         elif command == SPACE_STRING:
             result += f"iterable({stack}, \" \")"
+
+        elif command == LENGTH_TOP:
+            result += f"length_top({stack})"
+
+        elif command == REVERSE_TOP:
+            result += f"reverse_top({stack})"
+
+        elif command == POP_ITEM:
+            result += f"pop_item({stack})"
+
+        elif command == SORT_STACK:
+            result += f"sort_stack({stack})"
+            
 
         #Default case
 
