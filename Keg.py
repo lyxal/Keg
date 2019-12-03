@@ -770,9 +770,11 @@ if not printed:
     elif args and args.newoutput:
         footer = """
 if not printed:
-    x = len(stack) - 1
-    for _ in range(x):
-        nice(stack)"""
+    for item in stack:
+        if type(item) in [str, KegLib.Coherese.char]:
+            nice(stack)
+        else:
+            raw(stack)"""
 
     elif args and args.headraw:
         footer = """
