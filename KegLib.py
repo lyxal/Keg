@@ -566,6 +566,20 @@ def pop_item(stack):
 
 def sort_stack(stack):
     stack.__stack.sort()
-            
-            
-        
+
+def increment_register(stack):
+    register(stack)
+    integer(stack,1)
+    maths(stack, "+")
+    register(stack)
+
+def decrement_register(stack):
+    register(stack)
+    integer(stack,1)
+    maths(stack, "-")
+    register(stack)
+                       
+def register_dont_empty(stack):
+    register(stack)
+    duplicate(stack)
+    register(stack)

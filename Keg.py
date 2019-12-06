@@ -70,6 +70,8 @@ NEGATE = "±" #*-1
 ONE_ON_X = "⑱" #1/tos
 ROUND = "⑲" #uses round function
 WHILE_STUFF = "⑳" #Preprocesses as {!|
+INCREMENT_REGISTER, DECREMENT_REGISTER = "⑹⑺"
+PUSH_REGISTER_NO_EMPTY = "⑻"
 
 #Keg+ Section
 PUSH_N_PRINT = "ȦƁƇƉƐƑƓǶȊȷǨȽƜƝǪǷɊƦȘȚȔƲɅƛƳƵ"
@@ -91,6 +93,8 @@ SUMMATE = "⅀"
 EVAL_EXEC = "ß"
 END_SWITCH = "™"
 MULTILINE_INPUT = "᠈"
+MAP = "⑷" #will be £. closed with »
+MAP_CLOSE = "⑸" #As aforementioned, will be »
 
 VARIABLE_SET = "©"
 VARIAGE_GET = "®"
@@ -242,7 +246,7 @@ def tab_format(string: str) -> str:
 
 '''Actual Transpiler'''
 
-def transpile(source: str, stack="stack"):
+def transpile(source: str, stack="stack", lvl=0):
     '''
     Takes: source [str], stack (default="stack") [str]
     Does: This is the primary function here, as it does the actual transpilation
@@ -517,21 +521,21 @@ def transpile(source: str, stack="stack"):
                 result += f"var_get({stack}, '{command[0]}')"
 
         elif name == Parse.CMDS.SWITCH:
-            result += f"\nSWITCH_VARIABLE = {stack}.pop()\n"
+            result += f"\nSWITCH_VARIABLE{lvl} = {stack}.pop()\n"
             result += "for _ in range(1):\n"
             for case in command:
                 if len(case) == 1:
                     result += tab_format("else: \n")
                     result += tab_format(tab_format(\
-                        f"{stack}.push(SWITCH_VARIABLE)"))
-                    result += tab_format(tab_format(transpile(case[:])))
+                        f"{stack}.push(SWITCH_VARIABLE{lvl})"))
+                    result += tab_format(tab_format(transpile(case[:]), lvl=lvl+1))
                     result += tab_format(tab_format("\nbreak\n"))
                 else:
-                    result += tab_format(transpile([case[0]]) + "\n")
-                    result += tab_format(f"{stack}.push(SWITCH_VARIABLE)")
+                    result += tab_format(transpile([case[0]], lvl=lvl+1) + "\n")
+                    result += tab_format(f"{stack}.push(SWITCH_VARIABLE{lvl})")
                     result += tab_format(f"comparative({stack}, '=')")
                     result += tab_format(f"if bool({stack}.pop()):\n")
-                    result += tab_format(tab_format(transpile(case[1:])))
+                    result += tab_format(tab_format(transpile(case[1:], lvl=lvl+1)))
                     result += tab_format(tab_format("\nbreak\n"))
 
 
@@ -566,7 +570,7 @@ def transpile(source: str, stack="stack"):
         #Keg+
 
         elif command in PUSH_N_PRINT:
-            result += f"print('{ALPHA_MAP[PUSH_N_PRINT.index(command)]}')"
+            result += f"print('{ALPHA_MAP[PUSH_N_PRINT.index(command)]}', end='')"
 
         elif command in [TO_INT, TO_FLOAT, TO_STRING, TO_STACK, TO_CHAR]:
             result += f"try_cast({stack}, '{command}')"
@@ -636,6 +640,15 @@ def transpile(source: str, stack="stack"):
 
         elif command == SORT_STACK:
             result += f"sort_stack({stack})"
+
+        elif command == INCREMENT_REGISTER:
+            result += f"increment_register({stack})"
+
+        elif command == DECREMENT_REGISTER:
+            result += f"decrement_register({stack})"
+
+        elif command == PUSH_REGISTER_NO_EMPTY:
+            result += f"register_dont_empty({stack})"
             
 
         #Default case
@@ -714,6 +727,16 @@ if __name__ == "__main__":
 
         parser.add_argument("-in", "--ignorenewlines",
             help="newlines DON'T push 10",
+            action='store_true')
+
+        #-pr --printregister  : print the register instead of the stack
+        parser.add_argument("-pr", "--printregister",
+            help="print the register instead of the stack at EOE",
+            action='store_true')
+
+        #-rR --registerraw  : print the register instead of the stack
+        parser.add_argument("-rR", "--registerraw",
+            help="print the register instead of the stack at EOE",
             action='store_true')
 
 
@@ -821,6 +844,20 @@ if not printed:
             print(str(item), end="")
 """
 
+    elif args and args.printregister:
+        footer = """
+if not printed:
+    register(stack)
+    nice(stack)
+
+"""
+    elif args and args.registerraw:
+        footer = """
+if not printed:
+    register(stack)
+    raw(stack)
+
+"""   
     else:
         footer = """
 
