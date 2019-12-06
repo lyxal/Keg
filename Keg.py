@@ -740,7 +740,10 @@ if __name__ == "__main__":
             action='store_true')
 
 
-
+        #-pn --printnewlines : printing puts a newline between outputs  
+        parser.add_argument("-pn", "--printnewlines",
+            help="printing puts a newline between outputs",
+            action='store_true')
 
 
 
@@ -796,6 +799,9 @@ printed = False
 
     if args and args.inputraw:
         Stackd.input_raw = True
+
+    if args and args.printnewlines:
+        KegLib.seperator = "\n"
 
     #Conditionally determine the footer
 

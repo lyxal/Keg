@@ -8,7 +8,7 @@ _register = None
 variables = {}
 code_page = ""
 function_list = []
-
+seperator = ""
 
 # BASIC STACK PUSHING
 
@@ -78,20 +78,20 @@ def nice(stack, keep=False):
     item = stack.pop()
     if type(item) == int:
         print(_chr(item),
-              end="") #Preserve Keg's ability to print integers as chars
+              end=seperator) #Preserve Keg's ability to print integers as chars
 
     elif type(item) == float:
         print(item,
-              end="") #I mean, floats can't really be conv'd to chars, can they?
+              end=seperator) #I mean, floats can't really be conv'd to chars, can they?
 
     elif type(item) == char:
-        print(item.v, end="") #Because python doesn't have a char type.
+        print(item.v, end=seperator) #Because python doesn't have a char type.
 
     elif type(item) == Stack:
-        print(*[x for x in item], end="")
+        print(*[x for x in item], end=seperator)
 
     else:
-        print(custom_format(item), end="")
+        print(custom_format(item), end=seperator)
 
     if keep:
         stack.push(item)
@@ -103,20 +103,20 @@ def raw(stack, keep=False):
     item = stack.pop()
     if type(item) == int:
         print(item,
-              end="") #Integers are printed as integers
+              end=seperator) #Integers are printed as integers
 
     elif type(item) == float:
         print(item,
-              end="") #Floats -> Floats
+              end=seperator) #Floats -> Floats
 
     elif type(item) == char:
-        print(_ord(item.v), end="") #Char -> Integer
+        print(_ord(item.v), end=seperator) #Char -> Integer
 
     elif type(item) == Stack:
-        print(repr(stack), end="") #I actually made a repr() fn for Stacks
+        print(repr(stack), end=seperator) #I actually made a repr() fn for Stacks
 
     else:
-        print("`" + custom_format(item) + "`", end="") #Makes quines possible
+        print("`" + custom_format(item) + "`", end=seperator) #Makes quines possible
 
     if keep:
         stack.push(item)
