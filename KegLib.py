@@ -583,3 +583,20 @@ def register_dont_empty(stack):
     register(stack)
     duplicate(stack)
     register(stack)
+
+def register_aug_assign(stack, operator):
+    register(stack)
+    maths(stack, operator)
+    register(stack)
+
+def set_register_dont_empty(stack):
+    _register = stack.pop()
+
+def register_length(stack):
+    register_dont_empty(stack)
+    length_top(stack)
+
+def reverse_register(stack):
+    register_dont_empty(stack)
+    reverse_top(stack)
+

@@ -118,6 +118,12 @@ FILTER_BY = "⑰" #Takes a keg-string and pops all items not matching condition
 
 LENGTH_TOP, REVERSE_TOP = "⑴⑶"
 
+REGISTER_AUG_ADD, REGISTER_AUG_SUB, REGISTER_AUG_MULT, REGISTER_AUG_DIV = \
+                  "⑼⑽⑾⑿"
+
+REGISTER_SET, REGISTER_LENGTH, REGISTER_REVERSE = "⒀⒁⒂"
+END_OF_INPUT = "⒃"
+
 #'Keywords'
 
 COMMENT = "#"
@@ -649,6 +655,27 @@ def transpile(source: str, stack="stack", lvl=0):
 
         elif command == PUSH_REGISTER_NO_EMPTY:
             result += f"register_dont_empty({stack})"
+
+        elif command == REGISTER_AUG_ADD:
+            result += f"register_aug_assign({stack}, '+')"
+
+        elif command == REGISTER_AUG_SUB:
+            result += f"register_aug_assign({stack}, '-')"
+
+        elif command == REGISTER_AUG_MULT:
+            result += f"register_aug_assign({stack}, '*')"
+
+        elif command == REGISTER_AUG_DIV:
+            result += f"register_aug_assign({stack}, '/')"
+
+        elif command == REGISTER_SET:
+            result += f"set_register_dont_empty({stack})"
+
+        elif command == REGISTER_LENGTH:
+            result += f"register_length({stack})
+
+        elif command == REGISTER_REVERSE:
+            result += f"reverse_register({stack})"
             
 
         #Default case
