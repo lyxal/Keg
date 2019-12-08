@@ -122,7 +122,6 @@ REGISTER_AUG_ADD, REGISTER_AUG_SUB, REGISTER_AUG_MULT, REGISTER_AUG_DIV = \
                   "⑼⑽⑾⑿"
 
 REGISTER_SET, REGISTER_LENGTH, REGISTER_REVERSE = "⒀⒁⒂"
-END_OF_INPUT = "⒃"
 
 #'Keywords'
 
@@ -194,10 +193,11 @@ def balance(source: str) -> str:
 
     brackets = [] #This is kind of equivalent to the loops list found commonly
     #in Python BF interpreters.
-    mapping = {"{" : "}", "[" : "]", "(" : ")", "": ""}
+    mapping = {"{" : "}", "[" : "]", "(" : ")", "": "", "⑷": "⑸"}
     alt_brackets = {"{" : "z1-", "}" : "z3+", "(" : "85*",
                     ")" : "85*1+", "[" : "Z1+",
-                    "]" : "Z3+"}
+                    "]" : "Z3+", "⑷" : "25*25**2*56*+1+",
+                    "⑸" : "25*25**2*56*+2+"}
 
     escaped = False #Whether or not there is currently an escape sequence
 
@@ -216,10 +216,10 @@ def balance(source: str) -> str:
 
             continue
 
-        if char in "[({":
+        if char in "[({⑷":
             brackets.append(char)
 
-        elif char in "])}":
+        elif char in "])}⑸":
             for i in range(len(brackets)): #Close an open bracket
                 if mapping[brackets[i]] == char:
                     brackets[i] = ""
@@ -276,7 +276,6 @@ def transpile(source: str, stack="stack", lvl=0):
     result = ""
     tabs = ""
     #The variable storing the end result
-
     for Token in source:
         name, command = Token.name, Token.data
         #print(name, command)
@@ -545,6 +544,9 @@ def transpile(source: str, stack="stack", lvl=0):
                     result += tab_format(tab_format("\nbreak\n"))
 
 
+        elif name == Parse.CMDS.MAP:
+            result += f"keg_map({stack}, {command})"
+
         #Now, operators.
         elif command in MATHS:
             if command == "Ë":
@@ -672,10 +674,11 @@ def transpile(source: str, stack="stack", lvl=0):
             result += f"set_register_dont_empty({stack})"
 
         elif command == REGISTER_LENGTH:
-            result += f"register_length({stack})
+            result += f"register_length({stack})"
 
         elif command == REGISTER_REVERSE:
             result += f"reverse_register({stack})"
+
             
 
         #Default case

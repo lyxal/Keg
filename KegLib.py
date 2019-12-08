@@ -468,17 +468,19 @@ def try_cast(stack, what_type):
 def keg_exec(big_stack):
     import Keg
     code = big_stack.pop()
+    code = Keg.balance(code)
     code = Keg.transpile(code)
 
-    header = """
-    from KegLib import *
-    from Stackd import Stack
-    stack = Stack()
-    """
+
+    header = f"""
+from KegLib import *
+from Stackd import Stack
+stack = Stack()
+"""
 
     footer = """
-    for item in stack:
-        big_stack.push(item)
+for item in stack:
+    big_stack.push(item)
     """
 
     exec(header + code + footer)
@@ -600,3 +602,29 @@ def reverse_register(stack):
     register_dont_empty(stack)
     reverse_top(stack)
 
+def keg_map(stack, functions):
+    import Keg
+    for i in range(len(stack)):
+        small = Stack([stack[i]])
+        code = Keg.balance(functions)
+        code = Keg.transpile(code)
+
+        header = f"""
+from KegLib import *
+from Stackd import Stack
+stack = small
+"""
+
+        exec(header + code)
+        stack[i] = smart_summate(small)
+        
+
+def smart_summate(stack):
+    if all(map(lambda x : type(x) in [float, int], stack)):
+        return stack.pop()
+
+    elif all(map(lambda x : type(x) == char, stack)):
+        return "".join([c.v for c in stack])
+
+    else:
+        return str(stack)

@@ -4,8 +4,9 @@ CURLY = ["{", "}"]
 FUNCTION = ["@", "ƒ"]
 INTEGER_SCAN = "‡"
 SWITCH = ["¦", "™"]
+MAP = ["⑷", "⑸"]
 
-OPEN, CLOSE = "[({@¦", "])}ƒ™"
+OPEN, CLOSE = "[({@¦⑷", "])}ƒ™⑸"
 
 
 class CMDS:
@@ -20,6 +21,7 @@ class CMDS:
     VARIABLE = "variable"
     INTEGER = "integer"
     SWITCH = "switch"
+    MAP = "map"
 
 
 class Token():
@@ -142,6 +144,9 @@ def parse(prog):
             elif char == SWITCH[0]:
                 structures.append(CMDS.SWITCH)
 
+            elif char == MAP[0]:
+                structures.append(CMDS.MAP)
+
         elif char in CLOSE:
 
             struct = structures.pop()
@@ -221,6 +226,11 @@ def parse(prog):
                         tempTEMP = [parse(part) for part in parts]
                         ast.append(Token(struct, tempTEMP))
 
+                elif struct == CMDS.MAP:
+                    ast.append(Token(struct, "'" + parts[0] + "'"))
+                    parts = []
+                    temp = ""
+
             else:
                 temp += char
 
@@ -271,5 +281,5 @@ def func(source):
     return {"name": name, "number": n}
 
 if __name__ == "__main__":
-    test = parse("¦b8|e3|i1|s5™")
+    test = parse("123⑷;⑸(.)")
     print([str(x) for x in test])

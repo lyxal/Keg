@@ -80,6 +80,9 @@ class Stack:
 
         return temp
 
+    def __str__(self):
+        return "".join([str(item) for item in self.__stack])
+
 
 if __name__ == "__main__":
     x = Stack([1, 2, 3, [4, 5, [6, 7, 8]]])
