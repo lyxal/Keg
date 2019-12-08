@@ -194,7 +194,7 @@ def balance(source: str) -> str:
     brackets = [] #This is kind of equivalent to the loops list found commonly
     #in Python BF interpreters.
     mapping = {"{" : "}", "[" : "]", "(" : ")", "": "", "⑷": "⑸"}
-    alt_brackets = {"{" : "z1-", "}" : "z3+", "(" : "85*",
+    alt_brackets = {"{" : "z1+", "}" : "z3+", "(" : "85*",
                     ")" : "85*1+", "[" : "Z1+",
                     "]" : "Z3+", "⑷" : "25*25**2*56*+1+",
                     "⑸" : "25*25**2*56*+2+"}
