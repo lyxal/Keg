@@ -529,11 +529,12 @@ def transpile(source: str, stack="stack", lvl=0):
             result += f"\nSWITCH_VARIABLE{lvl} = {stack}.pop()\n"
             result += "for _ in range(1):\n"
             for case in command:
-                if len(case) == 1:
+                if "default" in case:
+                    default = case[0][:]
                     result += tab_format("else: \n")
                     result += tab_format(tab_format(\
                         f"{stack}.push(SWITCH_VARIABLE{lvl})"))
-                    result += tab_format(tab_format(transpile(case[:]), lvl=lvl+1))
+                    result += tab_format(tab_format(transpile(default, lvl=lvl+1)))
                     result += tab_format(tab_format("\nbreak\n"))
                 else:
                     result += tab_format(transpile([case[0]], lvl=lvl+1) + "\n")
@@ -845,7 +846,7 @@ if not printed:
         footer = """
 if not printed:
     for item in stack:
-        if type(item) in [str, KegLib.Coherese.char]:
+        if type(item) in [str, KegLib.Coherse.char]:
             nice(stack)
         else:
             raw(stack)"""

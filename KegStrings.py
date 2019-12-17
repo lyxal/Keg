@@ -44,10 +44,10 @@ def obj_str_extract(string):
             return eval(obj_data)
 
         elif str_type == "C":
-            return data
+            return obj_data
 
         elif str_type == "P":
-            exec(data)
+            exec(obj_data)
             
     else:
         return string

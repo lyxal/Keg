@@ -223,8 +223,11 @@ def parse(prog):
                     if len(parts) == 0:
                         ast.append(CMDS.NOP)
                     else:
-                        tempTEMP = [parse(part) for part in parts]
-                        ast.append(Token(struct, tempTEMP))
+                        switch_temp = [parse(part) for part in parts[:-1]]
+                        if parts[-1][0] == "║":
+                            default = parse(parts[-1])
+                            switch_temp.append([default[:], "default"])
+                        ast.append(Token(struct, switch_temp))
 
                 elif struct == CMDS.MAP:
                     ast.append(Token(struct, "'" + parts[0] + "'"))
@@ -240,8 +243,9 @@ def parse(prog):
 
         elif char == "║":
             if len(structures) == 1 and structures[-1] == CMDS.SWITCH:
-                parts.append("║" + temp)
-                temp = ""
+                default = True
+                parts.append(temp)
+                temp = "║"
 
             else:
                 temp += char
@@ -281,5 +285,5 @@ def func(source):
     return {"name": name, "number": n}
 
 if __name__ == "__main__":
-    test = parse("123⑷;⑸(.)")
+    test = parse("¦ab|cd║ef™")
     print([str(x) for x in test])

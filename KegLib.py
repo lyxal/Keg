@@ -50,6 +50,8 @@ def length(stack, pop_if_empty=False):
     stack.push(len(stack))
 
 def reverse(stack):
+    length(stack)
+    stack.pop()
     stack._Stack__stack.reverse() #Lazy moment, using Python built-ins
 
 def swap(stack):
@@ -170,6 +172,7 @@ def condition_eval(expr_list, stack):
 # REG EXTENSION
 
 def iota(stack):
+    try_cast(stack, 'ℤ') 
     k = stack.pop()
 
     for i in range(k, -1, -1):
