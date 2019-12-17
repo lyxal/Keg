@@ -845,7 +845,7 @@ if not printed:
     elif args and args.newoutput:
         footer = """
 if not printed:
-    for item in stack:
+    for item in stack[::-1]:
         if type(item) in [str, KegLib.Coherse.char]:
             nice(stack)
         else:
@@ -894,7 +894,8 @@ if not printed:
     register(stack)
     raw(stack)
 
-"""   
+"""
+
     else:
         footer = """
 
