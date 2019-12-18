@@ -122,6 +122,7 @@ REGISTER_AUG_ADD, REGISTER_AUG_SUB, REGISTER_AUG_MULT, REGISTER_AUG_DIV = \
                   "⑼⑽⑾⑿"
 
 REGISTER_SET, REGISTER_LENGTH, REGISTER_REVERSE = "⒀⒁⒂"
+TRUTHY = "⒃"
 
 #'Keywords'
 
@@ -171,6 +172,8 @@ unicode += "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳⑴⑵�
 
 
 for n in range(127234, 127243): unicode += chr(n)
+
+args = None
 
 '''Transpiler Helpers'''
 
@@ -265,6 +268,10 @@ def transpile(source: str, stack="stack", lvl=0):
 
     if type(source) == str:
         source = Parse.parse(source)
+
+
+    if args and args.reversetokens:
+        source = source[::-1]
 
     comment = False #Whether or not the transpiler is parsing a comment
     escaped = False #Whether or not the transpiler needs to use escape()
@@ -776,6 +783,11 @@ if __name__ == "__main__":
             help="printing puts a newline between outputs",
             action='store_true')
 
+        #-rt --reversetokens : reverse token order
+
+        parser.add_argument("-rt", "--reversetokens",
+            help="reverse token order internally",
+            action='store_true')
 
 
 
