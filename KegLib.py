@@ -631,3 +631,10 @@ def smart_summate(stack):
 
     else:
         return str(stack)
+
+def truthify(stack):
+    temp = stack.pop()
+    if bool(temp):
+        stack.push(1)
+    else:
+        stack.push(0)

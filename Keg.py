@@ -687,6 +687,9 @@ def transpile(source: str, stack="stack", lvl=0):
         elif command == REGISTER_REVERSE:
             result += f"reverse_register({stack})"
 
+        elif command == TRUTHIFY:
+            result += f"truthify({stack})"
+
             
 
         #Default case
