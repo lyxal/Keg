@@ -103,6 +103,7 @@ def Uncompress(source):
 def to_standard(source, s_type):
     result = ""
     compression_code = ""
+    escaped = False
 
     if type(KegStrings.obj_str_extract(source)) is not str:
         return source
@@ -110,6 +111,15 @@ def to_standard(source, s_type):
     if s_type in [STRINGS.STANDARD, STRINGS.STANDARD_SPACED]:
         spaces = " " * [STRINGS.STANDARD, STRINGS.STANDARD_SPACED].index(s_type)
         for char in source:
+            if escaped:
+                compression_code += char
+                escaped = False
+                continue
+
+            elif char == "\\":
+                escaped = True
+                continue
+            
             if char == ";":
                 result += f"{get_scc(compression_code)}{spaces}"
                 compression_code = ""

@@ -638,3 +638,28 @@ def truthify(stack):
         stack.push(1)
     else:
         stack.push(0)
+
+def keg_filter(stack):
+    import Keg
+
+    code = stack.pop()
+    code = Keg.balance(code)
+    code = Keg.transpile(code)
+    
+    final = Stack()
+
+    header = f"""
+from KegLib import *
+from Stackd import Stack
+stack = item
+"""
+
+    for i in range(len(stack)):
+        item = Stack([stack[i]])
+        temp = stack[i]
+        exec(header + code)
+        if bool(item.pop()):
+            final.push(temp)
+
+    stack._Stack__stack = final._Stack__stack
+            

@@ -60,7 +60,7 @@ NUMBER_SPLIT = "÷"
 FACTORIAL = "¡"
 EMPTY = "ø"
 PRINT_ALL = "Ω"
-NOT = "¬" #!top
+NOT, AND, OR = "¬⒄⒅" #!top, x⟑y, x⟇y
 PREDEFINED_CONSTANT = "λ"
 PI = "π"
 HALVE_TOP = "½" #math(stack, "/")
@@ -391,6 +391,36 @@ def transpile(source: str, stack="stack", lvl=0):
 
         elif command == ROUND:
             result += f"keg_round({stack})"
+
+        elif command == FILTER_BY:
+            result += f"keg_filter({stack})"
+
+        elif command == NOT:
+            result += f"""
+
+if bool({stack}.pop()):
+    {stack}.push(0)
+else:
+    {stack}.push(1)
+"""
+
+        elif command == AND:
+            result += f"""
+___lhs, ___rhs = {stack}.pop(), {stack}.pop()
+if bool(___lhs) and bool(___rhs):
+    {stack}.push(1)
+else:
+    {stack}.push(0)
+"""
+
+        elif command == OR:
+            result += f"""
+___lhs, ___rhs = {stack}.pop(), {stack}.pop()
+if bool(___lhs) or bool(___rhs):
+    {stack}.push(1)
+else:
+    {stack}.push(0)
+"""
 
         #Now, keywords and structures
         elif command == COMMENT:
