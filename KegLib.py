@@ -9,6 +9,7 @@ variables = {}
 code_page = ""
 function_list = []
 seperator = ""
+inputs = Stack()
 
 # BASIC STACK PUSHING
 
@@ -130,8 +131,18 @@ def Input(stack):
 
     #This one is "take input and push as ord"
     item = input()
-    for Char in reversed(item):
-        stack.push(char(Char))
+    if item:
+        for Char in reversed(item):
+            stack.push(char(Char))
+        inputs.push(item)
+    else:
+        item = inputs[-1]
+        if type(item) == str:
+            for Char in reversed(item):
+                stack.push(char(Char))
+        else:
+            stack.push(item)
+    shift(inputs, "R")
 
     #See you soon with another input fn!
 
@@ -213,7 +224,13 @@ def nice_input(stack):
     except:
         temp = temp
 
-    stack.push(temp)
+    if temp:
+        stack.push(temp)
+        inputs.push(temp)
+    else:
+        item = inputs[-1]
+        stack.push(item)
+    shift(inputs, "R")
 
     #Float > Integer > List > String
 
@@ -329,7 +346,14 @@ def square(stack):
 
 def string_input(stack):
     #The third and final method of input: string input
-    stack.push(input())
+    item = input()
+    if item:
+        stack.push(item)
+        inputs.push(item)
+    else:
+        item = inputs[-1]
+        stack.push(item)
+    shift(inputs, "R")
 
 def all_true(stack):
     if all(stack):
