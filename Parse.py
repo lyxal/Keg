@@ -285,5 +285,5 @@ def func(source):
     return {"name": name, "number": n}
 
 if __name__ == "__main__":
-    test = parse("¦ab|cd║ef™")
+    test = parse("?^⑷`(`⑸")
     print([str(x) for x in test])

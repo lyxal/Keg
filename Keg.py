@@ -203,9 +203,26 @@ def balance(source: str) -> str:
                     "⑸" : "25*25**2*56*+2+"}
 
     escaped = False #Whether or not there is currently an escape sequence
+    string_mode = False #Whether or not I'm currently in a string
 
     result = ""
     for char in source:
+
+        if string_mode:
+            if escaped:
+                result += char
+                escaped = False
+                continue
+            
+            elif char == "\\":
+                escaped = True
+                result += char
+                continue
+            else:
+                if char == "`":
+                    string_mode = False
+                result += char
+                continue
         if escaped: #Either escape the bracket or keep the escape
             if char in alt_brackets:
                 result += alt_brackets[char]
@@ -216,8 +233,11 @@ def balance(source: str) -> str:
 
         elif char == "\\":
             escaped = True
-
             continue
+
+        elif char == "`":
+            string_mode = True
+        
 
         if char in "[({⑷":
             brackets.append(char)
@@ -961,7 +981,7 @@ if not printed:
             printing += chr(item)
     print(printing, end="")
 """
-
+    print(code, balance(code))
     code = transpile(balance(code))
     if args and args.compiled:
         import sys

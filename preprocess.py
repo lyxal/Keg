@@ -5,6 +5,7 @@ def process(string):
     final = ""
     string_mode = [False, ""]
     escaped = False
+    comment = False
     ssl_reference = [False, ""]
     
     for char in string:
@@ -42,6 +43,9 @@ def process(string):
         if char == "₳":
             ssl_reference = [True, ""]
             continue
+
+        if char == "\n" and comment:
+            comment = False
         
         if ssl_reference[0] and len(ssl_reference[1]) != 2:
             ssl_reference[1] += char
@@ -58,6 +62,9 @@ def process(string):
         if char == "⑳":
             final += "{!|"
             continue
+
+        if char == "#":
+            comment = True
         
         final += char
     return final
@@ -113,6 +120,7 @@ def balance_strings(source):
         result += symbol
 
     return result
+
         
 if __name__ == "__main__":
     assert process("₳0a") == "<SSL:0a>"
