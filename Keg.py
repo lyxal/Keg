@@ -981,7 +981,7 @@ if not printed:
             printing += chr(item)
     print(printing, end="")
 """
-    print(code, balance(code))
+    #print(code, balance(code))
     code = transpile(balance(code))
     if args and args.compiled:
         import sys
