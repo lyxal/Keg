@@ -19,6 +19,7 @@ class Stack:
             self.stacks = [self.__stack]
 
         self.level = 0
+        self.inputs = []
 
     def __len__(self):
         return len(self.__stack)
@@ -63,6 +64,8 @@ class Stack:
                     return self.__stack.pop()
             except:
                 temp = temp
+
+            self.inputs.append(temp)
             return temp
 
     def __repr__(self):
