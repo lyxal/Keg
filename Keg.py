@@ -843,6 +843,11 @@ if __name__ == "__main__":
             action='store_true')
 
 
+        #-rs --reversestack : reverse stack before outputting
+
+        parser.add_argument("-rs", "--reversestack",
+            help="reverse stack before outputting implicitly",
+            action='store_true')
 
         args = parser.parse_args()
         file_location = args.file
@@ -893,6 +898,7 @@ stack = Stack()
 printed = False
 """
 
+    footer = ""
     if args and args.inputraw:
         Stackd.input_raw = True
 
@@ -901,14 +907,17 @@ printed = False
 
     #Conditionally determine the footer
 
+    if args and args.reversestack:
+        footer = "\nreverse(stack)\n"
+
     if args and args.head:
-        footer = """
+        footer += """
 if not printed:
     nice(stack)
 """
 
     elif args and args.newoutput:
-        footer = """
+        footer += """
 if not printed:
     for item in stack[::-1]:
         if type(item) in [str, KegLib.Coherse.char]:
@@ -917,27 +926,27 @@ if not printed:
             raw(stack)"""
 
     elif args and args.headraw:
-        footer = """
+        footer += """
 if  not printed:
     raw(stack)
 """
 
     elif args and args.reverseraw:
-        footer = """
+        footer += """
 if not printed:
     reverse(stack)
     raw(stack)
 """
 
     elif args and args.reversenice:
-        footer = """
+        footer += """
 if not printed:
     reverse(stack)
     nice(stack)
 """
 
     elif args and args.outputcharacters:
-        footer = """
+        footer += """
 if not printed:
     for item in stack:
         if type(item) in [int, float]:
@@ -947,14 +956,14 @@ if not printed:
 """
 
     elif args and args.printregister:
-        footer = """
+        footer += """
 if not printed:
     register(stack)
     nice(stack)
 
 """
     elif args and args.registerraw:
-        footer = """
+        footer += """
 if not printed:
     register(stack)
     raw(stack)
@@ -962,7 +971,7 @@ if not printed:
 """
 
     else:
-        footer = """
+        footer += """
 
 if not printed:
     printing = ""
