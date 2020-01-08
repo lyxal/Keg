@@ -136,7 +136,8 @@ def Input(stack):
             stack.push(char(Char))
         inputs.push(item)
     else:
-        item = inputs[-1]
+        item = inputs.pop()
+        inputs.push(item)
         if type(item) == str:
             for Char in reversed(item):
                 stack.push(char(Char))
@@ -228,7 +229,8 @@ def nice_input(stack):
         stack.push(temp)
         inputs.push(temp)
     else:
-        item = inputs[-1]
+        item = inputs.pop()
+        inputs.push(item)
         stack.push(item)
     shift(inputs, "R")
 
@@ -351,7 +353,8 @@ def string_input(stack):
         stack.push(item)
         inputs.push(item)
     else:
-        item = inputs[-1]
+        item = inputs.pop()
+        inputs.push(item)
         stack.push(item)
     shift(inputs, "R")
 
@@ -594,7 +597,7 @@ def pop_item(stack):
             stack.push(temp)
 
 def sort_stack(stack):
-    stack.__stack.sort()
+    stack._Stack__stack.sort()
 
 def increment_register(stack):
     register(stack)

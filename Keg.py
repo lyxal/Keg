@@ -60,18 +60,21 @@ NUMBER_SPLIT = "÷"
 FACTORIAL = "¡"
 EMPTY = "ø"
 PRINT_ALL = "Ω"
-NOT, AND, OR = "¬⒄⒅" #!top, x⟑y, x⟇y
+NOT = "¬"
+AND = ("⒄", "⟑") #This is what a temp code page looks like when a more certain page is added
+OR = ("⒅", "⟇" )
 PREDEFINED_CONSTANT = "λ"
 PI = "π"
 HALVE_TOP = "½" #math(stack, "/")
-INCREMENT = "⑨" #perhaps an upside down semi-colon
+INCREMENT = ("⑨", "؛")
 DOUBLE = "⑵" #dobule the top of stack
 NEGATE = "±" #*-1
-ONE_ON_X = "⑱" #1/tos
-ROUND = "⑲" #uses round function
-WHILE_STUFF = "⑳" #Preprocesses as {!|
-INCREMENT_REGISTER, DECREMENT_REGISTER = "⑹⑺"
-PUSH_REGISTER_NO_EMPTY = "⑻"
+ONE_ON_X = ("⑱", "⅟") #1/tos
+ROUND = ("⑲", "𝚪") #uses round function
+WHILE_STUFF = ("⑳", "↬") #Preprocesses as {!|
+INCREMENT_REGISTER = ("⑹", "ꜛ")
+DECREMENT_REGISTER = ("⑺", "ꜜ")
+PUSH_REGISTER_NO_EMPTY = ("⑻", "⅋")
 
 #Keg+ Section
 PUSH_N_PRINT = "ȦƁƇƉƐƑƓǶȊȷǨȽƜƝǪǷɊƦȘȚȔƲɅƛƳƵ"
@@ -93,8 +96,8 @@ SUMMATE = "⅀"
 EVAL_EXEC = "ß"
 END_SWITCH = "™"
 MULTILINE_INPUT = "᠈"
-MAP = "⑷" #will be £. closed with »
-MAP_CLOSE = "⑸" #As aforementioned, will be »
+MAP = ("⑷", "£") #will be £. closed with »
+MAP_CLOSE = ("⑸", "»") #As aforementioned, will be »
 
 VARIABLE_SET = "©"
 VARIAGE_GET = "®"
@@ -104,7 +107,9 @@ INFINITY = "א"
 RANDOM_INSTRUCTION = "⯑" #Chooses an instruction from
 #all avaliable commands and puts it in.
 
-DIV_MOD, EQUAL_TYPES, FIND_POS, PRINT_RAW_NO_POP = "①②③④"
+DIV_MOD = ("①", "‰")
+EQUAL_TYPES = ("②", "≡")
+FIND_POS, PRINT_RAW_NO_POP = "③④"
 FUNCTION_MODIFIERS = "⑤⑥⑦⑧"
 PRINT_NICE_NO_POP = "⑩"
 TO_PERCENTAGE = "⑪"
@@ -213,7 +218,7 @@ def balance(source: str) -> str:
                 result += char
                 escaped = False
                 continue
-            
+
             elif char == "\\":
                 escaped = True
                 result += char
@@ -237,7 +242,7 @@ def balance(source: str) -> str:
 
         elif char == "`":
             string_mode = True
-        
+
 
         if char in "[({⑷":
             brackets.append(char)
@@ -331,116 +336,6 @@ def transpile(source: str, stack="stack", lvl=0):
             else: #It isn't an object string
                 result += f"iterable({stack}, \"" + command + "\")"
 
-        #Handle all functions (built-in)
-        elif command == LENGTH:
-            if args and args.lengthpops:
-                result += f"length({stack}, True)"
-            else:
-                result += f"length({stack})"
-
-        elif command == DUPLICATE:
-            result += f"duplicate({stack})"
-
-        elif command == POP:
-            result += f"pop_top({stack})"
-
-        elif command == PRINT_CHR:
-            result += f"nice({stack}); printed = True"
-
-        elif command == PRINT_INT:
-            result += f"raw({stack}); printed = True"
-
-        elif command in [L_SHIFT, R_SHIFT]:
-            result += f"shift({stack}, '" + ["left", "right"]\
-                      [[L_SHIFT, R_SHIFT].index(command)]+ "')"
-
-        elif command == REVERSE:
-            result += f"reverse({stack})"
-
-        elif command == RANDOM:
-            result += f"random({stack})"
-
-        elif command == SWAP:
-            result += f"swap({stack})"
-
-        elif command == INPUT:
-            result += f"Input({stack})"
-
-        #Now, for Reg's commands
-        elif command == IOTA:
-            result += f"iota({stack})"
-
-        elif command == DECREMENT:
-            result += f"decrement({stack})"
-
-        elif command == SINE:
-            result += f"sine({stack})"
-
-        elif command == NICE_INPUT:
-            result += f"nice_input({stack})"
-
-        elif command == EXCLUSIVE_RANGE:
-            result += f"excl_range({stack})"
-
-        elif command == INCLUSIVE_RANGE:
-            result += f"incl_range({stack})"
-
-        elif command == GENERATE_RANGE:
-            result += f"smart_range({stack})"
-
-        elif command == NUMBER_SPLIT:
-            result += f"item_split({stack})"
-
-        elif command == FACTORIAL:
-            result += f"factorial({stack})"
-
-        elif command == STRING_INPUT:
-            result += f"string_input({stack})"
-
-        elif command == INCREMENT:
-            result += f"increment({stack})"
-
-        elif command == DOUBLE:
-            result += f"double({stack})"
-
-        elif command == NEGATE:
-            result += f"negate({stack})"
-
-        elif command == ONE_ON_X:
-            result += f"reciprocal({stack})"
-
-        elif command == ROUND:
-            result += f"keg_round({stack})"
-
-        elif command == FILTER_BY:
-            result += f"keg_filter({stack})"
-
-        elif command == NOT:
-            result += f"""
-
-if bool({stack}.pop()):
-    {stack}.push(0)
-else:
-    {stack}.push(1)
-"""
-
-        elif command == AND:
-            result += f"""
-___lhs, ___rhs = {stack}.pop(), {stack}.pop()
-if bool(___lhs) and bool(___rhs):
-    {stack}.push(1)
-else:
-    {stack}.push(0)
-"""
-
-        elif command == OR:
-            result += f"""
-___lhs, ___rhs = {stack}.pop(), {stack}.pop()
-if bool(___lhs) or bool(___rhs):
-    {stack}.push(1)
-else:
-    {stack}.push(0)
-"""
 
         #Now, keywords and structures
         elif command == COMMENT:
@@ -605,6 +500,117 @@ else:
         elif name == Parse.CMDS.MAP:
             result += f"keg_map({stack}, {command})"
 
+        #Handle all functions (built-in)
+        elif command == LENGTH:
+            if args and args.lengthpops:
+                result += f"length({stack}, True)"
+            else:
+                result += f"length({stack})"
+
+        elif command == DUPLICATE:
+            result += f"duplicate({stack})"
+
+        elif command == POP:
+            result += f"pop_top({stack})"
+
+        elif command == PRINT_CHR:
+            result += f"nice({stack}); printed = True"
+
+        elif command == PRINT_INT:
+            result += f"raw({stack}); printed = True"
+
+        elif command in [L_SHIFT, R_SHIFT]:
+            result += f"shift({stack}, '" + ["left", "right"]\
+                      [[L_SHIFT, R_SHIFT].index(command)]+ "')"
+
+        elif command == REVERSE:
+            result += f"reverse({stack})"
+
+        elif command == RANDOM:
+            result += f"random({stack})"
+
+        elif command == SWAP:
+            result += f"swap({stack})"
+
+        elif command == INPUT:
+            result += f"Input({stack})"
+
+        #Now, for Reg's commands
+        elif command == IOTA:
+            result += f"iota({stack})"
+
+        elif command == DECREMENT:
+            result += f"decrement({stack})"
+
+        elif command == SINE:
+            result += f"sine({stack})"
+
+        elif command == NICE_INPUT:
+            result += f"nice_input({stack})"
+
+        elif command == EXCLUSIVE_RANGE:
+            result += f"excl_range({stack})"
+
+        elif command == INCLUSIVE_RANGE:
+            result += f"incl_range({stack})"
+
+        elif command == GENERATE_RANGE:
+            result += f"smart_range({stack})"
+
+        elif command == NUMBER_SPLIT:
+            result += f"item_split({stack})"
+
+        elif command == FACTORIAL:
+            result += f"factorial({stack})"
+
+        elif command == STRING_INPUT:
+            result += f"string_input({stack})"
+
+        elif command in INCREMENT:
+            result += f"increment({stack})"
+
+        elif command == DOUBLE:
+            result += f"double({stack})"
+
+        elif command == NEGATE:
+            result += f"negate({stack})"
+
+        elif command in ONE_ON_X:
+            result += f"reciprocal({stack})"
+
+        elif command in ROUND:
+            result += f"keg_round({stack})"
+
+        elif command in FILTER_BY:
+            result += f"keg_filter({stack})"
+
+        elif command == NOT:
+            result += f"""
+
+if bool({stack}.pop()):
+    {stack}.push(0)
+else:
+    {stack}.push(1)
+    """
+
+        elif command in AND:
+            result += f"""
+___lhs, ___rhs = {stack}.pop(), {stack}.pop()
+if bool(___lhs) and bool(___rhs):
+    {stack}.push(1)
+else:
+    {stack}.push(0)
+"""
+
+        elif command in OR:
+            result += f"""
+___lhs, ___rhs = {stack}.pop(), {stack}.pop()
+if bool(___lhs) or bool(___rhs):
+    {stack}.push(1)
+else:
+    {stack}.push(0)
+"""
+
         #Now, operators.
         elif command in MATHS:
             if command == "Ë":
@@ -680,67 +686,67 @@ else:
         elif command == MULTILINE_INPUT:
             result += f"multiline({stack})"
 
-        elif command == PRINT_RAW_NO_POP:
+        elif command in PRINT_RAW_NO_POP:
             result += f"raw({stack}, True)"
 
-        elif command == PRINT_NICE_NO_POP:
+        elif command in PRINT_NICE_NO_POP:
             result += f"nice({stack}, True)"
 
-        elif command == TO_PERCENTAGE:
+        elif command in TO_PERCENTAGE:
             result += f"to_percentage({stack})"
 
-        elif command == EMPTY_STRING:
+        elif command in EMPTY_STRING:
             result += f"iterable({stack}, \"\")"
 
-        elif command == SPACE_STRING:
+        elif command in SPACE_STRING:
             result += f"iterable({stack}, \" \")"
 
-        elif command == LENGTH_TOP:
+        elif command in LENGTH_TOP:
             result += f"length_top({stack})"
 
-        elif command == REVERSE_TOP:
+        elif command in REVERSE_TOP:
             result += f"reverse_top({stack})"
 
-        elif command == POP_ITEM:
+        elif command in POP_ITEM:
             result += f"pop_item({stack})"
 
-        elif command == SORT_STACK:
+        elif command in SORT_STACK:
             result += f"sort_stack({stack})"
 
-        elif command == INCREMENT_REGISTER:
+        elif command in INCREMENT_REGISTER:
             result += f"increment_register({stack})"
 
-        elif command == DECREMENT_REGISTER:
+        elif command in DECREMENT_REGISTER:
             result += f"decrement_register({stack})"
 
-        elif command == PUSH_REGISTER_NO_EMPTY:
+        elif command in PUSH_REGISTER_NO_EMPTY:
             result += f"register_dont_empty({stack})"
 
-        elif command == REGISTER_AUG_ADD:
+        elif command in REGISTER_AUG_ADD:
             result += f"register_aug_assign({stack}, '+')"
 
-        elif command == REGISTER_AUG_SUB:
+        elif command in REGISTER_AUG_SUB:
             result += f"register_aug_assign({stack}, '-')"
 
-        elif command == REGISTER_AUG_MULT:
+        elif command in REGISTER_AUG_MULT:
             result += f"register_aug_assign({stack}, '*')"
 
-        elif command == REGISTER_AUG_DIV:
+        elif command in REGISTER_AUG_DIV:
             result += f"register_aug_assign({stack}, '/')"
 
-        elif command == REGISTER_SET:
+        elif command in REGISTER_SET:
             result += f"set_register_dont_empty({stack})"
 
-        elif command == REGISTER_LENGTH:
+        elif command in REGISTER_LENGTH:
             result += f"register_length({stack})"
 
-        elif command == REGISTER_REVERSE:
+        elif command in REGISTER_REVERSE:
             result += f"reverse_register({stack})"
 
-        elif command == TRUTHY:
+        elif command in TRUTHY:
             result += f"truthify({stack})"
 
-            
+
 
         #Default case
 
@@ -831,7 +837,7 @@ if __name__ == "__main__":
             action='store_true')
 
 
-        #-pn --printnewlines : printing puts a newline between outputs  
+        #-pn --printnewlines : printing puts a newline between outputs
         parser.add_argument("-pn", "--printnewlines",
             help="printing puts a newline between outputs",
             action='store_true')
