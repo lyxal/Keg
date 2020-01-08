@@ -51,7 +51,10 @@ def process(string):
             ssl_reference[1] += char
             if len(ssl_reference[1]) == 2:
                 ssl_reference[0] = False
-                final += f"<SSL:{ssl_reference[1]}>"
+                if ssl_reference[1] in ssls:
+                    final += ssls[ssl_reference[1]]
+                else:
+                    final += f"<SSL:{ssl_reference[1]}>"
                 ssl_reference[1] = ""
             continue
         
@@ -121,6 +124,11 @@ def balance_strings(source):
 
     return result
 
+ssls = {
+    "0a" : "`0123456789abcdefghijklmnopqrstuvwxyz`",
+    "0b" : "`0123456789`",
+    "0c" : "`abcdefghijklmnopqrstuvwxyz`"
+}
         
 if __name__ == "__main__":
     assert process("₳0a") == "<SSL:0a>"
