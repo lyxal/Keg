@@ -855,6 +855,12 @@ if __name__ == "__main__":
             help="reverse stack before outputting implicitly",
             action='store_true')
 
+        #-v --version : Prints when the interpreter was last updated
+
+        parser.add_argument("-v", "--version",
+            help="Prints when the interpreter was last updated",
+            action='store_true')
+
         args = parser.parse_args()
         file_location = args.file
 
@@ -870,6 +876,9 @@ if __name__ == "__main__":
                           "Push", char, "onto the stack")
                 i += 1
             exit()
+
+        elif args.version:
+            print("Keg Last Updated On: Wednesday 15 January 2020")
 
     else:
         file_location = input("Enter the file location of the Keg program: ")
