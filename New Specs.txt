@@ -1,0 +1,85 @@
+!   Push the length of the stack
+@   Start function
+#   Start a comment
+$   Swap the top two items
+%   Pop x, y, push y % x
+^   Reverse the stack
+&   Store/Push a value in/from the register
+*   Pop x, y, push y * x
+()  For loop
+[]  If statement
+{}  While loop
+:   Duplicate top
+;   End function
+"   Right shift
+'   Left shift
+<   Less than
+>   Greater than
+,   Print nice
+.   Print raw
+?   Take input
+/   Pop x, y, push y / x
+\   Escape next character
+~   Push random number (-inf, +inf)
+-   Push x, y, push y - x
+_   Pop top of stack
++   Push x, y, push y + x
+=   Equals
+a-Z Push character literal
+0-9 Push numeric literal
+`   Start normal string
+¬   Logical not
+≠   Not Equals
+≤   Less than or equal to
+≥   Greater than or equal to
+‹›  List
+°   Pop list, pos, push list[pos]
+•   Pop list, pos, val, list[pos] = val
+œ   Apply operator to all of stack
+£™  Map the expression to the top item iteratively
+ƒ™  Map the expression to the whole stack iteratively
+§™  Switch statement
+®   Set variable
+©   Get variable
+ß   Binary List
+⟨™  Zip map
+⸤   Min of zip Map
+⸢   Max of zip Map
+𐊗   Base ten
+𐊂   Base 2
+∑   Summate the stack
+∨   Max of the stack/item
+∧   Min of the stack/item
+∆   Increment
+▽   Decrement
+Ṙ   range(1, n + 1) [1, n]
+Ṛ   range(0, n + 1) [0, n]
+Ṟ   range(a, b) [a, b]
+ṙ   range(1, n) [1, n)
+ṛ   range(0, n) [0, n)
+ṟ   range(a, b) [a, b)
+⚁   mod 2
+⊡   space string
+″   empty string
+¢   map but keep original as input
+§   pairwise map
+Ω   print all
+²   square top
+𐊖   sort stack
+𐊜   uniquify
+⊐   wrap in List
+…   flatten
+ẕ   is integer
+ℤ   to integer
+¡   factorial
+ø   prefixes of t.o.s
+±   negate
+€   sub-sum a list
+ﬁ   filter a list
+⁄   loop variable
+˛   Empty string
+¯   Item in the list
+λ   Predefined constant
+𐊏  Loop variable
+⊕   Increment
+⊖   Decrement
