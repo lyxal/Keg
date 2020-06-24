@@ -75,6 +75,8 @@ WHILE_STUFF = ("⑳", "↬") #Preprocesses as {!|
 INCREMENT_REGISTER = ("⑹", "ꜛ")
 DECREMENT_REGISTER = ("⑺", "ꜜ")
 PUSH_REGISTER_NO_EMPTY = ("⑻", "⅋")
+X_TO_BASE = "⬥" # Huh, whould'a thought it'd take a code golf challenge to force me to finally implement this?
+
 
 #Keg+ Section
 PUSH_N_PRINT = "ȦƁƇƉƐƑƓǶȊȷǨȽƜƝǪǷɊƦȘȚȔƲɅƛƳƵ"
@@ -109,7 +111,8 @@ RANDOM_INSTRUCTION = "⯑" #Chooses an instruction from
 
 DIV_MOD = ("①", "‰")
 EQUAL_TYPES = ("②", "≡")
-FIND_POS, PRINT_RAW_NO_POP = "③④"
+FIND_POS = "③"
+PRINT_RAW_NO_POP = "④"
 FUNCTION_MODIFIERS = "⑤⑥⑦⑧"
 PRINT_NICE_NO_POP = "⑩"
 TO_PERCENTAGE = "⑪"
@@ -177,7 +180,6 @@ unicode += "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳⑴⑵�
 
 
 for n in range(127234, 127243): unicode += chr(n)
-
 args = None
 
 '''Transpiler Helpers'''
@@ -661,6 +663,9 @@ else:
 
         elif command == LOWER:
             result += f"case_switch({stack}, 'lower')"
+
+        elif command == X_TO_BASE:
+            result += f"int2base({stack})"
 
         elif command == TOGGLE:
             result += f"case_switch({stack}, 'toggle')"

@@ -184,7 +184,7 @@ def condition_eval(expr_list, stack):
 # REG EXTENSION
 
 def iota(stack):
-    try_cast(stack, 'ℤ') 
+    try_cast(stack, 'ℤ')
     k = stack.pop()
 
     for i in range(k, -1, -1):
@@ -610,7 +610,7 @@ def decrement_register(stack):
     integer(stack,1)
     maths(stack, "-")
     register(stack)
-                       
+
 def register_dont_empty(stack):
     register(stack)
     duplicate(stack)
@@ -647,7 +647,7 @@ stack = small
 
         exec(header + code)
         stack[i] = smart_summate(small)
-        
+
 
 def smart_summate(stack):
     if all(map(lambda x : type(x) in [float, int], stack)):
@@ -672,7 +672,7 @@ def keg_filter(stack):
     code = stack.pop()
     code = Keg.balance(code)
     code = Keg.transpile(code)
-    
+
     final = Stack()
 
     header = f"""
@@ -689,4 +689,35 @@ stack = item
             final.push(temp)
 
     stack._Stack__stack = final._Stack__stack
-            
+
+# https://stackoverflow.com/a/2267446/9363594
+
+
+def int2base(stack):
+
+    import string
+    digs = string.digits + string.ascii_letters
+
+    base = stack.pop()
+    x = stack.pop()
+
+    if x < 0:
+        sign = -1
+    elif x == 0:
+        stack.push(digs[0])
+    else:
+        sign = 1
+
+    x *= sign
+    digits = []
+
+    while x:
+        digits.append(digs[int(x % base)])
+        x = int(x // base)
+
+    if sign < 0:
+        digits.append('-')
+
+    digits.reverse()
+
+    stack.push(''.join(digits))
