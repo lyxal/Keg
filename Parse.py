@@ -43,7 +43,7 @@ def parse(prog):
     ast = []
     #print(prog)
     for char in prog:
-        #print(char, temp, parts, structures, [str(x) for x in ast])
+        # print(char, temp, parts, structures, [str(x) for x in ast])
 
         if integer_mode:
             if char not in "0123456789":
@@ -125,7 +125,7 @@ def parse(prog):
 
 
 
-        if char in OPEN:
+        if char in OPEN and not string_mode:
             if structures:
                 temp += char
 
@@ -147,8 +147,7 @@ def parse(prog):
             elif char == MAP[0]:
                 structures.append(CMDS.MAP)
 
-        elif char in CLOSE:
-
+        elif char in CLOSE and not string_mode:
             struct = structures.pop()
 
             if len(structures) == 0:
@@ -285,5 +284,5 @@ def func(source):
     return {"name": name, "number": n}
 
 if __name__ == "__main__":
-    test = parse("?^⑷`(`⑸")
+    test = parse("`]`")
     print([str(x) for x in test])
