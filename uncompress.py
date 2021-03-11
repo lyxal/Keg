@@ -168,7 +168,21 @@ def get_scc(code):
     index = _ord(code[1]) + (len(chars) * _ord(code[0]))
     return sccs[index]
 
+def keg_to_utf8(code):
+    # Taken from the old 05AB1E interpreter
+    processed_code = ""
+    for c in code:
+        processed_code += chars[c]
 
+    return processed_code
+
+def utf8_to_keg(code):
+    # Taken from the old 05AB1E interpreter
+    processed_code = ""
+    for c in code:
+        processed_code += chr(chars.index(c))
+
+    return processed_code
 
 if __name__ == "__main__":
     while 1:

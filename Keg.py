@@ -867,6 +867,11 @@ if __name__ == "__main__":
         parser.add_argument("-v", "--version",
             help="Prints when the interpreter was last updated",
             action='store_true')
+        
+        # -b --bytes : Treats input file as raw bytes
+        parser.add_argument("-b", "--bytes",
+            help="This is mainly for SBCS purposes and to show that there truly is a codepage.",
+            action='store_true')
 
         args = parser.parse_args()
         file_location = args.file
@@ -886,12 +891,16 @@ if __name__ == "__main__":
 
         elif args.version:
             print("Keg Last Updated On: Wednesday 15 January 2020")
-
+        
     else:
         file_location = input("Enter the file location of the Keg program: ")
         args = 0
 
-    source = open(file_location, encoding="utf-8").read()
+    if args.bytes:
+        source = open(file_location, "rb").read()
+        source = uncompress.keg_to_utf8(code)
+    else:
+        source = open(file_location, encoding="utf-8").read()
 
 
 
