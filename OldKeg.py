@@ -151,14 +151,12 @@ def generate_range(*args):
 def _ord(char):
     if char in code_page:
         return code_page.find(char)
-    else:
-        return ord(char)
+    return ord(char)
 
 def _chr(integer):
     if integer > 0 and integer < len(code_page):
         return code_page[integer]
-    else:
-        return chr(integer)
+    return chr(integer)
 
 def _eval(expr, stack=main_stack):
     #Evaluate the given expression as Keg code

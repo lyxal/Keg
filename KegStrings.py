@@ -43,12 +43,12 @@ def obj_str_extract(string):
         if str_type == "N": #New Object
             return eval(obj_data)
 
-        elif str_type == "C":
+        if str_type == "C":
             return obj_data
 
-        elif str_type == "P":
+        if str_type == "P":
             exec(obj_data)
-            
+    
     else:
         return string
 
