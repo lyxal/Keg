@@ -168,7 +168,7 @@ if not printed:
     for item in stack:
         if type(item) in [str, Stack]:
             printing += item
-        elif type(item) == Coherse.char:
+        elif type(item) is Coherse.char:
             printing += item.v
 
         elif item < 10 or item > 256:

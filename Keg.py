@@ -295,7 +295,7 @@ def transpile(source: str, stack="stack", lvl=0):
 
     '''
 
-    if type(source) == str:
+    if type(source) is str:
         source = Parse.parse(source)
 
 

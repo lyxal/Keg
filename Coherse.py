@@ -168,10 +168,10 @@ def _type(item):
     if type(item) in [float, int]:
         return "Number"
 
-    elif type(item) == char:
+    elif type(item) is char:
         return "Character"
 
-    elif type(item) == str:
+    elif type(item) is str:
         return "String"
 
     else:
