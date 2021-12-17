@@ -259,7 +259,7 @@ def balance(source: str) -> str:
 
         result += char
 
-    if len(brackets):
+    if brackets:
         for char in reversed(brackets): #Close all brackets
             result += mapping[char]
 
