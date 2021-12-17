@@ -37,7 +37,7 @@ class Stack:
         self.__stack.append(value)
 
     def pop(self):
-        if len(self.__stack):
+        if self.__stack:
             return self.__stack.pop()
         else:
             try:
