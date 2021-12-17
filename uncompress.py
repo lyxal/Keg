@@ -32,8 +32,7 @@ for n in range(127234, 127243): chars += chr(n)
 def _ord(char):
     if char in chars:
         return chars.find(char)
-    else:
-        return ord(char) + 256
+    return ord(char) + 256
 
 def numberToBase(n, b): #https://stackoverflow.com/a/28666223/9363594
     if n == 0:

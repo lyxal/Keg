@@ -21,10 +21,9 @@ def sub_strings(source: str, subtractant: str) -> str:
     result = source
     if len(subtractant) == 1:
         return source.replace(subtractant, "", 1)
-    else:
-        for char in subtractant:
-            result = sub_strings(result, char)
-        return result
+    for char in subtractant:
+        result = sub_strings(result, char)
+    return result
 
 def multiply(lhs: str, rhs: str) -> list:
 	result = []
@@ -168,14 +167,12 @@ def _type(item):
     if type(item) in [float, int]:
         return "Number"
 
-    elif type(item) is char:
+    if type(item) == char:
         return "Character"
 
-    elif type(item) is str:
+    if type(item) == str:
         return "String"
-
-    else:
-        return "Stack"
+    return "Stack"
 
 def operate(lhs, rhs, op):
     from Stackd import Stack
@@ -206,16 +203,14 @@ def do_compare(lhs, rhs, op):
 def _ord(character):
     if str(character) in code_page:
         return code_page.index(str(character))
-    else:
-        return ord(character)
+    return ord(character)
 
 def _chr(i):
     if code_page:
         if i == 10:
             return "\n"
-        elif 0 < i < 256:
+        if 0 < i < 256:
             return code_page[i]
-        else:
-            return chr(i)
+        return chr(i)
     else:
         return chr(i)

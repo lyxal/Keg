@@ -3,8 +3,7 @@
 def _ord(char):
     if char in code_page:
         return code_page.find(char)
-    else:
-        return ord(char)
+    return ord(char)
 
 code_page = "Set me in Keg.py"
 input_raw = False #Set me in Keg.py using flags
@@ -39,34 +38,33 @@ class Stack:
     def pop(self):
         if self.__stack:
             return self.__stack.pop()
-        else:
-            try:
-                temp = input()
-            except:
-                return None
+        try:
+            temp = input()
+        except:
+            return None
 
-            if input_raw:
-                from Coherse import char
+        if input_raw:
+            from Coherse import char
+            for Char in reversed(temp):
+                self.__stack.append(char(Char))
+            return self.__stack.pop()
+
+        try:
+            if type(eval(temp)) is float:
+                temp = float(temp)
+            elif type(eval(temp)) is int:
+                temp = int(temp)
+            elif type(eval(temp)) is list:
+                temp = Stack(eval(temp))
+            elif type(eval(temp)) is str:
                 for Char in reversed(temp):
-                    self.__stack.append(char(Char))
+                    self.__stack.append(Char)
                 return self.__stack.pop()
+        except:
+            temp = temp
 
-            try:
-                if type(eval(temp)) is float:
-                    temp = float(temp)
-                elif type(eval(temp)) is int:
-                    temp = int(temp)
-                elif type(eval(temp)) is list:
-                    temp = Stack(eval(temp))
-                elif type(eval(temp)) is str:
-                    for Char in reversed(temp):
-                        self.__stack.append(Char)
-                    return self.__stack.pop()
-            except:
-                temp = temp
-
-            self.inputs.append(temp)
-            return temp
+        self.inputs.append(temp)
+        return temp
 
     def __repr__(self):
         return str(self.__stack)

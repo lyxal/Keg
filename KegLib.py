@@ -168,10 +168,9 @@ def register(stack):
 def loop_eval(expr):
     if type(expr) in [float, int]:
         return range(int(expr))
-    elif type(expr) is char:
+    if type(expr) is char:
         return range(ord(expr.v))
-    else:
-        return expr
+    return expr
 
 def condition_eval(expr_list, stack):
     for expr in expr_list:
@@ -437,29 +436,25 @@ def to_string(item):
     if type(item) in [float, int]:
         return str(item)
 
-    elif type(item) is char:
+    if type(item) == char:
         return str(_ord(item.v))
 
-    elif type(item) is str:
+    if type(item) == str:
         return item
-
-    else:
-        return str(item)
+    return str(item)
 
 def _ord(character):
     if str(character) in code_page:
         return code_page.index(str(character))
-    else:
-        return ord(character)
+    return ord(character)
 
 def _chr(i):
     if code_page:
         if i == 10:
             return "\n"
-        elif 0 < i < 256:
+        if 0 < i < 256:
             return code_page[i]
-        else:
-            return chr(i)
+        return chr(i)
     else:
         return chr(i)
 
@@ -653,11 +648,9 @@ def smart_summate(stack):
     if all(map(lambda x : type(x) in [float, int], stack)):
         return stack.pop()
 
-    elif all(map(lambda x : type(x) is char, stack)):
+    if all(map(lambda x : type(x) == char, stack)):
         return "".join([c.v for c in stack])
-
-    else:
-        return str(stack)
+    return str(stack)
 
 def truthify(stack):
     temp = stack.pop()
