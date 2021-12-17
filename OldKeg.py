@@ -318,7 +318,7 @@ def balance(source):
         result += char
 
 
-    if len(brackets):
+    if brackets:
         for char in reversed(brackets):
             result += mapping[char]
 
@@ -383,7 +383,7 @@ def run(source, master_stack, sub_stack=None):
             stack._Stack__stack.insert(0, stack.pop())
 
         elif cmd == REVERSE:
-            if not len(stack):
+            if not stack:
                 keg_input(stack)
             stack._Stack__stack.reverse()
 

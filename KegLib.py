@@ -79,18 +79,18 @@ def nice(stack, keep=False):
     #call to a fn like str() might not handle
 
     item = stack.pop()
-    if type(item) == int:
+    if type(item) is int:
         print(_chr(item),
               end=seperator) #Preserve Keg's ability to print integers as chars
 
-    elif type(item) == float:
+    elif type(item) is float:
         print(item,
               end=seperator) #I mean, floats can't really be conv'd to chars, can they?
 
-    elif type(item) == char:
+    elif type(item) is char:
         print(item.v, end=seperator) #Because python doesn't have a char type.
 
-    elif type(item) == Stack:
+    elif type(item) is Stack:
         print(*[x for x in item], end=seperator)
 
     else:
@@ -104,18 +104,18 @@ def raw(stack, keep=False):
     #Like nice(), but Keg's version of repr()
 
     item = stack.pop()
-    if type(item) == int:
+    if type(item) is int:
         print(item,
               end=seperator) #Integers are printed as integers
 
-    elif type(item) == float:
+    elif type(item) is float:
         print(item,
               end=seperator) #Floats -> Floats
 
-    elif type(item) == char:
+    elif type(item) is char:
         print(_ord(item.v), end=seperator) #Char -> Integer
 
-    elif type(item) == Stack:
+    elif type(item) is Stack:
         print(repr(stack), end=seperator) #I actually made a repr() fn for Stacks
 
     else:
@@ -138,7 +138,7 @@ def Input(stack):
     else:
         item = inputs.pop()
         inputs.push(item)
-        if type(item) == str:
+        if type(item) is str:
             for Char in reversed(item):
                 stack.push(char(Char))
         else:
@@ -568,13 +568,13 @@ def length_top(stack):
 
 def reverse_top(stack):
     item = stack.pop()
-    if type(item) == int:
+    if type(item) is int:
         if item < 0:
             item = int(str(item)[::-1][:-1]) * -1
         else:
             item = int(str(item)[::-1])
 
-    elif type(item) == float:
+    elif type(item) is float:
         if item < 0:
             item = float(str(item)[::-1][:-1]) * -1
         else:
